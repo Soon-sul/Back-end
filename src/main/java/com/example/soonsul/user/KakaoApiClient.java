@@ -26,6 +26,9 @@ public class KakaoApiClient implements OAuthApiClient {
     @Value("${oauth.kakao.client-id}")
     private String clientId;
 
+    @Value("${oauth.kakao.redirect-uri}")
+    private String redirectUri;
+
     private final RestTemplate restTemplate;
 
     @Override
@@ -42,7 +45,7 @@ public class KakaoApiClient implements OAuthApiClient {
         MultiValueMap<String, String> body = params.makeBody();
         body.add("grant_type", GRANT_TYPE);
         body.add("client_id", clientId);
-        body.add("redirect_uri", "http://localhost:8080/auth/kakao/callback");
+        body.add("redirect_uri", redirectUri);
 
         HttpEntity<?> request = new HttpEntity<>(body, httpHeaders);
         KakaoTokens response = restTemplate.postForObject(url, request, KakaoTokens.class);
