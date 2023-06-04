@@ -65,4 +65,12 @@ public class JwtTokenProvider {
                 .parseClaimsJws(token).getBody();
     }
 
+    public boolean isValidToken(String token) {
+        try {
+            Claims claims = getClaimsFormToken(token);
+            return true;
+        } catch (JwtException | NullPointerException exception) {
+            return false;
+        }
+    }
 }

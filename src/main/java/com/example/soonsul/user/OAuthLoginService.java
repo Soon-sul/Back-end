@@ -79,4 +79,11 @@ public class OAuthLoginService {
             throw new RefreshTokenExpiredException("refresh token expired", ErrorCode.REFRESH_TOKEN_EXPIRED);
         }
     }
+
+
+    //액세스토큰 유효성 검사
+    @Transactional(readOnly = true)
+    public boolean isValidToken(String token) {
+        return jwtTokenProvider.isValidToken(token);
+    }
 }

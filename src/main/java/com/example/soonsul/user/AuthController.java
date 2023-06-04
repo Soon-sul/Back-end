@@ -23,7 +23,7 @@ public class AuthController {
 
     @ApiOperation(value = "카카오 로그인 리다이렉션 api")
     @GetMapping("/kakao/callback")
-    public ResponseEntity<ResultResponse> getCodeFromKakao(@ModelAttribute KakaoParams kakaoParams) {
+    public ResponseEntity<ResultResponse> loginKakao(@ModelAttribute KakaoParams kakaoParams) {
         if(kakaoParams.getError()!=null) throw new OAuthLoginException("OAuth login fail", ErrorCode.OAUTH_LOGIN_FAIL);
 
         TokenDto data= oAuthLoginService.login(kakaoParams);
@@ -63,7 +63,7 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<ResultResponse> signup(@RequestBody SignupDto signupDto) {
         TokenDto data= oAuthLoginService.signup(signupDto);
-        return ResponseEntity.ok(ResultResponse.of(ResultCode.ORIGINAL_USER_LOGIN_SUCCESS, data));
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.SIGNUP_SUCCESS, data));
     }
 
 
@@ -81,5 +81,13 @@ public class AuthController {
         HttpHeaders headers = new HttpHeaders();
         headers.add(AuthConstants.AUTH_HEADER_ACCESS, newAccessToken);
         return ResponseEntity.ok().headers(headers).body(ResultResponse.of(ResultCode.GENERATE_ACCESS_TOKEN_SUCCESS));
+    }
+
+
+    @ApiOperation(value = "액세스토큰 유효성 검사")
+    @GetMapping("/token")
+    public ResponseEntity<ResultResponse> isValidToken(@RequestHeader(value="AuthorizationAccess") String token) {
+        boolean data= oAuthLoginService.isValidToken(token);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.TOKEN_VALID_CHECK_SUCCESS, data));
     }
 }
