@@ -21,7 +21,7 @@ public enum ErrorCode {
     USER_NOT_EXIST(500,"U001","LOGIN USER NOT EXIST"),
 
     //liquor
-    LIQUOR_NOT_EXIST(500,"L001","LIQUOR USER NOT EXIST");
+    LIQUOR_NOT_EXIST(500,"L001","LIQUOR NOT EXIST");
 
     final private int status;
     final private String errorCode;
