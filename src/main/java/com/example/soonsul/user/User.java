@@ -47,6 +47,4 @@ public class User {
     @Column(name = "oauth_id", nullable = false, unique = true)
     private String oauthId;
 
-    //@Column(name = "oauth_provider")
-    //private OAuthProvider oAuthProvider;
 }

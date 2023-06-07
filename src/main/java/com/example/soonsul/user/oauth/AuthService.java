@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -79,7 +78,7 @@ public class AuthService {
         Optional<RefreshToken> getRefreshToken= refreshTokenRepository.findById(refreshToken);
         if(getRefreshToken.isPresent()){
             User user= userRepository.findById(getRefreshToken.get().getUserId())
-                    .orElseThrow(()-> new UserNotExistException("user not exist", ErrorCode.USER_NOTEXIST));
+                    .orElseThrow(()-> new UserNotExistException("user not exist", ErrorCode.USER_NOT_EXIST));
             return jwtTokenProvider.generateJwtToken(user);
         }
         else{

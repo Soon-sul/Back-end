@@ -1,5 +1,6 @@
 package com.example.soonsul.response.error;
 
+import com.example.soonsul.liquor.exception.LiquorNoExistException;
 import com.example.soonsul.user.exception.OAuthLoginException;
 import com.example.soonsul.user.exception.RefreshTokenExpiredException;
 import com.example.soonsul.user.exception.TokenExpiredJwtException;
@@ -49,4 +50,10 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
     }
 
+    @ExceptionHandler(LiquorNoExistException.class)
+    public ResponseEntity<ErrorResponse> handleLiquorNoExistException(LiquorNoExistException ex){
+        log.error("handleLiquorNoExistException",ex);
+        final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
+    }
 }
