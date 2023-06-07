@@ -1,4 +1,4 @@
-package com.example.soonsul.user;
+package com.example.soonsul.user.oauth.token;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

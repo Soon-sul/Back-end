@@ -1,5 +1,6 @@
-package com.example.soonsul.user;
+package com.example.soonsul.user.oauth.jwt;
 
+import com.example.soonsul.user.User;
 import com.example.soonsul.user.redis.RefreshToken;
 import io.jsonwebtoken.*;
 

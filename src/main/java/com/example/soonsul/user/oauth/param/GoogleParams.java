@@ -1,5 +1,6 @@
-package com.example.soonsul.user;
+package com.example.soonsul.user.oauth.param;
 
+import com.example.soonsul.user.oauth.OAuthProvider;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

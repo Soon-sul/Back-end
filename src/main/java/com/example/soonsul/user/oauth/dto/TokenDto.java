@@ -1,4 +1,4 @@
-package com.example.soonsul.user;
+package com.example.soonsul.user.oauth.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;

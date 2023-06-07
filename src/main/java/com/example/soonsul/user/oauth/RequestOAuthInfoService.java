@@ -1,5 +1,8 @@
-package com.example.soonsul.user;
+package com.example.soonsul.user.oauth;
 
+import com.example.soonsul.user.oauth.client.OAuthApiClient;
+import com.example.soonsul.user.oauth.param.OAuthLoginParams;
+import com.example.soonsul.user.oauth.response.OAuthInfoResponse;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

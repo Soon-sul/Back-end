@@ -1,7 +1,12 @@
-package com.example.soonsul.user;
+package com.example.soonsul.user.oauth.client;
 
 
 
+import com.example.soonsul.user.oauth.OAuthProvider;
+import com.example.soonsul.user.oauth.param.OAuthLoginParams;
+import com.example.soonsul.user.oauth.response.NaverInfoResponse;
+import com.example.soonsul.user.oauth.response.OAuthInfoResponse;
+import com.example.soonsul.user.oauth.token.NaverTokens;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;

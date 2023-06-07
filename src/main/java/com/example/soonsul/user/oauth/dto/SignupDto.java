@@ -1,4 +1,4 @@
-package com.example.soonsul.user;
+package com.example.soonsul.user.oauth.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

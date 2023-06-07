@@ -1,6 +1,7 @@
-package com.example.soonsul.user;
+package com.example.soonsul.user.oauth.param;
 
 
+import com.example.soonsul.user.oauth.OAuthProvider;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +11,7 @@ import org.springframework.util.MultiValueMap;
 @Getter
 @Builder
 @AllArgsConstructor
-public class NaverParams implements OAuthLoginParams {
+public class KakaoParams implements OAuthLoginParams {
     private String code;
     private String state;
     private String error;
@@ -19,14 +20,13 @@ public class NaverParams implements OAuthLoginParams {
 
     @Override
     public OAuthProvider oAuthProvider(){
-        return OAuthProvider.NAVER;
+        return OAuthProvider.KAKAO;
     }
 
     @Override
     public MultiValueMap<String, String> makeBody() {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("code", code);
-        body.add("state", state);
         return body;
     }
 }

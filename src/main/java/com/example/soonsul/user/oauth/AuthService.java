@@ -1,10 +1,17 @@
-package com.example.soonsul.user;
+package com.example.soonsul.user.oauth;
 
 import com.example.soonsul.response.error.ErrorCode;
+import com.example.soonsul.user.oauth.jwt.JwtTokenProvider;
+import com.example.soonsul.user.User;
+import com.example.soonsul.user.UserRepository;
 import com.example.soonsul.user.exception.RefreshTokenExpiredException;
 import com.example.soonsul.user.exception.UserNotExistException;
+import com.example.soonsul.user.oauth.dto.SignupDto;
+import com.example.soonsul.user.oauth.dto.TokenDto;
+import com.example.soonsul.user.oauth.param.OAuthLoginParams;
 import com.example.soonsul.user.redis.RefreshToken;
 import com.example.soonsul.user.redis.RefreshTokenRepository;
+import com.example.soonsul.user.oauth.response.OAuthInfoResponse;
 import com.example.soonsul.util.RandomNickName;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,7 +22,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class OAuthLoginService {
+public class AuthService {
     private final UserRepository userRepository;
     private final RequestOAuthInfoService requestOAuthInfoService;
     private final JwtTokenProvider jwtTokenProvider;

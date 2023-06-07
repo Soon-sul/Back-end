@@ -1,9 +1,15 @@
-package com.example.soonsul.user;
+package com.example.soonsul.user.oauth;
 
 import com.example.soonsul.response.error.ErrorCode;
 import com.example.soonsul.response.result.ResultCode;
 import com.example.soonsul.response.result.ResultResponse;
+import com.example.soonsul.user.oauth.dto.SignupDto;
+import com.example.soonsul.user.oauth.dto.TokenDto;
 import com.example.soonsul.user.exception.OAuthLoginException;
+import com.example.soonsul.user.oauth.jwt.AuthConstants;
+import com.example.soonsul.user.oauth.param.GoogleParams;
+import com.example.soonsul.user.oauth.param.KakaoParams;
+import com.example.soonsul.user.oauth.param.NaverParams;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -18,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 public class AuthController {
-    private final OAuthLoginService oAuthLoginService;
+    private final AuthService oAuthLoginService;
 
 
     @ApiOperation(value = "카카오 로그인 리다이렉션 api")

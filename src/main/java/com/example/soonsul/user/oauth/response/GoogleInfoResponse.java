@@ -1,12 +1,13 @@
-package com.example.soonsul.user;
+package com.example.soonsul.user.oauth.response;
 
+import com.example.soonsul.user.oauth.OAuthProvider;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class KakaoInfoResponse implements OAuthInfoResponse {
+public class GoogleInfoResponse implements OAuthInfoResponse {
 
     @JsonProperty("id")
     private String id;
@@ -18,6 +19,6 @@ public class KakaoInfoResponse implements OAuthInfoResponse {
 
     @Override
     public OAuthProvider getOAuthProvider() {
-        return OAuthProvider.KAKAO;
+        return OAuthProvider.GOOGLE;
     }
 }
