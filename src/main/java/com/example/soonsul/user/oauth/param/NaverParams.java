@@ -14,8 +14,8 @@ import org.springframework.util.MultiValueMap;
 public class NaverParams implements OAuthLoginParams {
     private String code;
     private String state;
-    private String error;
-    private String error_description;
+    //private String error;
+    //private String error_description;
 
 
     @Override

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SignupDto {
     private String oauthId;
-    private String oAuthProvider;
+    private String oauthProvider;
     private String gender;
     private Integer age;
     private boolean flagAge;

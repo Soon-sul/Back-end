@@ -30,7 +30,7 @@ public class AuthController {
     @ApiOperation(value = "카카오 로그인")
     @GetMapping("/login/kakao")
     public ResponseEntity<ResultResponse> loginKakao(@ModelAttribute KakaoParams kakaoParams) {
-        if(kakaoParams.getError()!=null) throw new OAuthLoginException("OAuth login fail", ErrorCode.OAUTH_LOGIN_FAIL);
+        //if(kakaoParams.getError()!=null) throw new OAuthLoginException("OAuth login fail", ErrorCode.OAUTH_LOGIN_FAIL);
 
         TokenDto data= authService.login(kakaoParams);
         if(data.getRefreshToken()==null){
@@ -43,7 +43,7 @@ public class AuthController {
     @ApiOperation(value = "네이버 로그인")
     @GetMapping("/login/naver")
     public ResponseEntity<ResultResponse> loginNaver(@ModelAttribute NaverParams naverParams) {
-        if(naverParams.getError()!=null) throw new OAuthLoginException("OAuth login fail", ErrorCode.OAUTH_LOGIN_FAIL);
+        //if(naverParams.getError()!=null) throw new OAuthLoginException("OAuth login fail", ErrorCode.OAUTH_LOGIN_FAIL);
 
         TokenDto data= authService.login(naverParams);
         if(data.getRefreshToken()==null){
@@ -55,7 +55,7 @@ public class AuthController {
     @ApiOperation(value = "구글 로그인")
     @GetMapping("/login/google")
     public ResponseEntity<ResultResponse> loginGoogle(@ModelAttribute GoogleParams googleParams) {
-        if(googleParams.getError()!=null) throw new OAuthLoginException("OAuth login fail", ErrorCode.OAUTH_LOGIN_FAIL);
+        //if(googleParams.getError()!=null) throw new OAuthLoginException("OAuth login fail", ErrorCode.OAUTH_LOGIN_FAIL);
 
         TokenDto data= authService.login(googleParams);
         if(data.getRefreshToken()==null){

@@ -14,5 +14,5 @@ public class TokenDto {
     private String accessToken;
     private String refreshToken;
     private String oauthId;
-    private OAuthProvider oAuthProvider;
+    private OAuthProvider oauthProvider;
 }

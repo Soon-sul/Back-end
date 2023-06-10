@@ -13,9 +13,9 @@ import org.springframework.util.MultiValueMap;
 @AllArgsConstructor
 public class KakaoParams implements OAuthLoginParams {
     private String code;
-    private String state;
-    private String error;
-    private String error_description;
+    //private String state;
+    //private String error;
+    //private String error_description;
 
 
     @Override

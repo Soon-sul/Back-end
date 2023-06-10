@@ -32,7 +32,7 @@ public class AuthService {
     public TokenDto login(OAuthLoginParams params) {
         final OAuthInfoResponse response = requestOAuthInfoService.request(params);
         final String oauthId= response.getId();
-        final OAuthProvider oAuthProvider= params.oAuthProvider();
+        final OAuthProvider oauthProvider= params.oAuthProvider();
         final Optional<User> user= userRepository.findByOauthId(oauthId);
 
         if(user.isPresent()) {          //이미 가입된 사용자
@@ -46,7 +46,7 @@ public class AuthService {
         else{                          //신규가입자
             return TokenDto.builder()
                     .oauthId(oauthId)
-                    .oAuthProvider(oAuthProvider)
+                    .oauthProvider(oauthProvider)
                     .build();
         }
     }
@@ -65,7 +65,7 @@ public class AuthService {
                 .flagPrivacy(signupDto.isFlagPrivacy())
                 .flagWithdrawal(false)
                 .oauthId(signupDto.getOauthId())
-                .oAuthProvider(OAuthProvider.valueOf(signupDto.getOAuthProvider()))
+                .oAuthProvider(OAuthProvider.valueOf(signupDto.getOauthProvider()))
                 .build();
         userRepository.save(user);
 
