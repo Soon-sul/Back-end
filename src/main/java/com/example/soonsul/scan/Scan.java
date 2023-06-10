@@ -1,7 +1,6 @@
 package com.example.soonsul.scan;
 
 import com.example.soonsul.liquor.entity.Liquor;
-import com.example.soonsul.liquor.entity.LiquorInfo;
 import com.example.soonsul.user.User;
 import lombok.*;
 
@@ -25,11 +24,11 @@ public class Scan {
     private LocalDate scannedDate;
 
 
-    @OneToOne(fetch = FetchType.LAZY , cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY , cascade = CascadeType.REMOVE)
     @JoinColumn(name="user_id")
     private User user;
 
-    @OneToOne(fetch = FetchType.LAZY , cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY , cascade = CascadeType.REMOVE)
     @JoinColumn(name="liquor_id")
     private Liquor liquor;
 }

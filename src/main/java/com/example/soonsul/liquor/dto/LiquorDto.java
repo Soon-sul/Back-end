@@ -9,19 +9,20 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LiquorInfoDto {
+public class LiquorDto {
     private String name;
-    private String title;
     private String salePlace;
     private String location;
     private String ingredient;
     private Double averageRating;
     private Long lowestPrice;
-    private String alcohol;
-    private String capacity;
+    private Double alcohol;
+    private Integer capacity;
     private Long viewCount;
     private Integer latitude;
     private Integer longitude;
     private String region;
     private String imageUrl;
+    private String liquorCatory;
+    private String brewery;
 }
