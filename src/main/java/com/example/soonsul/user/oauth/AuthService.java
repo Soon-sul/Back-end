@@ -65,6 +65,7 @@ public class AuthService {
                 .flagPrivacy(signupDto.isFlagPrivacy())
                 .flagWithdrawal(false)
                 .oauthId(signupDto.getOauthId())
+                .oAuthProvider(OAuthProvider.valueOf(signupDto.getOAuthProvider()))
                 .build();
         userRepository.save(user);
 
