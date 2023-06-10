@@ -31,7 +31,8 @@ public class AuthService {
     @Transactional
     public TokenDto login(OAuthLoginParams params) {
         final OAuthInfoResponse response = requestOAuthInfoService.request(params);
-        final String oauthId= params.oAuthProvider().name()+"@"+response.getId();
+        final String oauthId= response.getId();
+        final OAuthProvider oAuthProvider= params.oAuthProvider();
         final Optional<User> user= userRepository.findByOauthId(oauthId);
 
         if(user.isPresent()) {          //이미 가입된 사용자
@@ -45,6 +46,7 @@ public class AuthService {
         else{                          //신규가입자
             return TokenDto.builder()
                     .oauthId(oauthId)
+                    .oAuthProvider(oAuthProvider)
                     .build();
         }
     }

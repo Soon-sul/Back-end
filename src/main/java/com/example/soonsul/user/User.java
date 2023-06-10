@@ -1,5 +1,6 @@
 package com.example.soonsul.user;
 
+import com.example.soonsul.user.oauth.OAuthProvider;
 import lombok.*;
 
 import javax.persistence.*;
@@ -46,5 +47,9 @@ public class User {
 
     @Column(name = "oauth_id", nullable = false, unique = true)
     private String oauthId;
+
+    @Column(name = "oauth_provider")
+    @Enumerated(EnumType.STRING)
+    private OAuthProvider oAuthProvider;
 
 }

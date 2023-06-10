@@ -24,15 +24,15 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 public class AuthController {
-    private final AuthService oAuthLoginService;
+    private final AuthService authService;
 
 
-    @ApiOperation(value = "카카오 로그인 리다이렉션 api")
-    @GetMapping("/kakao/callback")
+    @ApiOperation(value = "카카오 로그인")
+    @GetMapping("/login/kakao")
     public ResponseEntity<ResultResponse> loginKakao(@ModelAttribute KakaoParams kakaoParams) {
         if(kakaoParams.getError()!=null) throw new OAuthLoginException("OAuth login fail", ErrorCode.OAUTH_LOGIN_FAIL);
 
-        TokenDto data= oAuthLoginService.login(kakaoParams);
+        TokenDto data= authService.login(kakaoParams);
         if(data.getRefreshToken()==null){
             return ResponseEntity.ok(ResultResponse.of(ResultCode.NEW_USER_LOGIN_SUCCESS, data));
         }
@@ -40,24 +40,24 @@ public class AuthController {
     }
 
 
-    @ApiOperation(value = "네이버 로그인 리다이렉션 api")
-    @GetMapping("/naver/callback")
+    @ApiOperation(value = "네이버 로그인")
+    @GetMapping("/login/naver")
     public ResponseEntity<ResultResponse> loginNaver(@ModelAttribute NaverParams naverParams) {
         if(naverParams.getError()!=null) throw new OAuthLoginException("OAuth login fail", ErrorCode.OAUTH_LOGIN_FAIL);
 
-        TokenDto data= oAuthLoginService.login(naverParams);
+        TokenDto data= authService.login(naverParams);
         if(data.getRefreshToken()==null){
             return ResponseEntity.ok(ResultResponse.of(ResultCode.NEW_USER_LOGIN_SUCCESS, data));
         }
         return ResponseEntity.ok(ResultResponse.of(ResultCode.ORIGINAL_USER_LOGIN_SUCCESS, data));
     }
 
-    @ApiOperation(value = "구글 로그인 리다이렉션 api")
-    @GetMapping("/google/callback")
+    @ApiOperation(value = "구글 로그인")
+    @GetMapping("/login/google")
     public ResponseEntity<ResultResponse> loginGoogle(@ModelAttribute GoogleParams googleParams) {
         if(googleParams.getError()!=null) throw new OAuthLoginException("OAuth login fail", ErrorCode.OAUTH_LOGIN_FAIL);
 
-        TokenDto data= oAuthLoginService.login(googleParams);
+        TokenDto data= authService.login(googleParams);
         if(data.getRefreshToken()==null){
             return ResponseEntity.ok(ResultResponse.of(ResultCode.NEW_USER_LOGIN_SUCCESS, data));
         }
@@ -68,7 +68,7 @@ public class AuthController {
     @ApiOperation(value = "회원가입")
     @PostMapping("/signup")
     public ResponseEntity<ResultResponse> signup(@RequestBody SignupDto signupDto) {
-        TokenDto data= oAuthLoginService.signup(signupDto);
+        TokenDto data= authService.signup(signupDto);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.SIGNUP_SUCCESS, data));
     }
 
@@ -83,7 +83,7 @@ public class AuthController {
             @RequestHeader(value="AuthorizationAccess") String token,
             @RequestHeader(value="AuthorizationRefresh") String refreshToken
     ) {
-        String newAccessToken= oAuthLoginService.refreshToken(refreshToken);
+        String newAccessToken= authService.refreshToken(refreshToken);
         HttpHeaders headers = new HttpHeaders();
         headers.add(AuthConstants.AUTH_HEADER_ACCESS, newAccessToken);
         return ResponseEntity.ok().headers(headers).body(ResultResponse.of(ResultCode.GENERATE_ACCESS_TOKEN_SUCCESS));
@@ -93,7 +93,7 @@ public class AuthController {
     @ApiOperation(value = "액세스토큰 유효성 검사")
     @GetMapping("/token")
     public ResponseEntity<ResultResponse> isValidToken(@RequestHeader(value="AuthorizationAccess") String token) {
-        boolean data= oAuthLoginService.isValidToken(token);
+        boolean data= authService.isValidToken(token);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.TOKEN_VALID_CHECK_SUCCESS, data));
     }
 }
