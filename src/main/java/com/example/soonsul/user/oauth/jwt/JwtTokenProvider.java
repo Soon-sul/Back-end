@@ -1,6 +1,6 @@
 package com.example.soonsul.user.oauth.jwt;
 
-import com.example.soonsul.user.User;
+import com.example.soonsul.user.entity.User;
 import com.example.soonsul.user.redis.RefreshToken;
 import io.jsonwebtoken.*;
 
@@ -74,4 +74,10 @@ public class JwtTokenProvider {
             return false;
         }
     }
+
+    public Long getUserIdFromToken(String token) {
+        Claims claims = getClaimsFormToken(token);
+        return (Long) claims.get("userId");
+    }
+
 }

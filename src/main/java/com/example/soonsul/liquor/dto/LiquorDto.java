@@ -1,5 +1,6 @@
 package com.example.soonsul.liquor.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class LiquorDto {
     private String name;
     private String salePlace;
@@ -25,4 +27,6 @@ public class LiquorDto {
     private String imageUrl;
     private String liquorCatory;
     private String brewery;
+    private Double liquorPersonalRating;
+    private Long ratingNumber;
 }

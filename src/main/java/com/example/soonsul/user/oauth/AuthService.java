@@ -2,8 +2,8 @@ package com.example.soonsul.user.oauth;
 
 import com.example.soonsul.response.error.ErrorCode;
 import com.example.soonsul.user.oauth.jwt.JwtTokenProvider;
-import com.example.soonsul.user.User;
-import com.example.soonsul.user.UserRepository;
+import com.example.soonsul.user.entity.User;
+import com.example.soonsul.user.repository.UserRepository;
 import com.example.soonsul.user.exception.RefreshTokenExpiredException;
 import com.example.soonsul.user.exception.UserNotExistException;
 import com.example.soonsul.user.oauth.dto.SignupDto;

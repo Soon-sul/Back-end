@@ -1,4 +1,4 @@
-package com.example.soonsul.user;
+package com.example.soonsul.user.entity;
 
 import com.example.soonsul.user.oauth.OAuthProvider;
 import lombok.*;

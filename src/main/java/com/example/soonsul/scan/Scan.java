@@ -1,7 +1,7 @@
 package com.example.soonsul.scan;
 
 import com.example.soonsul.liquor.entity.Liquor;
-import com.example.soonsul.user.User;
+import com.example.soonsul.user.entity.User;
 import lombok.*;
 
 import javax.persistence.*;
