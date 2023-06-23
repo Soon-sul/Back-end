@@ -30,8 +30,8 @@ public class PersonalEvaluation {
     @Column(name = "carbonic_acid")
     private Integer carbonicAcid;
 
-    @Column(name = "body_feel")
-    private Integer bodyFeel;
+    @Column(name = "heavy")
+    private Integer heavy;
 
     @Column(name = "scent")
     private Integer scent;
@@ -47,5 +47,34 @@ public class PersonalEvaluation {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private User user;
+
+
+    public void updateLiquorPersonalRating(Double liquorPersonalRating){
+        this.liquorPersonalRating= liquorPersonalRating;
+    }
+
+    public void updateSweetness(Integer sweetness){
+        this.sweetness= sweetness;
+    }
+
+    public void updateAcidity(Integer acidity){
+        this.acidity= acidity;
+    }
+
+    public void updateCarbonicAcid(Integer carbonicAcid){
+        this.carbonicAcid= carbonicAcid;
+    }
+
+    public void updateHeavy(Integer heavy){
+        this.heavy= heavy;
+    }
+
+    public void updateScent(Integer scent){
+        this.scent= scent;
+    }
+
+    public void updateDensity(Integer density){
+        this.density= density;
+    }
 
 }

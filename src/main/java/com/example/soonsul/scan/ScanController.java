@@ -21,4 +21,5 @@ public class ScanController {
         final String data= scanService.getLiquor(name);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_SCANNED_LIQUOR_NAME_SUCCESS, data));
     }
+
 }

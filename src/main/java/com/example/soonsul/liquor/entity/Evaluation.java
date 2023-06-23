@@ -13,26 +13,49 @@ import javax.persistence.*;
 public class Evaluation {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "evaluation_id", nullable = false, unique = true)
     private String evaluationId;
 
     @Column(name = "sweetness")
-    private Integer sweetness;
+    private Double sweetness;
 
     @Column(name = "acidity")
-    private Integer acidity;
+    private Double acidity;
 
     @Column(name = "carbonic_acid")
-    private Integer carbonicAcid;
+    private Double carbonicAcid;
 
-    @Column(name = "body_feel")
-    private Integer bodyFeel;
+    @Column(name = "heavy")
+    private Double heavy;
 
     @Column(name = "scent")
-    private Integer scent;
+    private Double scent;
 
     @Column(name = "density")
-    private Integer density;
+    private Double density;
 
+
+    public void updateSweetness(Double sweetness){
+        this.sweetness= sweetness;
+    }
+
+    public void updateAcidity(Double acidity){
+        this.acidity= acidity;
+    }
+
+    public void updateCarbonicAcid(Double carbonicAcid){
+        this.carbonicAcid= carbonicAcid;
+    }
+
+    public void updateHeavy(Double heavy){
+        this.heavy= heavy;
+    }
+
+    public void updateScent(Double scent){
+        this.scent= scent;
+    }
+
+    public void updateDensity(Double density){
+        this.density= density;
+    }
 }

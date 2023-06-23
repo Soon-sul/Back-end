@@ -1,5 +1,7 @@
 package com.example.soonsul.config;
 
+import com.example.soonsul.config.interceptor.HeaderFilter;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

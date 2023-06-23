@@ -19,9 +19,21 @@ public enum ErrorCode {
 
     //user
     USER_NOT_EXIST(500,"U001","LOGIN USER NOT EXIST"),
+    PERSONAL_EVALUATION_NOT_EXIST(500,"U002","PERSONAL EVALUATION NOT EXIST"),
 
     //liquor
-    LIQUOR_NOT_EXIST(500,"L001","LIQUOR NOT EXIST");
+    LIQUOR_NOT_EXIST(500,"L001","LIQUOR NOT EXIST"),
+    EVALUATION_NOT_EXIST(500,"L002","EVALUATION NOT EXIST"),
+
+    //review
+    REVIEW_NOT_EXIST(500,"R001","REVIEW NOT EXIST"),
+
+    //comment
+    COMMENT_NOT_EXIST(500,"C001","COMMENT NOT EXIST"),
+
+
+    //code
+    CODE_NOT_EXIST(500,"CD01","CODE NOT EXIST");
 
     final private int status;
     final private String errorCode;

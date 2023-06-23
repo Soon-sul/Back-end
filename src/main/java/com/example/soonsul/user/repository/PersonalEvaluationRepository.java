@@ -15,4 +15,10 @@ public interface PersonalEvaluationRepository extends JpaRepository<PersonalEval
 
     Optional<PersonalEvaluation> findByUserAndLiquor(User user, Liquor liquor);
     Long countByLiquor(Liquor liquor);
+
+    @Query(nativeQuery = true,
+            value = "SELECT * FROM personal_evaluation p WHERE p.user_id = :userId " +
+                    "AND p.liquor_id = :liquorId ")
+    Optional<PersonalEvaluation> findPersonalEvaluation(@Param("userId") Long userId, @Param("liquorId") String liquorId);
+
 }

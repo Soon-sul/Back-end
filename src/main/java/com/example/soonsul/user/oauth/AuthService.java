@@ -4,8 +4,8 @@ import com.example.soonsul.response.error.ErrorCode;
 import com.example.soonsul.user.oauth.jwt.JwtTokenProvider;
 import com.example.soonsul.user.entity.User;
 import com.example.soonsul.user.repository.UserRepository;
-import com.example.soonsul.user.exception.RefreshTokenExpiredException;
-import com.example.soonsul.user.exception.UserNotExistException;
+import com.example.soonsul.user.exception.RefreshTokenExpired;
+import com.example.soonsul.user.exception.UserNotExist;
 import com.example.soonsul.user.oauth.dto.SignupDto;
 import com.example.soonsul.user.oauth.dto.TokenDto;
 import com.example.soonsul.user.oauth.param.OAuthLoginParams;
@@ -81,11 +81,11 @@ public class AuthService {
         Optional<RefreshToken> getRefreshToken= refreshTokenRepository.findById(refreshToken);
         if(getRefreshToken.isPresent()){
             User user= userRepository.findById(getRefreshToken.get().getUserId())
-                    .orElseThrow(()-> new UserNotExistException("user not exist", ErrorCode.USER_NOT_EXIST));
+                    .orElseThrow(()-> new UserNotExist("user not exist", ErrorCode.USER_NOT_EXIST));
             return jwtTokenProvider.generateJwtToken(user);
         }
         else{
-            throw new RefreshTokenExpiredException("refresh token expired", ErrorCode.REFRESH_TOKEN_EXPIRED);
+            throw new RefreshTokenExpired("refresh token expired", ErrorCode.REFRESH_TOKEN_EXPIRED);
         }
     }
 

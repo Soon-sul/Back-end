@@ -2,7 +2,7 @@ package com.example.soonsul.util;
 
 import com.example.soonsul.response.error.ErrorCode;
 import com.example.soonsul.user.entity.User;
-import com.example.soonsul.user.exception.UserNotExistException;
+import com.example.soonsul.user.exception.UserNotExist;
 import com.example.soonsul.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -17,6 +17,6 @@ public class UserUtil {
     public User getUserByAuthentication(){
         Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
         return userRepository.findById(Long.parseLong(authentication.getName()))
-                .orElseThrow(()-> new UserNotExistException("login user not exist", ErrorCode.USER_NOT_EXIST));
+                .orElseThrow(()-> new UserNotExist("login user not exist", ErrorCode.USER_NOT_EXIST));
     }
 }

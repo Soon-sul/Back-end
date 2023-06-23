@@ -60,4 +60,9 @@ public class Liquor {
 
     @Column(name = "brewery")
     private String brewery;
+
+
+    public void updateAverageRating(Double averageRating){
+        this.averageRating= averageRating;
+    }
 }

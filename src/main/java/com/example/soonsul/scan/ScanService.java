@@ -1,7 +1,7 @@
 package com.example.soonsul.scan;
 
 import com.example.soonsul.liquor.entity.Liquor;
-import com.example.soonsul.liquor.exception.LiquorNoExistException;
+import com.example.soonsul.liquor.exception.LiquorNotExist;
 import com.example.soonsul.liquor.repository.LiquorRepository;
 import com.example.soonsul.response.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ public class ScanService {
     @Transactional(readOnly = true)
     public String getLiquor(String name){
         final Liquor liquor= liquorRepository.findByName(name)
-                .orElseThrow(()-> new LiquorNoExistException("liquor not exist", ErrorCode.LIQUOR_NOT_EXIST));
+                .orElseThrow(()-> new LiquorNotExist("liquor not exist", ErrorCode.LIQUOR_NOT_EXIST));
         return liquor.getLiquorId();
     }
 }
