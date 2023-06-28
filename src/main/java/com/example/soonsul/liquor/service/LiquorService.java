@@ -27,6 +27,7 @@ public class LiquorService {
     private final PrizeRepository prizeRepository;
     private final EvaluationRepository evaluationRepository;
     private final CodeRepository codeRepository;
+    private final LocationRepository locationRepository;
 
 
     @Transactional(readOnly = true)
@@ -41,14 +42,6 @@ public class LiquorService {
             liquorPersonalRating= personalEvaluation.get().getLiquorPersonalRating();
         }
 
-        final Long ratingNumber= personalEvaluationRepository.countByLiquor(liquor);
-
-        final List<Prize> prizes= prizeRepository.findAllByLiquor(liquor);
-        final List<String> prizeNameList= new ArrayList<>();
-        for(Prize p: prizes){
-            prizeNameList.add(p.getPrizeName());
-        }
-
         final String region= codeRepository.findById(liquor.getRegion())
                 .orElseThrow(()->new CodeNotExist("code not exist", ErrorCode.CODE_NOT_EXIST)).getCodeName();
         final String liquorCatory= codeRepository.findById(liquor.getLiquorCatory())
@@ -57,7 +50,7 @@ public class LiquorService {
         return LiquorInfoDto.builder()
                 .name(liquor.getName())
                 .salePlace(liquor.getSalePlace())
-                .location(liquor.getLocation())
+                .locationList(locationRepository.findAllByLiquor(liquorId))
                 .ingredient(liquor.getIngredient())
                 .averageRating(liquor.getAverageRating())
                 .lowestPrice(liquor.getLowestPrice())
@@ -71,8 +64,8 @@ public class LiquorService {
                 .liquorCatory(liquorCatory)
                 .brewery(liquor.getBrewery())
                 .liquorPersonalRating(liquorPersonalRating)
-                .ratingNumber(ratingNumber)
-                .prizes(prizeNameList)
+                .ratingNumber(personalEvaluationRepository.countByLiquor(liquor))
+                .prizeList(prizeRepository.findAllByLiquor(liquorId))
                 .build();
     }
 

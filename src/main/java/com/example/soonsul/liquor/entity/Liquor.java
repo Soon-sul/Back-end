@@ -22,9 +22,6 @@ public class Liquor {
     @Column(name = "sale_place")
     private String salePlace;
 
-    @Column(name = "location")
-    private String location;
-
     @Column(name = "ingredient")
     private String ingredient;
 

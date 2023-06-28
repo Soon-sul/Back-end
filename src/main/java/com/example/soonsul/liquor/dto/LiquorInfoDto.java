@@ -25,8 +25,8 @@ public class LiquorInfoDto {
     @ApiModelProperty(value = "판매처")
     private String salePlace;
 
-    @ApiModelProperty(value = "소재지")
-    private String location;
+    @ApiModelProperty(value = "소재지 리스트")
+    private List<String> locationList;
 
     @ApiModelProperty(value = "성분")
     private String ingredient;
@@ -71,5 +71,5 @@ public class LiquorInfoDto {
     private Long ratingNumber;
 
     @ApiModelProperty(value = "수상내역 리스트")
-    private List<String> prizes;
+    private List<String> prizeList;
 }
