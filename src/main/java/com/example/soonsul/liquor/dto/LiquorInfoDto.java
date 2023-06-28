@@ -22,8 +22,14 @@ public class LiquorInfoDto {
     @ApiModelProperty(value = "전통주 이름")
     private String name;
 
-    @ApiModelProperty(value = "판매처")
-    private String salePlace;
+    @ApiModelProperty(value = "판매처 이름")
+    private String salePlaceName;
+
+    @ApiModelProperty(value = "판매처 전화번호")
+    private String phoneNumber;
+
+    @ApiModelProperty(value = "판매처 url")
+    private String siteUrl;
 
     @ApiModelProperty(value = "소재지 리스트")
     private List<String> locationList;

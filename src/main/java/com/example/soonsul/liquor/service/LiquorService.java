@@ -28,6 +28,7 @@ public class LiquorService {
     private final EvaluationRepository evaluationRepository;
     private final CodeRepository codeRepository;
     private final LocationRepository locationRepository;
+    private final SalePlaceRepository salePlaceRepository;
 
 
     @Transactional(readOnly = true)
@@ -42,6 +43,8 @@ public class LiquorService {
             liquorPersonalRating= personalEvaluation.get().getLiquorPersonalRating();
         }
 
+        final SalePlace salePlace= salePlaceRepository.findById(liquor.getSalePlaceId())
+                .orElseThrow(()-> new SalePlaceNotExist("sale-place not exist", ErrorCode.SALE_PLACE_NOT_EXIST));
         final String region= codeRepository.findById(liquor.getRegion())
                 .orElseThrow(()->new CodeNotExist("code not exist", ErrorCode.CODE_NOT_EXIST)).getCodeName();
         final String liquorCatory= codeRepository.findById(liquor.getLiquorCatory())
@@ -49,7 +52,9 @@ public class LiquorService {
 
         return LiquorInfoDto.builder()
                 .name(liquor.getName())
-                .salePlace(liquor.getSalePlace())
+                .salePlaceName(salePlace.getName())
+                .phoneNumber(salePlace.getPhoneNumber())
+                .siteUrl(salePlace.getSiteUrl())
                 .locationList(locationRepository.findAllByLiquor(liquorId))
                 .ingredient(liquor.getIngredient())
                 .averageRating(liquor.getAverageRating())

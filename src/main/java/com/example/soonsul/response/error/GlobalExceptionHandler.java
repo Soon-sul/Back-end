@@ -102,4 +102,11 @@ public class GlobalExceptionHandler {
         final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
         return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
     }
+
+    @ExceptionHandler(SalePlaceNotExist.class)
+    public ResponseEntity<ErrorResponse> handleSalePlaceNotExist(SalePlaceNotExist ex){
+        log.error("handleSalePlaceNotExist",ex);
+        final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
+    }
 }
