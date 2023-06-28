@@ -121,6 +121,30 @@ public class CommentService {
     }
 
 
+    @Transactional
+    public void postCommentLike(Long commentId){
+        final Comment comment= commentRepository.findById(commentId)
+                .orElseThrow(()-> new CommentNotExist("comment not exist", ErrorCode.COMMENT_NOT_EXIST));
+        comment.addGood(1);
+    }
+
+
+    @Transactional
+    public void deleteCommentLike(Long commentId){
+        final Comment comment= commentRepository.findById(commentId)
+                .orElseThrow(()-> new CommentNotExist("comment not exist", ErrorCode.COMMENT_NOT_EXIST));
+        comment.addGood(-1);
+    }
+
+
+    @Transactional(readOnly = true)
+    public Integer getCommentLike(Long commentId){
+        final Comment comment= commentRepository.findById(commentId)
+                .orElseThrow(()-> new CommentNotExist("comment not exist", ErrorCode.COMMENT_NOT_EXIST));
+        return comment.getGood();
+    }
+
+
 
     private String dateConversion(LocalDateTime request){
         final LocalDateTime now= LocalDateTime.now();

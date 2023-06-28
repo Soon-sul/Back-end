@@ -36,6 +36,9 @@ public enum ResultCode {
     POST_REVIEW_LIKE_SUCCESS(200,"L017","해당 리뷰의 좋아요를 추가했습니다."),
     DELETE_REVIEW_LIKE_SUCCESS(200,"L018","해당 리뷰의 좋아요를 삭제했습니다."),
     GET_REVIEW_LIKE_SUCCESS(200,"L019","해당 리뷰의 좋아요를 조회했습니다."),
+    POST_COMMENT_LIKE_SUCCESS(200,"L020","해당 댓글의 좋아요를 추가했습니다."),
+    DELETE_COMMENT_LIKE_SUCCESS(200,"L021","해당 댓글의 좋아요를 삭제했습니다."),
+    GET_COMMENT_LIKE_SUCCESS(200,"L022","해당 댓글의 좋아요를 조회했습니다."),
     ;
 
 

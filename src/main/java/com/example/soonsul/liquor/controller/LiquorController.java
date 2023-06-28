@@ -180,6 +180,7 @@ public class LiquorController {
         return ResponseEntity.ok(ResultResponse.of(ResultCode.DELETE_REVIEW_LIKE_SUCCESS));
     }
 
+
     @ApiOperation(value = "해당 리뷰의 좋아요 개수 조회")
     @GetMapping("/review/{reviewId}/like")
     public ResponseEntity<ResultResponse> getReviewLike(@PathVariable("reviewId") Long reviewId) {
@@ -187,4 +188,26 @@ public class LiquorController {
         return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_REVIEW_LIKE_SUCCESS, data));
     }
 
+
+    @ApiOperation(value = "댓글 좋아요 추가")
+    @PostMapping("/comment/{commentId}/like")
+    public ResponseEntity<ResultResponse> postCommentLike(@PathVariable("commentId") Long commentId) {
+        commentService.postCommentLike(commentId);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.POST_COMMENT_LIKE_SUCCESS));
+    }
+
+
+    @ApiOperation(value = "댓글 좋아요 삭제")
+    @DeleteMapping("/comment/{commentId}/like")
+    public ResponseEntity<ResultResponse> deleteCommentLike(@PathVariable("commentId") Long commentId) {
+        commentService.deleteCommentLike(commentId);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.DELETE_COMMENT_LIKE_SUCCESS));
+    }
+
+    @ApiOperation(value = "해당 댓글의 좋아요 개수 조회")
+    @GetMapping("/comment/{commentId}/like")
+    public ResponseEntity<ResultResponse> getCommentLike(@PathVariable("commentId") Long commentId) {
+        final Integer data= commentService.getCommentLike(commentId);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_COMMENT_LIKE_SUCCESS, data));
+    }
 }

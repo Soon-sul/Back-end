@@ -48,4 +48,6 @@ public class Comment {
     public void updateUpperCommentId(Long upperCommentId){
         this.upperCommentId= upperCommentId;
     }
+
+    public void addGood(Integer number) {this.good+= number;}
 }
