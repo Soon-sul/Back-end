@@ -39,6 +39,7 @@ public enum ResultCode {
     POST_COMMENT_LIKE_SUCCESS(200,"L020","해당 댓글의 좋아요를 추가했습니다."),
     DELETE_COMMENT_LIKE_SUCCESS(200,"L021","해당 댓글의 좋아요를 삭제했습니다."),
     GET_COMMENT_LIKE_SUCCESS(200,"L022","해당 댓글의 좋아요를 조회했습니다."),
+    GET_WEEK_LIQUOR_SUCCESS(200,"L023","이번주 가장 사랑받는 전통주를 조회했습니다."),
     ;
 
 

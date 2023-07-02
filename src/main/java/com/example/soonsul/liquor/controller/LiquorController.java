@@ -2,10 +2,7 @@ package com.example.soonsul.liquor.controller;
 
 import com.example.soonsul.liquor.dto.*;
 import com.example.soonsul.liquor.response.*;
-import com.example.soonsul.liquor.service.CommentService;
-import com.example.soonsul.liquor.service.EvaluationService;
-import com.example.soonsul.liquor.service.LiquorService;
-import com.example.soonsul.liquor.service.ReviewService;
+import com.example.soonsul.liquor.service.*;
 import com.example.soonsul.response.result.ResultCode;
 import com.example.soonsul.response.result.ResultResponse;
 import io.swagger.annotations.Api;
@@ -17,6 +14,9 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Api(tags="Liquor")
@@ -28,6 +28,7 @@ public class LiquorController {
     private final EvaluationService evaluationService;
     private final ReviewService reviewService;
     private final CommentService commentService;
+    private final ClickService clickService;
 
 
     @ApiOperation(value = "전통주 상세 정보 조회")
@@ -210,4 +211,13 @@ public class LiquorController {
         final Integer data= commentService.getCommentLike(commentId);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_COMMENT_LIKE_SUCCESS, data));
     }
+
+
+    @ApiOperation(value = "전통주 조회수 한개 추가")
+    @PostMapping("/{liquorId}/click")
+    public ResponseEntity<ResultResponse> postClick(@PathVariable("liquorId") String liquorId) {
+        clickService.postClick(liquorId);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_COMMENT_LIKE_SUCCESS));
+    }
+
 }

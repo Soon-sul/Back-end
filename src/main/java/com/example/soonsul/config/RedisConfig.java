@@ -1,4 +1,4 @@
-package com.example.soonsul.user.redis;
+package com.example.soonsul.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;

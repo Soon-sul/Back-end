@@ -20,7 +20,7 @@ public class JwtTokenProvider {
 
     public String generateJwtToken(User user) {
         JwtBuilder builder = Jwts.builder()
-                .setSubject(user.getNickname())
+                .setSubject(user.getUserId().toString())
                 .setHeader(createHeader())
                 .setClaims(createClaims(user))
                 .setExpiration(createExpireHourForOneYear())
@@ -52,7 +52,7 @@ public class JwtTokenProvider {
 
     private static Map<String, Object> createClaims(User user) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("nickname", user.getNickname());
+        claims.put("userId", user.getUserId());
         return claims;
     }
 
@@ -77,7 +77,7 @@ public class JwtTokenProvider {
 
     public Long getUserIdFromToken(String token) {
         Claims claims = getClaimsFormToken(token);
-        return (Long) claims.get("userId");
+        return Long.valueOf(claims.get("userId").toString());
     }
 
 }
