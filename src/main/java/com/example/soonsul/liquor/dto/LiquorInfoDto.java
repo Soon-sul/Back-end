@@ -57,14 +57,17 @@ public class LiquorInfoDto {
     @ApiModelProperty(value = "경도")
     private Integer longitude;
 
-    @ApiModelProperty(value = "도(지역) 코드값")
+    @ApiModelProperty(value = "지역 이름")
     private String region;
 
     @ApiModelProperty(value = "전통주 대표사진")
     private String imageUrl;
 
-    @ApiModelProperty(value = "주종 코드값")
-    private String liquorCatory;
+    @ApiModelProperty(value = "주종 소카테고리")
+    private String liquorSmallCatory;
+
+    @ApiModelProperty(value = "주종 대카테고리")
+    private String liquorBigCatory;
 
     @ApiModelProperty(value = "양조장")
     private String brewery;

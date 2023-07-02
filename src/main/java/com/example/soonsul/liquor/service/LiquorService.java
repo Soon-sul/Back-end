@@ -55,8 +55,9 @@ public class LiquorService {
 
         final String region= codeRepository.findById(liquor.getRegion())
                 .orElseThrow(()->new CodeNotExist("code not exist", ErrorCode.CODE_NOT_EXIST)).getCodeName();
-        final String liquorCatory= codeRepository.findById(liquor.getLiquorCatory())
+        final String smallCatory= codeRepository.findById(liquor.getLiquorCatory())
                 .orElseThrow(()->new CodeNotExist("code not exist", ErrorCode.CODE_NOT_EXIST)).getCodeName();
+        final String bigCatory= liquor.getLiquorCatory().substring(0,2);
 
         return LiquorInfoDto.builder()
                 .name(liquor.getName())
@@ -74,7 +75,8 @@ public class LiquorService {
                 .longitude(liquor.getLongitude())
                 .region(region)
                 .imageUrl(liquor.getImageUrl())
-                .liquorCatory(liquorCatory)
+                .liquorSmallCatory(smallCatory)
+                .liquorBigCatory(BigCategory.valueOf(bigCatory).getValue())
                 .brewery(liquor.getBrewery())
                 .liquorPersonalRating(liquorPersonalRating)
                 .ratingNumber(personalEvaluationRepository.countByLiquor(liquor))

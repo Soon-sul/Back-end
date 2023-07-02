@@ -19,7 +19,7 @@ public class Code {
     @Column(name = "code_id", nullable = false, unique = true)
     private String codeId;
 
-    @Column(name = "code_name", nullable = false, unique = true)
+    @Column(name = "code_name", nullable = false)
     private String codeName;
 
 }
