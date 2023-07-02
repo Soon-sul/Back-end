@@ -19,9 +19,6 @@ public class Liquor {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
-    @Column(name = "sale_place_id")
-    private Long salePlaceId;
-
     @Column(name = "ingredient")
     private String ingredient;
 

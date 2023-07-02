@@ -25,4 +25,9 @@ public class SalePlace {
 
     @Column(name = "site_url")
     private String siteUrl;
+
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="liquor_id")
+    private Liquor liquor;
 }

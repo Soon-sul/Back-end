@@ -43,8 +43,16 @@ public class LiquorService {
             liquorPersonalRating= personalEvaluation.get().getLiquorPersonalRating();
         }
 
-        final SalePlace salePlace= salePlaceRepository.findById(liquor.getSalePlaceId())
-                .orElseThrow(()-> new SalePlaceNotExist("sale-place not exist", ErrorCode.SALE_PLACE_NOT_EXIST));
+        String salePlaceName= null;
+        String phoneNumber= null;
+        String siteUrl= null;
+        final Optional<SalePlace> salePlace= salePlaceRepository.findByLiquor(liquor);
+        if(salePlace.isPresent()){
+            salePlaceName= salePlace.get().getName();
+            phoneNumber= salePlace.get().getPhoneNumber();
+            siteUrl= salePlace.get().getSiteUrl();
+        }
+
         final String region= codeRepository.findById(liquor.getRegion())
                 .orElseThrow(()->new CodeNotExist("code not exist", ErrorCode.CODE_NOT_EXIST)).getCodeName();
         final String liquorCatory= codeRepository.findById(liquor.getLiquorCatory())
@@ -52,9 +60,9 @@ public class LiquorService {
 
         return LiquorInfoDto.builder()
                 .name(liquor.getName())
-                .salePlaceName(salePlace.getName())
-                .phoneNumber(salePlace.getPhoneNumber())
-                .siteUrl(salePlace.getSiteUrl())
+                .salePlaceName(salePlaceName)
+                .phoneNumber(phoneNumber)
+                .siteUrl(siteUrl)
                 .locationList(locationRepository.findAllByLiquor(liquorId))
                 .ingredient(liquor.getIngredient())
                 .averageRating(liquor.getAverageRating())

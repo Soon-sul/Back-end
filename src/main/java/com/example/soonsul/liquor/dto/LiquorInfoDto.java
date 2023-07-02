@@ -15,7 +15,6 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
 @ApiModel(description = "전통주 상세 정보")
 public class LiquorInfoDto {
 
