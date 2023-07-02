@@ -32,6 +32,8 @@ public enum ErrorCode {
     //comment
     COMMENT_NOT_EXIST(500,"C001","COMMENT NOT EXIST"),
 
+    //promotion
+    PROMOTION_NOT_EXIST(500,"P001","PROMOTION NOT EXIST"),
 
     //code
     CODE_NOT_EXIST(500,"CD01","CODE NOT EXIST");
