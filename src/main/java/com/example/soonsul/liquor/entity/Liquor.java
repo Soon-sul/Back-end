@@ -49,8 +49,8 @@ public class Liquor {
     @Column(name = "image_url")
     private String imageUrl;
 
-    @Column(name = "liquor_catory")
-    private String liquorCatory;
+    @Column(name = "liquor_category")
+    private String liquorCategory;
 
     @Column(name = "brewery")
     private String brewery;

@@ -14,8 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -55,9 +53,8 @@ public class LiquorService {
 
         final String region= codeRepository.findById(liquor.getRegion())
                 .orElseThrow(()->new CodeNotExist("code not exist", ErrorCode.CODE_NOT_EXIST)).getCodeName();
-        final String smallCatory= codeRepository.findById(liquor.getLiquorCatory())
+        final String liquorCategory= codeRepository.findById(liquor.getLiquorCategory())
                 .orElseThrow(()->new CodeNotExist("code not exist", ErrorCode.CODE_NOT_EXIST)).getCodeName();
-        final String bigCatory= liquor.getLiquorCatory().substring(0,2);
 
         return LiquorInfoDto.builder()
                 .name(liquor.getName())
@@ -75,8 +72,7 @@ public class LiquorService {
                 .longitude(liquor.getLongitude())
                 .region(region)
                 .imageUrl(liquor.getImageUrl())
-                .liquorSmallCatory(smallCatory)
-                .liquorBigCatory(BigCategory.valueOf(bigCatory).getValue())
+                .liquorCategory(liquorCategory)
                 .brewery(liquor.getBrewery())
                 .liquorPersonalRating(liquorPersonalRating)
                 .ratingNumber(personalEvaluationRepository.countByLiquor(liquor))

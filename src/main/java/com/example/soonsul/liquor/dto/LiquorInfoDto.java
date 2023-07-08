@@ -63,11 +63,8 @@ public class LiquorInfoDto {
     @ApiModelProperty(value = "전통주 대표사진")
     private String imageUrl;
 
-    @ApiModelProperty(value = "주종 소카테고리")
-    private String liquorSmallCatory;
-
-    @ApiModelProperty(value = "주종 대카테고리")
-    private String liquorBigCatory;
+    @ApiModelProperty(value = "주종 카테고리")
+    private String liquorCategory;
 
     @ApiModelProperty(value = "양조장")
     private String brewery;
