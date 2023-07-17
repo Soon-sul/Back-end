@@ -9,18 +9,14 @@ import javax.persistence.*;
 @Builder
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name="prize")
-public class Prize {
+@Table(name="prize_info")
+public class PrizeInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "prize_id", nullable = false, unique = true)
-    private Long prizeId;
-
-    @Column(name = "prize_info_id")
+    @Column(name = "prize_info_id", nullable = false, unique = true)
     private Long prizeInfoId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="liquor_id")
-    private Liquor liquor;
+    @Column(name = "name")
+    private String name;
 }

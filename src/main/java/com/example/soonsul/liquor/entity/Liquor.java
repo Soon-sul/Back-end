@@ -37,12 +37,6 @@ public class Liquor {
     @Column(name = "view_count")
     private Long viewCount;
 
-    @Column(name = "latitude")
-    private Integer latitude;
-
-    @Column(name = "longitude")
-    private Integer longitude;
-
     @Column(name = "region")
     private String region;
 
@@ -51,9 +45,6 @@ public class Liquor {
 
     @Column(name = "liquor_category")
     private String liquorCategory;
-
-    @Column(name = "brewery")
-    private String brewery;
 
 
     public void updateAverageRating(Double averageRating){

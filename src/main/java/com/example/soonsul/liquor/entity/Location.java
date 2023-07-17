@@ -18,8 +18,8 @@ public class Location {
     @Column(name = "location_id", nullable = false, unique = true)
     private Long locationId;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "location_info_id")
+    private Long locationInfoId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="liquor_id")

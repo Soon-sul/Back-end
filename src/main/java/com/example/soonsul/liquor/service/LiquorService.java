@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,6 +29,7 @@ public class LiquorService {
     private final CodeRepository codeRepository;
     private final LocationRepository locationRepository;
     private final SalePlaceRepository salePlaceRepository;
+    private final PrizeInfoRepository prizeInfoRepository;
 
 
     @Transactional(readOnly = true)
@@ -41,16 +44,6 @@ public class LiquorService {
             liquorPersonalRating= personalEvaluation.get().getLiquorPersonalRating();
         }
 
-        String salePlaceName= null;
-        String phoneNumber= null;
-        String siteUrl= null;
-        final Optional<SalePlace> salePlace= salePlaceRepository.findByLiquor(liquor);
-        if(salePlace.isPresent()){
-            salePlaceName= salePlace.get().getName();
-            phoneNumber= salePlace.get().getPhoneNumber();
-            siteUrl= salePlace.get().getSiteUrl();
-        }
-
         final String region= codeRepository.findById(liquor.getRegion())
                 .orElseThrow(()->new CodeNotExist("code not exist", ErrorCode.CODE_NOT_EXIST)).getCodeName();
         final String liquorCategory= codeRepository.findById(liquor.getLiquorCategory())
@@ -58,26 +51,39 @@ public class LiquorService {
 
         return LiquorInfoDto.builder()
                 .name(liquor.getName())
-                .salePlaceName(salePlaceName)
-                .phoneNumber(phoneNumber)
-                .siteUrl(siteUrl)
-                .locationList(locationRepository.findAllByLiquor(liquorId))
                 .ingredient(liquor.getIngredient())
                 .averageRating(liquor.getAverageRating())
                 .lowestPrice(liquor.getLowestPrice())
                 .alcohol(liquor.getAlcohol())
                 .capacity(liquor.getCapacity())
                 .viewCount(liquor.getViewCount())
-                .latitude(liquor.getLatitude())
-                .longitude(liquor.getLongitude())
                 .region(region)
                 .imageUrl(liquor.getImageUrl())
                 .liquorCategory(liquorCategory)
-                .brewery(liquor.getBrewery())
                 .liquorPersonalRating(liquorPersonalRating)
                 .ratingNumber(personalEvaluationRepository.countByLiquor(liquor))
-                .prizeList(prizeRepository.findAllByLiquor(liquorId))
                 .build();
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<PrizeListDto> getLiquorPrize(String liquorId){
+        final Liquor liquor= liquorRepository.findById(liquorId)
+                .orElseThrow(()-> new LiquorNotExist("liquor not exist", ErrorCode.LIQUOR_NOT_EXIST));
+        final List<Prize> prizeList= prizeRepository.findAllByLiquor(liquor);
+
+        final List<PrizeListDto> result= new ArrayList<>();
+        for(Prize p: prizeList){
+            final PrizeInfo info= prizeInfoRepository.findById(p.getPrizeInfoId())
+                    .orElseThrow(()-> new PrizeInfoNotExist("prize info not exist",ErrorCode.PRIZE_INFO_NOT_EXIST));
+            final PrizeListDto dto = PrizeListDto.builder()
+                    .prizeId(p.getPrizeId())
+                    .name(info.getName())
+                    .build();
+            result.add(dto);
+        }
+
+        return result;
     }
 
 

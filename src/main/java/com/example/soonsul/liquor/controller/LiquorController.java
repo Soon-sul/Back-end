@@ -11,11 +11,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @Api(tags="Liquor")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/liquor")
+@RequestMapping("/liquors")
 public class LiquorController {
     private final LiquorService liquorService;
     private final EvaluationService evaluationService;
@@ -27,6 +29,13 @@ public class LiquorController {
     public ResponseEntity<LiquorInfoResponse> getLiquorInfo(@PathVariable("liquorId") String liquorId) {
         final LiquorInfoDto data= liquorService.getLiquorInfo(liquorId);
         return ResponseEntity.ok(LiquorInfoResponse.of(ResultCode.GET_LIQUOR_INFO_SUCCESS, data));
+    }
+
+    @ApiOperation(value = "전통주 수상내역 조회")
+    @GetMapping("/{liquorId}/info/prizes")
+    public ResponseEntity<PrizeListResponse> getLiquorPrize(@PathVariable("liquorId") String liquorId) {
+        final List<PrizeListDto> data= liquorService.getLiquorPrize(liquorId);
+        return ResponseEntity.ok(PrizeListResponse.of(ResultCode.GET_LIQUOR_PRIZE_SUCCESS, data));
     }
 
 

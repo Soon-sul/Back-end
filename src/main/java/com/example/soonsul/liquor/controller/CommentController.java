@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.*;
 @Api(tags="Comment")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/liquor")
+@RequestMapping("/liquors")
 public class CommentController {
     private final CommentService commentService;
 
     @ApiOperation(value = "댓글 작성")
-    @PostMapping("/review/{reviewId}/comment")
+    @PostMapping("/reviews/{reviewId}/comment")
     public ResponseEntity<ResultResponse> postComment(@PathVariable("reviewId") Long reviewId, @RequestBody CommentRequest request) {
         commentService.postComment(reviewId, request);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.POST_COMMENT_SUCCESS));
@@ -26,7 +26,7 @@ public class CommentController {
 
 
     @ApiOperation(value = "댓글 수정")
-    @PutMapping("/comment/{commentId}")
+    @PutMapping("/comments/{commentId}")
     public ResponseEntity<ResultResponse> putComment(@PathVariable("commentId") Long commentId, @RequestBody CommentRequest request) {
         commentService.putComment(commentId, request);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.PUT_COMMENT_SUCCESS));
@@ -34,7 +34,7 @@ public class CommentController {
 
 
     @ApiOperation(value = "댓글 삭제")
-    @DeleteMapping("/comment/{commentId}")
+    @DeleteMapping("/comments/{commentId}")
     public ResponseEntity<ResultResponse> deleteComment(@PathVariable("commentId") Long commentId) {
         commentService.deleteComment(commentId);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.DELETE_COMMENT_SUCCESS));
@@ -42,7 +42,7 @@ public class CommentController {
 
 
     @ApiOperation(value = "대댓글 작성")
-    @PostMapping("/re-comment/{upperCommentId}")
+    @PostMapping("/re-comments/{upperCommentId}")
     public ResponseEntity<ResultResponse> postReComment(@PathVariable("upperCommentId") Long upperCommentId, @RequestBody CommentRequest request) {
         commentService.postReComment(upperCommentId, request);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.POST_RECOMMENT_SUCCESS));
@@ -50,7 +50,7 @@ public class CommentController {
 
 
     @ApiOperation(value = "대댓글 수정")
-    @PutMapping("/re-comment/{commentId}")
+    @PutMapping("/re-comments/{commentId}")
     public ResponseEntity<ResultResponse> putReComment(@PathVariable("commentId") Long commentId, @RequestBody CommentRequest request) {
         commentService.putComment(commentId, request);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.PUT_RECOMMENT_SUCCESS));
@@ -58,7 +58,7 @@ public class CommentController {
 
 
     @ApiOperation(value = "대댓글 삭제")
-    @DeleteMapping("/re-comment/{commentId}")
+    @DeleteMapping("/re-comments/{commentId}")
     public ResponseEntity<ResultResponse> deleteReComment(@PathVariable("commentId") Long commentId) {
         commentService.deleteReComment(commentId);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.DELETE_RECOMMENT_SUCCESS));
@@ -66,7 +66,7 @@ public class CommentController {
 
 
     @ApiOperation(value = "댓글 좋아요 추가")
-    @PostMapping("/comment/{commentId}/like")
+    @PostMapping("/comments/{commentId}/like")
     public ResponseEntity<ResultResponse> postCommentLike(@PathVariable("commentId") Long commentId) {
         commentService.postCommentLike(commentId);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.POST_COMMENT_LIKE_SUCCESS));
@@ -74,7 +74,7 @@ public class CommentController {
 
 
     @ApiOperation(value = "댓글 좋아요 삭제")
-    @DeleteMapping("/comment/{commentId}/like")
+    @DeleteMapping("/comments/{commentId}/like")
     public ResponseEntity<ResultResponse> deleteCommentLike(@PathVariable("commentId") Long commentId) {
         commentService.deleteCommentLike(commentId);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.DELETE_COMMENT_LIKE_SUCCESS));
@@ -82,7 +82,7 @@ public class CommentController {
 
 
     @ApiOperation(value = "해당 댓글의 좋아요 개수 조회")
-    @GetMapping("/comment/{commentId}/like")
+    @GetMapping("/comments/{commentId}/like")
     public ResponseEntity<ResultResponse> getCommentLike(@PathVariable("commentId") Long commentId) {
         final Integer data= commentService.getCommentLike(commentId);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_COMMENT_LIKE_SUCCESS, data));

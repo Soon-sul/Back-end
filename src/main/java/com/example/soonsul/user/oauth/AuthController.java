@@ -76,12 +76,12 @@ public class AuthController {
     @ApiOperation(value = "새로운 Access Token 재발급")
     @PostMapping(value = "/refresh")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "AuthorizationAccess", value = "AuthorizationAccess", required = true, dataType = "String", paramType = "header"),
-            @ApiImplicitParam(name = "AuthorizationRefresh", value = "AuthorizationRefresh", required = true, dataType = "String", paramType = "header")
+            @ApiImplicitParam(name = "Authorization", value = "Authorization", required = true, dataType = "String", paramType = "header"),
+            @ApiImplicitParam(name = "refreshToken", value = "refreshToken", required = true, dataType = "String", paramType = "header")
     })
     public ResponseEntity<ResultResponse> refreshToken(
-            @RequestHeader(value="AuthorizationAccess") String token,
-            @RequestHeader(value="AuthorizationRefresh") String refreshToken
+            @RequestHeader(value="Authorization") String token,
+            @RequestHeader(value="refreshToken") String refreshToken
     ) {
         String newAccessToken= authService.refreshToken(refreshToken);
         HttpHeaders headers = new HttpHeaders();

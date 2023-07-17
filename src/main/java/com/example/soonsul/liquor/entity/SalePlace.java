@@ -17,15 +17,8 @@ public class SalePlace {
     @Column(name = "sale_place_id", nullable = false, unique = true)
     private Long salePlaceId;
 
-    @Column(name = "name")
-    private String name;
-
-    @Column(name = "phone_number")
-    private String phoneNumber;
-
-    @Column(name = "site_url")
-    private String siteUrl;
-
+    @Column(name = "sale_place_info_id")
+    private Long salePlaceInfoId;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="liquor_id")
