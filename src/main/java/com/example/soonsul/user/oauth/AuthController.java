@@ -92,7 +92,7 @@ public class AuthController {
 
     @ApiOperation(value = "액세스토큰 유효성 검사")
     @GetMapping("/token")
-    public ResponseEntity<ResultResponse> isValidToken(@RequestHeader(value="AuthorizationAccess") String token) {
+    public ResponseEntity<ResultResponse> isValidToken(@RequestHeader(value="Authorization") String token) {
         boolean data= authService.isValidToken(token);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.TOKEN_VALID_CHECK_SUCCESS, data));
     }
