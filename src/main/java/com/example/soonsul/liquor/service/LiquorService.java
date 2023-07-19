@@ -30,6 +30,8 @@ public class LiquorService {
     private final LocationRepository locationRepository;
     private final SalePlaceRepository salePlaceRepository;
     private final PrizeInfoRepository prizeInfoRepository;
+    private final LocationInfoRepository locationInfoRepository;
+    private final SalePlaceInfoRepository salePlaceInfoRepository;
 
 
     @Transactional(readOnly = true)
@@ -82,7 +84,51 @@ public class LiquorService {
                     .build();
             result.add(dto);
         }
+        return result;
+    }
 
+
+    @Transactional(readOnly = true)
+    public List<LocationListDto> getLiquorLocation(String liquorId){
+        final Liquor liquor= liquorRepository.findById(liquorId)
+                .orElseThrow(()-> new LiquorNotExist("liquor not exist", ErrorCode.LIQUOR_NOT_EXIST));
+        final List<Location> locationList= locationRepository.findAllByLiquor(liquor);
+
+        final List<LocationListDto> result= new ArrayList<>();
+        for(Location l: locationList){
+            final LocationInfo info= locationInfoRepository.findById(l.getLocationInfoId())
+                    .orElseThrow(()-> new LocationInfoNotExist("location info not exist",ErrorCode.LOCATION_INFO_NOT_EXIST));
+            final LocationListDto dto = LocationListDto.builder()
+                    .locationInfoId(l.getLocationId())
+                    .name(info.getName())
+                    .latitude(info.getLatitude())
+                    .longitude(info.getLongitude())
+                    .brewery(info.getBrewery())
+                    .build();
+            result.add(dto);
+        }
+        return result;
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<SalePlaceListDto> getLiquorSalePlace(String liquorId){
+        final Liquor liquor= liquorRepository.findById(liquorId)
+                .orElseThrow(()-> new LiquorNotExist("liquor not exist", ErrorCode.LIQUOR_NOT_EXIST));
+        final List<SalePlace> salePlaceList= salePlaceRepository.findAllByLiquor(liquor);
+
+        final List<SalePlaceListDto> result= new ArrayList<>();
+        for(SalePlace s: salePlaceList){
+            final SalePlaceInfo info= salePlaceInfoRepository.findById(s.getSalePlaceInfoId())
+                    .orElseThrow(()-> new SalePlaceInfoNotExist("sale place info not exist",ErrorCode.SALE_PLACE_INFO_NOT_EXIST));
+            final SalePlaceListDto dto = SalePlaceListDto.builder()
+                    .salePlaceId(s.getSalePlaceId())
+                    .name(info.getName())
+                    .phoneNumber(info.getPhoneNumber())
+                    .siteUrl(info.getSiteUrl())
+                    .build();
+            result.add(dto);
+        }
         return result;
     }
 

@@ -41,6 +41,8 @@ public enum ResultCode {
     GET_COMMENT_LIKE_SUCCESS(200,"L022","해당 댓글의 좋아요를 조회했습니다."),
     GET_WEEK_LIQUOR_SUCCESS(200,"L023","이번주 가장 사랑받는 전통주를 조회했습니다."),
     GET_LIQUOR_PRIZE_SUCCESS(200,"L024","전통주 수상내역 정보를 조회했습니다."),
+    GET_LIQUOR_LOCATION_SUCCESS(200,"L025","전통주 소재지 정보를 조회했습니다."),
+    GET_LIQUOR_SALE_PLACE_SUCCESS(200,"L026","전통주 판매처 정보를 조회했습니다."),
 
     //promotion
     GET_PROMOTION_LIST_SUCCESS(200,"P001","모든 프로모션을 조회했습니다."),

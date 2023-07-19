@@ -31,11 +31,28 @@ public class LiquorController {
         return ResponseEntity.ok(LiquorInfoResponse.of(ResultCode.GET_LIQUOR_INFO_SUCCESS, data));
     }
 
+
     @ApiOperation(value = "전통주 수상내역 조회")
-    @GetMapping("/{liquorId}/info/prizes")
+    @GetMapping("/{liquorId}/prizes")
     public ResponseEntity<PrizeListResponse> getLiquorPrize(@PathVariable("liquorId") String liquorId) {
         final List<PrizeListDto> data= liquorService.getLiquorPrize(liquorId);
         return ResponseEntity.ok(PrizeListResponse.of(ResultCode.GET_LIQUOR_PRIZE_SUCCESS, data));
+    }
+
+
+    @ApiOperation(value = "전통주 소재지 조회")
+    @GetMapping("/{liquorId}/locations")
+    public ResponseEntity<LocationListResponse> getLiquorLocation(@PathVariable("liquorId") String liquorId) {
+        final List<LocationListDto> data= liquorService.getLiquorLocation(liquorId);
+        return ResponseEntity.ok(LocationListResponse.of(ResultCode.GET_LIQUOR_LOCATION_SUCCESS, data));
+    }
+
+
+    @ApiOperation(value = "전통주 판매처 조회")
+    @GetMapping("/{liquorId}/locations")
+    public ResponseEntity<SalePlaceListResponse> getLiquorSalePlace(@PathVariable("liquorId") String liquorId) {
+        final List<SalePlaceListDto> data= liquorService.getLiquorSalePlace(liquorId);
+        return ResponseEntity.ok(SalePlaceListResponse.of(ResultCode.GET_LIQUOR_SALE_PLACE_SUCCESS, data));
     }
 
 
