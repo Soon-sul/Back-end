@@ -21,10 +21,10 @@ public class LocationListDto {
     private String name;
 
     @ApiModelProperty(value = "위도")
-   private Integer latitude;
+   private Double latitude;
 
     @ApiModelProperty(value = "경도")
-    private Integer longitude;
+    private Double longitude;
 
     @ApiModelProperty(value = "양조장")
     private String brewery;

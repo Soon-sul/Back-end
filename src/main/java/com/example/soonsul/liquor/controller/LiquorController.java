@@ -49,7 +49,7 @@ public class LiquorController {
 
 
     @ApiOperation(value = "전통주 판매처 조회")
-    @GetMapping("/{liquorId}/locations")
+    @GetMapping("/{liquorId}/sale-places")
     public ResponseEntity<SalePlaceListResponse> getLiquorSalePlace(@PathVariable("liquorId") String liquorId) {
         final List<SalePlaceListDto> data= liquorService.getLiquorSalePlace(liquorId);
         return ResponseEntity.ok(SalePlaceListResponse.of(ResultCode.GET_LIQUOR_SALE_PLACE_SUCCESS, data));
