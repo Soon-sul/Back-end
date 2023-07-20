@@ -11,9 +11,14 @@ import java.util.List;
 
 @Repository
 public interface LocationRepository extends JpaRepository<Location, Long> {
-
+    /*
     @Query(nativeQuery = true,
             value="SELECT l.name FROM location l WHERE l.liquor_id = :liquorId")
     List<String> findAllByLiquor(@Param("liquorId") String liquorId);
+     */
     List<Location> findAllByLiquor(Liquor liquor);
+
+    @Query(nativeQuery = true,
+            value="SELECT * FROM location l WHERE l.liquor_id = :liquorId")
+    List<Location> findAllById(@Param("liquorId") String liquorId);
 }

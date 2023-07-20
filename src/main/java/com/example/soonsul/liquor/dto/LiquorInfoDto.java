@@ -49,7 +49,7 @@ public class LiquorInfoDto {
     @ApiModelProperty(value = "전통주 개인평점")
     private Double liquorPersonalRating;
 
-    @ApiModelProperty(value = "평가수")
-    private Long ratingNumber;
+    @ApiModelProperty(value = "리뷰 평가수")
+    private Integer ratingNumber;
 
 }

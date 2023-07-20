@@ -32,6 +32,7 @@ public class LiquorService {
     private final PrizeInfoRepository prizeInfoRepository;
     private final LocationInfoRepository locationInfoRepository;
     private final SalePlaceInfoRepository salePlaceInfoRepository;
+    private final ReviewRepository reviewRepository;
 
 
     @Transactional(readOnly = true)
@@ -63,7 +64,7 @@ public class LiquorService {
                 .imageUrl(liquor.getImageUrl())
                 .liquorCategory(liquorCategory)
                 .liquorPersonalRating(liquorPersonalRating)
-                .ratingNumber(personalEvaluationRepository.countByLiquor(liquor))
+                .ratingNumber(reviewRepository.countByLiquor(liquor))
                 .build();
     }
 
