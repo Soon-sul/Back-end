@@ -108,14 +108,9 @@ public class LiquorController {
     @PostMapping("/{liquorId}/click")
     public ResponseEntity<ResultResponse> postClick(@PathVariable("liquorId") String liquorId) {
         clickService.postClick(liquorId);
+        clickService.postRegionClick(liquorId);
+        clickService.addViewNumber(liquorId);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.POST_CLICK_SUCCESS));
     }
 
-
-    @ApiOperation(value = "전통주 조회수 한개 추가")
-    @PostMapping("/{liquorId}/region-click")
-    public ResponseEntity<ResultResponse> postRegionClick(@PathVariable("liquorId") String liquorId) {
-        clickService.postRegionClick(liquorId);
-        return ResponseEntity.ok(ResultResponse.of(ResultCode.POST_REGION_CLICK_SUCCESS));
-    }
 }

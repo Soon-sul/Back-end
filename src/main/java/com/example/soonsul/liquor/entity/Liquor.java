@@ -50,4 +50,8 @@ public class Liquor {
     public void updateAverageRating(Double averageRating){
         this.averageRating= averageRating;
     }
+
+    public void addViewCount(){
+        this.viewCount++;
+    }
 }

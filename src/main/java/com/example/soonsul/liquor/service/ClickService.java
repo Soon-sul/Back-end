@@ -61,4 +61,11 @@ public class ClickService {
         regionClickRepository.save(regionClick);
     }
 
+
+    @Transactional
+    public void addViewNumber(String liquorId){
+        final Liquor liquor= liquorRepository.findById(liquorId)
+                .orElseThrow(()-> new LiquorNotExist("liquor not exist", ErrorCode.LIQUOR_NOT_EXIST));
+        liquor.addViewCount();
+    }
 }

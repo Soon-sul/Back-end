@@ -45,8 +45,7 @@ public enum ResultCode {
     GET_LIQUOR_SALE_PLACE_SUCCESS(200,"L026","전통주 판매처 정보를 조회했습니다."),
 
     //click
-    POST_CLICK_SUCCESS(201,"C001","이번주 사랑받는 전통주에 대한 클릭을 등록했습니다."),
-    POST_REGION_CLICK_SUCCESS(201,"C002","지금 사랑받는 지역술에 대한 클릭을 등록했습니다."),
+    POST_CLICK_SUCCESS(201,"C001","전통주 클릭을 등록했습니다."),
 
     //promotion
     GET_PROMOTION_LIST_SUCCESS(200,"P001","모든 프로모션을 조회했습니다."),
