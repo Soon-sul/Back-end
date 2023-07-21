@@ -39,7 +39,11 @@ public enum ErrorCode {
     PROMOTION_NOT_EXIST(500,"P001","PROMOTION NOT EXIST"),
 
     //code
-    CODE_NOT_EXIST(500,"CD01","CODE NOT EXIST");
+    CODE_NOT_EXIST(500,"CD01","CODE NOT EXIST"),
+
+    //file
+    UPLOAD_FILE_NOT_EXIST(500,"F001","FILE NOT EXIST"),
+    FILE_UPLOAD_ERROR(500,"F002","FILE UPLOAD ERROR");
 
     final private int status;
     final private String errorCode;
