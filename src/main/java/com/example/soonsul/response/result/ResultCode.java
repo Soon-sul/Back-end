@@ -49,6 +49,9 @@ public enum ResultCode {
     //click
     POST_CLICK_SUCCESS(201,"C001","전통주 클릭을 등록했습니다."),
 
+    //search
+    GET_SEARCH_SUCCESS(200,"S002","해당 전통주를 검색했습니다."),
+
     //promotion
     GET_PROMOTION_LIST_SUCCESS(200,"P001","모든 프로모션을 조회했습니다."),
     GET_PROMOTION_SUCCESS(200,"P002","해당 프로모션을 조회했습니다.")
