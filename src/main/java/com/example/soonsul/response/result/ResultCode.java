@@ -44,6 +44,7 @@ public enum ResultCode {
     GET_LIQUOR_LOCATION_SUCCESS(200,"L025","전통주 소재지 정보를 조회했습니다."),
     GET_LIQUOR_SALE_PLACE_SUCCESS(200,"L026","전통주 판매처 정보를 조회했습니다."),
     GET_LIQUOR_LIST_NAME_SUCCESS(200,"L027","모든 전통주 이름을 조회했습니다"),
+    UPDATE_LIQUOR_FILTERING_SUCCESS(200,"L028","전통주 필터링을 업데이트했습니다."),
 
     //click
     POST_CLICK_SUCCESS(201,"C001","전통주 클릭을 등록했습니다."),

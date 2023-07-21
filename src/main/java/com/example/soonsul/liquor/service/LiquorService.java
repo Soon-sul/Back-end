@@ -14,9 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +32,8 @@ public class LiquorService {
     private final LocationInfoRepository locationInfoRepository;
     private final SalePlaceInfoRepository salePlaceInfoRepository;
     private final ReviewRepository reviewRepository;
+    private final LiquorFilteringRepository filteringRepository;
+    private final FilteringClickRepository filteringClickRepository;
 
 
     @Transactional(readOnly = true)
@@ -52,6 +53,16 @@ public class LiquorService {
         final String liquorCategory= codeRepository.findById(liquor.getLiquorCategory())
                 .orElseThrow(()->new CodeNotExist("code not exist", ErrorCode.CODE_NOT_EXIST)).getCodeName();
 
+        final List<LiquorFilteringDto> filtering= new ArrayList<>();
+        final List<LiquorFiltering> filteringList= filteringRepository.findAllByLiquorId(liquorId);
+        for(LiquorFiltering l: filteringList){
+            final LiquorFilteringDto dto= LiquorFilteringDto.builder()
+                    .age(l.getAge())
+                    .gender(l.getGender())
+                    .build();
+            filtering.add(dto);
+        }
+
         return LiquorInfoDto.builder()
                 .name(liquor.getName())
                 .ingredient(liquor.getIngredient())
@@ -59,12 +70,12 @@ public class LiquorService {
                 .lowestPrice(liquor.getLowestPrice())
                 .alcohol(liquor.getAlcohol())
                 .capacity(liquor.getCapacity())
-                .viewCount(liquor.getViewCount())
                 .region(region)
                 .imageUrl(liquor.getImageUrl())
                 .liquorCategory(liquorCategory)
                 .liquorPersonalRating(liquorPersonalRating)
                 .ratingNumber(reviewRepository.countByLiquor(liquor))
+                .filtering(filtering)
                 .build();
     }
 
@@ -203,6 +214,36 @@ public class LiquorService {
     @Transactional(readOnly = true)
     public List<String> getLiquorListName(){
         return liquorRepository.findAllName();
+    }
+
+
+    @Transactional
+    public void updateFiltering(){
+        final List<Integer> age= Arrays.asList(20, 30, 40, 50, 60);
+        final List<String> gender= Arrays.asList("f", "g");
+
+        filteringRepository.deleteAll();
+        for(Integer a: age){
+            for(String g: gender){
+                final HashMap<String, Integer> map = new HashMap<>();
+                final List<FilteringClick> clickList= filteringClickRepository.findAllByAgeAndGender(a,g);
+
+                for(FilteringClick f: clickList){
+                    map.put(f.getLiquorId(), (map.get(f.getLiquorId())==null) ? 1: map.get(f.getLiquorId())+1);
+                }
+                if(map.size()==0) continue;
+                List<Map.Entry<String, Integer>> entries = new LinkedList<>(map.entrySet());
+                entries.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
+
+                final LiquorFiltering filtering= LiquorFiltering.builder()
+                        .age(a)
+                        .gender(g)
+                        .liquorId(entries.get(0).getKey())
+                        .build();
+                filteringRepository.save(filtering);
+            }
+        }
+        filteringClickRepository.deleteAll();
     }
 
 }

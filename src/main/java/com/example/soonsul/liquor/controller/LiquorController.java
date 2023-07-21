@@ -109,7 +109,7 @@ public class LiquorController {
     public ResponseEntity<ResultResponse> postClick(@PathVariable("liquorId") String liquorId) {
         clickService.postClick(liquorId);
         clickService.postRegionClick(liquorId);
-        clickService.addViewNumber(liquorId);
+        clickService.postFilteringClick(liquorId);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.POST_CLICK_SUCCESS));
     }
 
@@ -119,5 +119,13 @@ public class LiquorController {
     public ResponseEntity<ResultResponse> getLiquorListName() {
         final List<String> data= liquorService.getLiquorListName();
         return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_LIQUOR_LIST_NAME_SUCCESS, data));
+    }
+
+
+    @ApiOperation(value = "전통주 필터링 정보 업데이트 - 한달주기")
+    @PostMapping("/filtering")
+    public ResponseEntity<ResultResponse> updateFiltering() {
+        liquorService.updateFiltering();
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.UPDATE_LIQUOR_FILTERING_SUCCESS));
     }
 }

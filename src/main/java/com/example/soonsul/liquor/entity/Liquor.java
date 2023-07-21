@@ -51,7 +51,4 @@ public class Liquor {
         this.averageRating= averageRating;
     }
 
-    public void addViewCount(){
-        this.viewCount++;
-    }
 }
