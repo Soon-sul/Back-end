@@ -113,4 +113,11 @@ public class LiquorController {
         return ResponseEntity.ok(ResultResponse.of(ResultCode.POST_CLICK_SUCCESS));
     }
 
+
+    @ApiOperation(value = "모든 전통주 이름 조회")
+    @GetMapping("/name")
+    public ResponseEntity<ResultResponse> getLiquorListName() {
+        final List<String> data= liquorService.getLiquorListName();
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_LIQUOR_LIST_NAME_SUCCESS, data));
+    }
 }

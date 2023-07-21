@@ -199,4 +199,10 @@ public class LiquorService {
         return flag;
     }
 
+
+    @Transactional(readOnly = true)
+    public List<String> getLiquorListName(){
+        return liquorRepository.findAllName();
+    }
+
 }
