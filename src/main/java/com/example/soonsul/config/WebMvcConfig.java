@@ -15,6 +15,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
     private static final String[] CLASSPATH_RESOURCE_LOCATIONS = { "classpath:/static/", "classpath:/public/",
             "classpath:/", "classpath:/resources/" };
 
+    String connectPath = "/log/**";
+    String resourcePath = "file:///home/ubuntu/log";
+
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController( "/" ).setViewName( "index" );
@@ -24,6 +27,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/resources/**").addResourceLocations(CLASSPATH_RESOURCE_LOCATIONS);
+        registry.addResourceHandler(connectPath)
+                .addResourceLocations(resourcePath);
     }
 
     @Bean
@@ -48,4 +53,5 @@ public class WebMvcConfig implements WebMvcConfigurer {
         characterEncodingFilter.setForceEncoding(true);
         return characterEncodingFilter;
     }
+
 }

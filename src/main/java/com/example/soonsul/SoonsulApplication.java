@@ -17,7 +17,10 @@ public class SoonsulApplication {
 
 	public static void main(String[] args) {
 
-		System.setProperty("logging.file.name", "/home/ubuntu/Back-end/src/main/resources/static/"
+		//System.setProperty("logging.file.name", "/home/ubuntu/Back-end/src/main/resources/static/"
+		//		+ new SimpleDateFormat("yyyy-MM-dd").format(new Date())+".log");
+
+		System.setProperty("logging.file.name", "/home/ubuntu/log/"
 				+ new SimpleDateFormat("yyyy-MM-dd").format(new Date())+".log");
 
 		new SpringApplicationBuilder(SoonsulApplication.class)
