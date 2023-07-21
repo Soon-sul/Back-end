@@ -46,6 +46,10 @@ public enum ResultCode {
     GET_LIQUOR_LIST_NAME_SUCCESS(200,"L027","모든 전통주 이름을 조회했습니다"),
     UPDATE_LIQUOR_FILTERING_SUCCESS(200,"L028","전통주 필터링을 업데이트했습니다."),
 
+    //user
+    PUT_PROFILE_SUCCESS(200,"U001","유저 프로필을 수정했습니다."),
+    GET_NICKNAME_CHECK_SUCCESS(200,"U002","유저 닉네임 사용유무를 조회했습니다."),
+
     //click
     POST_CLICK_SUCCESS(201,"C001","전통주 클릭을 등록했습니다."),
 
