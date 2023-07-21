@@ -16,7 +16,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
             "classpath:/", "classpath:/resources/" };
 
     String connectPath = "/log/**";
-    String resourcePath = "/home/ubuntu/log/";
+    String resourcePath = "file:/home/ubuntu/log/";
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
