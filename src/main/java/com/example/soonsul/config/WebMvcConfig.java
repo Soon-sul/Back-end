@@ -26,10 +26,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/resources/**").addResourceLocations(CLASSPATH_RESOURCE_LOCATIONS);
-        registry.addResourceHandler(connectPath)
-                .addResourceLocations(resourcePath);
+        //registry.addResourceHandler("/resources/**").addResourceLocations(CLASSPATH_RESOURCE_LOCATIONS);
+        registry.addResourceHandler(connectPath).addResourceLocations(resourcePath);
     }
+
 
     @Bean
     public FilterRegistrationBean<HeaderFilter> getFilterRegistrationBean() {
