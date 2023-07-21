@@ -33,7 +33,7 @@ public class RegionLiquorDto {
     @ApiModelProperty(value = "주종 카테고리", position = 5)
     private String liquorCategory;
 
-    @ApiModelProperty(value = "소재지 리스트", position = 6)
+    @ApiModelProperty(value = "양조장 리스트", position = 6)
     private List<String> locationList;
 
     @ApiModelProperty(value = "최저가", position = 7)
