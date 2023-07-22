@@ -1,5 +1,8 @@
 package com.example.soonsul.user;
 
+import com.example.soonsul.main.dto.RegionLiquorDto;
+import com.example.soonsul.promotion.PromotionService;
+import com.example.soonsul.promotion.dto.PromotionDto;
 import com.example.soonsul.response.result.ResultCode;
 import com.example.soonsul.response.result.ResultResponse;
 import com.example.soonsul.search.dto.SearchDto;
@@ -12,7 +15,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Api(tags="User")
 @RestController
@@ -20,6 +26,7 @@ import java.util.List;
 @RequestMapping("/user")
 public class UserController {
     private final UserService userService;
+    private final PromotionService promotionService;
 
 
     @ApiOperation(value = "유저 프로필 변경")
@@ -38,4 +45,11 @@ public class UserController {
     }
 
 
+    @ApiOperation(value = "유저 찜 리스트 조회")
+    @GetMapping("/zzims")
+    public ResponseEntity<ResultResponse> getUserZzim() {
+        final List<PromotionDto> result= promotionService.getPromotionList();
+        final List<PromotionDto> data= result.stream().filter(PromotionDto::isFlagZzim).collect(Collectors.toList());
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_USER_ZZIM_SUCCESS, data));
+    }
 }

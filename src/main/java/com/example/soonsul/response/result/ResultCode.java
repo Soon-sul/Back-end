@@ -53,6 +53,7 @@ public enum ResultCode {
     //user
     PUT_PROFILE_SUCCESS(200,"U001","유저 프로필을 수정했습니다."),
     GET_NICKNAME_CHECK_SUCCESS(200,"U002","유저 닉네임 사용유무를 조회했습니다."),
+    GET_USER_ZZIM_SUCCESS(200,"U003","유저 찜 리스트를 조회했습니다."),
 
     //click
     POST_CLICK_SUCCESS(201,"C001","전통주 클릭을 등록했습니다."),
@@ -62,7 +63,8 @@ public enum ResultCode {
 
     //promotion
     GET_PROMOTION_LIST_SUCCESS(200,"P001","모든 프로모션을 조회했습니다."),
-    GET_PROMOTION_SUCCESS(200,"P002","해당 프로모션을 조회했습니다.")
+    GET_PROMOTION_SUCCESS(200,"P002","해당 프로모션을 조회했습니다."),
+    POST_ZZIM_SUCCESS(201,"P003","찜을 등록했습니다.")
     ;
 
 

@@ -4,14 +4,12 @@ import com.example.soonsul.promotion.dto.PromotionDto;
 import com.example.soonsul.promotion.response.PromotionListResponse;
 import com.example.soonsul.promotion.response.PromotionResponse;
 import com.example.soonsul.response.result.ResultCode;
+import com.example.soonsul.response.result.ResultResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -35,6 +33,14 @@ public class PromotionController {
     public ResponseEntity<PromotionResponse> getPromotion(@PathVariable("promotionId") Long promotionId) {
         final PromotionDto data= promotionService.getPromotion(promotionId);
         return ResponseEntity.ok(PromotionResponse.of(ResultCode.GET_PROMOTION_SUCCESS, data));
+    }
+
+
+    @ApiOperation(value = "찜 등록")
+    @PostMapping("/{promotionId}/zzim")
+    public ResponseEntity<ResultResponse> postZzim(@PathVariable("promotionId") Long promotionId) {
+        promotionService.postZzim(promotionId);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.POST_ZZIM_SUCCESS));
     }
 
 }

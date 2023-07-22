@@ -1,5 +1,6 @@
 package com.example.soonsul.promotion.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
 @Builder
 @NoArgsConstructor
@@ -36,4 +38,7 @@ public class PromotionDto {
 
     @ApiModelProperty(value = "메인 이미지 url", position = 7)
     private String image;
+
+    @ApiModelProperty(value = "찜 여부", position = 8)
+    private boolean flagZzim;
 }
