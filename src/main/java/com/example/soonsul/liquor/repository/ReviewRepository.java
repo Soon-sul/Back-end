@@ -27,4 +27,5 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     Integer countByUser(User user);
     Optional<Review> findByUserAndLiquor(User user, Liquor liquor);
     Integer countByLiquor(Liquor liquor);
+    void deleteByUserAndLiquor(User user, Liquor liquor);
 }

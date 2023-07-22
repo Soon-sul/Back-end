@@ -57,6 +57,8 @@ public enum ResultCode {
     GET_USER_ZZIM_SUCCESS(200,"U003","유저 찜 리스트를 조회했습니다."),
     GET_USER_HISTORY_SUCCESS(200,"U004","사진 히스토리를 조회했습니다."),
     GET_USER_SCRAP_SUCCESS(200,"U005","유저가 스크랩한 전통주 리스트를 조회했습니다."),
+    GET_USER_EVALUATION_SUCCESS(200,"U006","유저가 남긴 평가리스트를 조회했습니다."),
+    DELETE_USER_EVALUATION_SUCCESS(200,"U007","유저가 남긴 평가를 삭제했습니다."),
 
     //click
     POST_CLICK_SUCCESS(201,"C001","전통주 클릭을 등록했습니다."),

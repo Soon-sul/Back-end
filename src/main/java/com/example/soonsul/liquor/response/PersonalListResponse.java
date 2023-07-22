@@ -1,0 +1,35 @@
+package com.example.soonsul.liquor.response;
+
+import com.example.soonsul.liquor.dto.PersonalDto;
+import com.example.soonsul.response.result.ResultCode;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+
+import java.util.List;
+
+@Getter
+@ApiModel(description = "유저가 남긴 평가 리스트 응답 모델")
+public class PersonalListResponse {
+
+    @ApiModelProperty(value = "Http 상태 코드")
+    private final int status;
+    @ApiModelProperty(value = "Business 상태 코드")
+    private final String code;
+    @ApiModelProperty(value = "응답 메세지")
+    private final String message;
+    @ApiModelProperty(value = "응답 데이터")
+    private final List<PersonalDto> data;
+
+
+    public PersonalListResponse(ResultCode resultCode, List<PersonalDto> data) {
+        this.status = resultCode.getStatus();
+        this.code = resultCode.getCode();
+        this.message = resultCode.getMessage();
+        this.data = data;
+    }
+
+    public static PersonalListResponse of(ResultCode resultCode, List<PersonalDto> data) {
+        return new PersonalListResponse(resultCode, data);
+    }
+}

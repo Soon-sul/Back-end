@@ -4,6 +4,7 @@ import com.example.soonsul.liquor.entity.Liquor;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Getter
 @AllArgsConstructor
@@ -38,6 +39,9 @@ public class PersonalEvaluation {
 
     @Column(name = "density")
     private Integer density;
+
+    @Column(name = "evaluation_date")
+    private LocalDate evaluationDate;
 
 
     @ManyToOne(fetch = FetchType.LAZY)

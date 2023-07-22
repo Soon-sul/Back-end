@@ -1,8 +1,12 @@
 package com.example.soonsul.user;
 
 import com.example.soonsul.liquor.dto.LiquorInfoDto;
+import com.example.soonsul.liquor.dto.PersonalDto;
 import com.example.soonsul.liquor.response.LiquorInfoListResponse;
+import com.example.soonsul.liquor.response.PersonalListResponse;
+import com.example.soonsul.liquor.service.EvaluationService;
 import com.example.soonsul.liquor.service.LiquorService;
+import com.example.soonsul.liquor.service.PersonalService;
 import com.example.soonsul.main.dto.RegionLiquorDto;
 import com.example.soonsul.promotion.PromotionService;
 import com.example.soonsul.promotion.dto.PromotionDto;
@@ -22,6 +26,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,6 +44,8 @@ public class UserController {
     private final PromotionService promotionService;
     private final ScanService scanService;
     private final LiquorService liquorService;
+    private final PersonalService personalService;
+    private final EvaluationService evaluationService;
 
 
     @ApiOperation(value = "유저 프로필 변경")
@@ -79,5 +86,21 @@ public class UserController {
     public ResponseEntity<LiquorInfoListResponse> getUserScrap(@PageableDefault(size=10) Pageable pageable, String sorting) {
         final List<LiquorInfoDto> data= liquorService.getScrapList(pageable, sorting);
         return ResponseEntity.ok(LiquorInfoListResponse.of(ResultCode.GET_USER_SCRAP_SUCCESS, data));
+    }
+
+
+    @ApiOperation(value = "내가 남긴 평가리스트 조회")
+    @GetMapping("/evaluations")
+    public ResponseEntity<PersonalListResponse> getUserEvaluation(@PageableDefault(size=10, sort = "personal_evaluation_id", direction = Sort.Direction.DESC) Pageable pageable) {
+        final List<PersonalDto> data= personalService.getPersonalEvaluationList(pageable);
+        return ResponseEntity.ok(PersonalListResponse.of(ResultCode.GET_USER_EVALUATION_SUCCESS, data));
+    }
+
+
+    @ApiOperation(value = "내가 남긴 평가 삭제 (전통주 평점, 맛평가, 리뷰 삭제)")
+    @DeleteMapping("/evaluation/{liquorId}")
+    public ResponseEntity<ResultResponse> deleteUserEvaluation(@PathVariable("liquorId") String liquorId) {
+        evaluationService.deletePersonalEvaluation(liquorId);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.DELETE_USER_EVALUATION_SUCCESS));
     }
 }

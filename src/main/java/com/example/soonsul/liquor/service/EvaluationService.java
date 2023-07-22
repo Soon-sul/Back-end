@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -46,6 +47,7 @@ public class EvaluationService {
                 .heavy(request.getHeavy())
                 .scent(request.getScent())
                 .density(request.getDensity())
+                .evaluationDate(LocalDate.now())
                 .user(user)
                 .liquor(liquor)
                 .build();
@@ -89,6 +91,39 @@ public class EvaluationService {
     }
 
 
+    @Transactional
+    public void deletePersonalEvaluation(String liquorId){
+        final User user= userUtil.getUserByAuthentication();
+        final Liquor liquor= liquorRepository.findById(liquorId)
+                .orElseThrow(()-> new LiquorNotExist("liquor not exist", ErrorCode.LIQUOR_NOT_EXIST));
+        final Evaluation evaluation= evaluationRepository.findById(liquor.getLiquorId())
+                .orElseThrow(()-> new EvaluationNotExist("evaluation not exist", ErrorCode.EVALUATION_NOT_EXIST));
+        final EvaluationNumber number= evaluationNumberRepository.findById(liquor.getLiquorId())
+                .orElseThrow(()-> new LiquorNotExist("evaluation number not exist", ErrorCode.LIQUOR_NOT_EXIST));
+        final PersonalEvaluation personalEvaluation= personalEvaluationRepository.findByUserAndLiquor(user, liquor)
+                .orElseThrow(()-> new PersonalEvaluationNotExist("liquor evaluation not exist", ErrorCode.PERSONAL_EVALUATION_NOT_EXIST));
+
+        subAverageRating(liquor, number, personalEvaluation);
+
+        if(personalEvaluation.getSweetness()!=null)
+            sub(FlavorType.SWEETNESS, null, evaluation, number, personalEvaluation);
+        if(personalEvaluation.getAcidity()!=null)
+            sub(FlavorType.ACIDITY, null, evaluation, number, personalEvaluation);
+        if(personalEvaluation.getCarbonicAcid()!=null)
+            sub(FlavorType.CARBONIC_ACID, null, evaluation, number, personalEvaluation);
+        if(personalEvaluation.getHeavy()!=null)
+            sub(FlavorType.HEAVY, null, evaluation, number, personalEvaluation);
+        if(personalEvaluation.getScent()!=null)
+            sub(FlavorType.SCENT, null, evaluation, number, personalEvaluation);
+        if(personalEvaluation.getDensity()!=null)
+            sub(FlavorType.DENSITY, null, evaluation, number, personalEvaluation);
+
+        personalEvaluationRepository.delete(personalEvaluation);
+        if(reviewRepository.findByUserAndLiquor(user, liquor).isPresent())
+            reviewRepository.deleteByUserAndLiquor(user, liquor);
+    }
+
+
     private void calAverageByPost(Liquor liquor, EvaluationRequest request){
         final Evaluation evaluation= evaluationRepository.findById(liquor.getLiquorId())
                 .orElseThrow(()-> new EvaluationNotExist("evaluation not exist", ErrorCode.EVALUATION_NOT_EXIST));
@@ -117,22 +152,22 @@ public class EvaluationService {
             pe.updateLiquorPersonalRating(request.getLiquorPersonalRating());
         }
 
-        if(checkByNull(pe.getSweetness(),request.getSweetness()) && checkByEqual(pe.getSweetness(),request.getSweetness()))
+        if(checkByEqual(pe.getSweetness(),request.getSweetness()))
             calFlavorEvaluation(FlavorType.SWEETNESS, pe.getSweetness(), request.getSweetness(), evaluation, number, pe);
 
-        if(checkByNull(pe.getAcidity(),request.getAcidity()) && checkByEqual(pe.getAcidity(),request.getAcidity()))
+        if(checkByEqual(pe.getAcidity(),request.getAcidity()))
             calFlavorEvaluation(FlavorType.ACIDITY, pe.getAcidity(), request.getAcidity(), evaluation, number, pe);
 
-        if(checkByNull(pe.getCarbonicAcid(),request.getCarbonicAcid()) && checkByEqual(pe.getCarbonicAcid(),request.getCarbonicAcid()))
+        if(checkByEqual(pe.getCarbonicAcid(),request.getCarbonicAcid()))
             calFlavorEvaluation(FlavorType.CARBONIC_ACID, pe.getCarbonicAcid(), request.getCarbonicAcid(), evaluation, number, pe);
 
-        if(checkByNull(pe.getHeavy(),request.getHeavy()) && checkByEqual(pe.getHeavy(),request.getHeavy()))
+        if(checkByEqual(pe.getHeavy(),request.getHeavy()))
             calFlavorEvaluation(FlavorType.HEAVY, pe.getHeavy(), request.getHeavy(), evaluation, number, pe);
 
-        if(checkByNull(pe.getScent(),request.getScent()) && checkByEqual(pe.getScent(),request.getScent()))
+        if(checkByEqual(pe.getScent(),request.getScent()))
             calFlavorEvaluation(FlavorType.SCENT, pe.getScent(), request.getScent(), evaluation, number, pe);
 
-        if(checkByNull(pe.getDensity(),request.getDensity()) && checkByEqual(pe.getDensity(),request.getDensity()))
+        if(checkByEqual(pe.getDensity(),request.getDensity()))
             calFlavorEvaluation(FlavorType.DENSITY, pe.getDensity(), request.getDensity(), evaluation, number, pe);
 
     }
@@ -142,6 +177,7 @@ public class EvaluationService {
     }
 
     private boolean checkByEqual(Integer origin, Integer request){
+        if(origin==null) return true;
         return !origin.equals(request);
     }
 
