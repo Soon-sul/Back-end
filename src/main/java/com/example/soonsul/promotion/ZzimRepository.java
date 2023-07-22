@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ZzimRepository extends JpaRepository<Zzim, Long> {
     boolean existsByUserAndPromotion(User user, Promotion promotion);
+    void deleteByUserAndPromotion(User user, Promotion promotion);
 }

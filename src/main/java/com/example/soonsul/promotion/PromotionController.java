@@ -43,4 +43,12 @@ public class PromotionController {
         return ResponseEntity.ok(ResultResponse.of(ResultCode.POST_ZZIM_SUCCESS));
     }
 
+
+    @ApiOperation(value = "찜 삭제")
+    @DeleteMapping("/{promotionId}/zzim")
+    public ResponseEntity<ResultResponse> deleteZzim(@PathVariable("promotionId") Long promotionId) {
+        promotionService.deleteZzim(promotionId);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.DELETE_ZZIM_SUCCESS));
+    }
+
 }

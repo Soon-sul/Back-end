@@ -79,4 +79,15 @@ public class PromotionService {
                 .build();
         zzimRepository.save(zzim);
     }
+
+
+    @Transactional
+    public void deleteZzim(Long promotionId){
+        final User user= userUtil.getUserByAuthentication();
+        final Promotion promotion= promotionRepository.findById(promotionId)
+                .orElseThrow(()-> new PromotionNotExist("promotion not exist", ErrorCode.PROMOTION_NOT_EXIST));
+
+        zzimRepository.deleteByUserAndPromotion(user, promotion);
+    }
+
 }
