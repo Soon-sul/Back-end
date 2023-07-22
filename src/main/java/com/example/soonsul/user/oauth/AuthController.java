@@ -65,7 +65,7 @@ public class AuthController {
     }
 
 
-    @ApiOperation(value = "회원가입")
+    @ApiOperation(value = "회원가입", notes = "gender: f, m")
     @PostMapping("/signup")
     public ResponseEntity<TokenResponse> signup(@RequestBody SignupDto signupDto) {
         TokenDto data= authService.signup(signupDto);

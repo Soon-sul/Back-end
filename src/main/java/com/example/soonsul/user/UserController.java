@@ -74,9 +74,9 @@ public class UserController {
     }
 
 
-    @ApiOperation(value = "스크랩한 전통주 조회")
+    @ApiOperation(value = "스크랩한 전통주 조회", notes = "sorting: date, star, lowest-cost, highest-cost")
     @GetMapping("/scraps")
-    public ResponseEntity<LiquorInfoListResponse> getUserScrap(@PageableDefault(size=10, sort = "scan_id", direction = Sort.Direction.DESC) Pageable pageable, String sorting) {
+    public ResponseEntity<LiquorInfoListResponse> getUserScrap(@PageableDefault(size=10) Pageable pageable, String sorting) {
         final List<LiquorInfoDto> data= liquorService.getScrapList(pageable, sorting);
         return ResponseEntity.ok(LiquorInfoListResponse.of(ResultCode.GET_USER_SCRAP_SUCCESS, data));
     }
