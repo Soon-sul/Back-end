@@ -24,9 +24,8 @@ public class SoonsulApplication {
 	}
 
 	public static void main(String[] args) {
-		System.setProperty("logging.file.name", "/home/ubuntu/log2/"
-				+ new SimpleDateFormat("yyyy-MM-dd").format(new Date())+".log");
-		System.out.println(new Date());
+		System.setProperty("logging.file.name", "/home/ubuntu/log/"
+				+ LocalDate.now()+".log");
 		System.out.println(System.getProperty("logging.file.name"));
 
 		new SpringApplicationBuilder(SoonsulApplication.class)
