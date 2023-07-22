@@ -19,18 +19,10 @@ public class SoonsulApplication {
 			+ "classpath:application.properties ,"
 			+ "classpath:oauth.yml";
 
-	/*
-	@PostConstruct
-	public void started() {
-		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
-	}
-	 */
-
 	public static void main(String[] args) {
-
+		System.out.println(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
 		System.setProperty("logging.file.name", "/home/ubuntu/log/"
 				+ LocalDate.now(ZoneId.of("Asia/Seoul"))+".log");
-		System.out.println(System.getProperty("logging.file.name"));
 
 		new SpringApplicationBuilder(SoonsulApplication.class)
 				.properties(APPLICATION_LOCATIONS)
