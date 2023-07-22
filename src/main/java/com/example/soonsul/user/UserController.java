@@ -5,11 +5,17 @@ import com.example.soonsul.promotion.PromotionService;
 import com.example.soonsul.promotion.dto.PromotionDto;
 import com.example.soonsul.response.result.ResultCode;
 import com.example.soonsul.response.result.ResultResponse;
+import com.example.soonsul.scan.ScanService;
+import com.example.soonsul.scan.dto.ScanDto;
+import com.example.soonsul.scan.response.ScanResponse;
 import com.example.soonsul.search.dto.SearchDto;
 import com.example.soonsul.search.response.SearchResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +33,7 @@ import java.util.stream.Collectors;
 public class UserController {
     private final UserService userService;
     private final PromotionService promotionService;
+    private final ScanService scanService;
 
 
     @ApiOperation(value = "유저 프로필 변경")
@@ -51,5 +58,13 @@ public class UserController {
         final List<PromotionDto> result= promotionService.getPromotionList();
         final List<PromotionDto> data= result.stream().filter(PromotionDto::isFlagZzim).collect(Collectors.toList());
         return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_USER_ZZIM_SUCCESS, data));
+    }
+
+
+    @ApiOperation(value = "사진 히스토리 조회")
+    @GetMapping("/histories")
+    public ResponseEntity<ScanResponse> getUserHistory(@PageableDefault(size=10, sort = "scan_id", direction = Sort.Direction.DESC) Pageable pageable) {
+        final List<ScanDto> data= scanService.getScanList(pageable);
+        return ResponseEntity.ok(ScanResponse.of(ResultCode.GET_USER_HISTORY_SUCCESS, data));
     }
 }

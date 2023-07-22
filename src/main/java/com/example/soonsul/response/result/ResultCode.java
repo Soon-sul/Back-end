@@ -16,8 +16,7 @@ public enum ResultCode {
     //scan
     GET_SCANNED_LIQUOR_NAME_SUCCESS(200,"SC01","스캔한 제품의 주류명을 조회했습니다."),
     POST_SCAN_SUCCESS(201,"SC02","스캔한 제품을 사진 히스토리에 저장했습니다."),
-    GET_SCAN_LIST_SUCCESS(200,"SC03","모든 사진 히스토리를 조회했습니다."),
-    DELETE_SCAN_SUCCESS(200,"SC04","해당 히스토리를 삭제했습니다."),
+    DELETE_SCAN_SUCCESS(200,"SC03","해당 히스토리를 삭제했습니다."),
 
     //liquor
     GET_LIQUOR_INFO_SUCCESS(200,"L001","전통주 정보를 조회했습니다."),
@@ -54,6 +53,7 @@ public enum ResultCode {
     PUT_PROFILE_SUCCESS(200,"U001","유저 프로필을 수정했습니다."),
     GET_NICKNAME_CHECK_SUCCESS(200,"U002","유저 닉네임 사용유무를 조회했습니다."),
     GET_USER_ZZIM_SUCCESS(200,"U003","유저 찜 리스트를 조회했습니다."),
+    GET_USER_HISTORY_SUCCESS(200,"U004","사진 히스토리를 조회했습니다."),
 
     //click
     POST_CLICK_SUCCESS(201,"C001","전통주 클릭을 등록했습니다."),

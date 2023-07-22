@@ -41,14 +41,6 @@ public class ScanController {
     }
 
 
-    @ApiOperation(value = "사진히스토리 조회", notes = "10개씩 페이징")
-    @GetMapping("/history")
-    public ResponseEntity<ScanResponse> getScanList(@PageableDefault(size=10, sort = "scan_id", direction = Sort.Direction.DESC) Pageable pageable) {
-        final List<ScanDto> data= scanService.getScanList(pageable);
-        return ResponseEntity.ok(ScanResponse.of(ResultCode.GET_SCAN_LIST_SUCCESS, data));
-    }
-
-
     @ApiOperation(value = "해당 히스토리 삭제")
     @DeleteMapping("/{scanId}")
     public ResponseEntity<ResultResponse> deleteScan(@PathVariable("scanId") Long scanId) {
