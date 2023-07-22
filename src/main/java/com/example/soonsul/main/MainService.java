@@ -140,6 +140,7 @@ public class MainService {
 
             final RegionLiquorDto dto= RegionLiquorDto.builder()
                     .liquorId(liquorId)
+                    .name(liquor.getName())
                     .averageRating(liquor.getAverageRating())
                     .alcohol(liquor.getAlcohol())
                     .capacity(liquor.getCapacity())
@@ -152,6 +153,7 @@ public class MainService {
                     .clickNumber(map.get(liquorId))
                     .distance(disMap.get(liquorId))
                     .build();
+            list.add(dto);
         }
 
         switch (sorting) {
@@ -217,6 +219,7 @@ public class MainService {
 
             final RegionLiquorDto dto = RegionLiquorDto.builder()
                     .liquorId(liquorId)
+                    .name(liquor.getName())
                     .averageRating(liquor.getAverageRating())
                     .alcohol(liquor.getAlcohol())
                     .capacity(liquor.getCapacity())

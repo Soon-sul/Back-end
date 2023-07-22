@@ -21,36 +21,39 @@ public class RegionLiquorDto {
     @ApiModelProperty(value = "전통주 pk", position = 1)
     private String liquorId;
 
-    @ApiModelProperty(value = "평점", position = 2)
+    @ApiModelProperty(value = "전통주 이름", position = 2)
+    private String name;
+
+    @ApiModelProperty(value = "평점", position = 3)
     private Double averageRating;
 
-    @ApiModelProperty(value = "도수", position = 3)
+    @ApiModelProperty(value = "도수", position = 4)
     private Double alcohol;
 
-    @ApiModelProperty(value = "용량", position = 4)
+    @ApiModelProperty(value = "용량", position = 5)
     private Integer capacity;
 
-    @ApiModelProperty(value = "주종 카테고리", position = 5)
+    @ApiModelProperty(value = "주종 카테고리", position = 6)
     private String liquorCategory;
 
-    @ApiModelProperty(value = "양조장 리스트", position = 6)
+    @ApiModelProperty(value = "양조장 리스트", position = 7)
     private List<String> locationList;
 
-    @ApiModelProperty(value = "최저가", position = 7)
+    @ApiModelProperty(value = "최저가", position = 8)
     private Long lowestPrice;
 
-    @ApiModelProperty(value = "찜 여부", position = 8)
+    @ApiModelProperty(value = "찜 여부", position = 9)
     private boolean flagZzim;
 
-    @ApiModelProperty(value = "리뷰 평가수", position = 9)
+    @ApiModelProperty(value = "리뷰 평가수", position = 10)
     private Integer ratingNumber;
 
-    @ApiModelProperty(value = "전통주 대표 사진", position = 10)
+    @ApiModelProperty(value = "전통주 대표 사진", position = 11)
     private String imageUrl;
 
-    @ApiModelProperty(value = "클릭수", position = 11)
+    @ApiModelProperty(value = "클릭수", position = 12)
     private Integer clickNumber;
 
-    @ApiModelProperty(value = "거리차 -> 내주변 카테고리일때만 값 리턴", position = 12)
+    @ApiModelProperty(value = "거리차 -> 내주변 카테고리일때만 값 리턴", position = 13)
     private Double distance;
 }
