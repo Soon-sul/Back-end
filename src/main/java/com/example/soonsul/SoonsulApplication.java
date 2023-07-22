@@ -9,6 +9,7 @@ import javax.annotation.PostConstruct;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -18,14 +19,17 @@ public class SoonsulApplication {
 			+ "classpath:application.properties ,"
 			+ "classpath:oauth.yml";
 
+	/*
 	@PostConstruct
 	public void started() {
 		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
 	}
+	 */
 
 	public static void main(String[] args) {
+
 		System.setProperty("logging.file.name", "/home/ubuntu/log/"
-				+ LocalDate.now()+".log");
+				+ LocalDate.now(ZoneId.of("Asia/Seoul"))+".log");
 		System.out.println(System.getProperty("logging.file.name"));
 
 		new SpringApplicationBuilder(SoonsulApplication.class)
