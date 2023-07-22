@@ -7,7 +7,6 @@ import com.example.soonsul.liquor.response.PersonalListResponse;
 import com.example.soonsul.liquor.service.EvaluationService;
 import com.example.soonsul.liquor.service.LiquorService;
 import com.example.soonsul.liquor.service.PersonalService;
-import com.example.soonsul.main.dto.RegionLiquorDto;
 import com.example.soonsul.promotion.PromotionService;
 import com.example.soonsul.promotion.dto.PromotionDto;
 import com.example.soonsul.promotion.response.PromotionListResponse;
@@ -16,8 +15,6 @@ import com.example.soonsul.response.result.ResultResponse;
 import com.example.soonsul.scan.ScanService;
 import com.example.soonsul.scan.dto.ScanDto;
 import com.example.soonsul.scan.response.ScanResponse;
-import com.example.soonsul.search.dto.SearchDto;
-import com.example.soonsul.search.response.SearchResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -26,12 +23,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -81,7 +75,8 @@ public class UserController {
     }
 
 
-    @ApiOperation(value = "스크랩한 전통주 조회", notes = "sorting: date, star, lowest-cost, highest-cost")
+    @ApiOperation(value = "스크랩한 전통주 조회", notes = "sorting: [최신순: date] [별점순: star] [가격 낮은순: lowest-cost] " +
+            "[가격 높은순: highest-cost]")
     @GetMapping("/scraps")
     public ResponseEntity<LiquorInfoListResponse> getUserScrap(@PageableDefault(size=10) Pageable pageable, String sorting) {
         final List<LiquorInfoDto> data= liquorService.getScrapList(pageable, sorting);

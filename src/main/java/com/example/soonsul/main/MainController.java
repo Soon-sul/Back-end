@@ -30,7 +30,7 @@ public class MainController {
 
     @ApiOperation(value = "지금 사랑받는 지역술", notes = "region: [내위치: Around-me] [수도권: Metropolitan-area]" +
             "[강원도: Gangwon-do] [충청도: Chungcheong-do] [경상도: Gyeongsang-do] [전라도: Jeolla-do] [제주도: Jeju-do] " +
-            ", sorting: star, review, lowest-cost, highest-cost")
+            ", sorting: [별점순: star] [리뷰순: review] [가격 낮은순: lowest-cost] [가격 높은순: highest-cost]")
     @GetMapping("/region-liquor")
     public ResponseEntity<RegionLiquorResponse> getRegionLiquor(@RequestParam("region") String region, @RequestParam("sorting") String sorting,
                                                                 @RequestParam(value = "latitude", required = false) Double latitude,
