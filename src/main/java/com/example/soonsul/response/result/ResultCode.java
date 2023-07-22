@@ -14,7 +14,10 @@ public enum ResultCode {
     TOKEN_VALID_CHECK_SUCCESS(200,"A005","Access Token 유효성 검사 완료했습니다."),
 
     //scan
-    GET_SCANNED_LIQUOR_NAME_SUCCESS(200,"S001","스캔한 제품의 주류명을 조회했습니다."),
+    GET_SCANNED_LIQUOR_NAME_SUCCESS(200,"SC01","스캔한 제품의 주류명을 조회했습니다."),
+    POST_SCAN_SUCCESS(201,"SC02","스캔한 제품을 사진 히스토리에 저장했습니다."),
+    GET_SCAN_LIST_SUCCESS(200,"SC03","모든 사진 히스토리를 조회했습니다."),
+    DELETE_SCAN_SUCCESS(200,"SC04","해당 히스토리를 삭제했습니다."),
 
     //liquor
     GET_LIQUOR_INFO_SUCCESS(200,"L001","전통주 정보를 조회했습니다."),
@@ -45,6 +48,7 @@ public enum ResultCode {
     GET_LIQUOR_SALE_PLACE_SUCCESS(200,"L026","전통주 판매처 정보를 조회했습니다."),
     GET_LIQUOR_LIST_NAME_SUCCESS(200,"L027","모든 전통주 이름을 조회했습니다"),
     UPDATE_LIQUOR_FILTERING_SUCCESS(200,"L028","전통주 필터링을 업데이트했습니다."),
+    GET_PERSONAL_RATING_SUCCESS(200,"L029","전통주 개인 평점을 조회했습니다"),
 
     //user
     PUT_PROFILE_SUCCESS(200,"U001","유저 프로필을 수정했습니다."),
@@ -54,7 +58,7 @@ public enum ResultCode {
     POST_CLICK_SUCCESS(201,"C001","전통주 클릭을 등록했습니다."),
 
     //search
-    GET_SEARCH_SUCCESS(200,"S002","해당 전통주를 검색했습니다."),
+    GET_SEARCH_SUCCESS(200,"SE01","해당 전통주를 검색했습니다."),
 
     //promotion
     GET_PROMOTION_LIST_SUCCESS(200,"P001","모든 프로모션을 조회했습니다."),

@@ -20,8 +20,11 @@ public class Scan {
     @Column(name = "scan_id", nullable = false, unique = true)
     private Long scanId;
 
-    @Column(name = "scanned_date", nullable = false)
-    private LocalDate scannedDate;
+    @Column(name = "scan_date", nullable = false)
+    private LocalDate scanDate;
+
+    @Column(name = "image_url", nullable = false)
+    private String imageUrl;
 
 
     @ManyToOne(fetch = FetchType.LAZY , cascade = CascadeType.REMOVE)

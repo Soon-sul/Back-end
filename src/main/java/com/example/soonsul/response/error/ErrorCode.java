@@ -38,8 +38,12 @@ public enum ErrorCode {
     //promotion
     PROMOTION_NOT_EXIST(500,"P001","PROMOTION NOT EXIST"),
 
+    //scan
+    SCAN_NOT_EXIST(500,"S001","SCAN NOT EXIST"),
+
     //code
     CODE_NOT_EXIST(500,"CD01","CODE NOT EXIST"),
+
 
     //file
     UPLOAD_FILE_NOT_EXIST(500,"F001","FILE NOT EXIST"),
