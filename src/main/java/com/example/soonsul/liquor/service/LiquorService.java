@@ -11,9 +11,11 @@ import com.example.soonsul.user.exception.PersonalEvaluationNotExist;
 import com.example.soonsul.user.repository.PersonalEvaluationRepository;
 import com.example.soonsul.util.UserUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -34,6 +36,7 @@ public class LiquorService {
     private final ReviewRepository reviewRepository;
     private final LiquorFilteringRepository filteringRepository;
     private final FilteringClickRepository filteringClickRepository;
+    private final ScrapRepository scrapRepository;
 
 
     @Transactional(readOnly = true)
@@ -76,6 +79,7 @@ public class LiquorService {
                 .liquorPersonalRating(liquorPersonalRating)
                 .ratingNumber(reviewRepository.countByLiquor(liquor))
                 .filtering(filtering)
+                .flagScrap(scrapRepository.existsByUserAndLiquor(user, liquor))
                 .build();
     }
 
@@ -244,6 +248,98 @@ public class LiquorService {
             }
         }
         filteringClickRepository.deleteAll();
+    }
+
+
+    @Transactional
+    public void postScrap(String liquorId){
+        final User user= userUtil.getUserByAuthentication();
+        final Liquor liquor= liquorRepository.findById(liquorId)
+                .orElseThrow(()-> new LiquorNotExist("liquor not exist", ErrorCode.LIQUOR_NOT_EXIST));
+
+        final Scrap scrap= Scrap.builder()
+                .scrapDate(LocalDate.now())
+                .user(user)
+                .liquor(liquor)
+                .build();
+        scrapRepository.save(scrap);
+    }
+
+
+    @Transactional
+    public void deleteScrap(String liquorId){
+        final User user= userUtil.getUserByAuthentication();
+        final Liquor liquor= liquorRepository.findById(liquorId)
+                .orElseThrow(()-> new LiquorNotExist("liquor not exist", ErrorCode.LIQUOR_NOT_EXIST));
+
+        scrapRepository.deleteByUserAndLiquor(user, liquor);
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<LiquorInfoDto> getScrapList(Pageable pageable, String sorting){
+        final User user= userUtil.getUserByAuthentication();
+        final List<Liquor> list= liquorRepository.findAll(pageable).toList();
+
+        final List<LiquorInfoDto> result= new ArrayList<>();
+        for(Liquor l: list){
+            final Optional<Scrap> scrap= scrapRepository.findByUserAndLiquor(user,l);
+            if(scrap.isEmpty()) continue;
+
+            final String liquorCategory= codeRepository.findById(l.getLiquorCategory())
+                    .orElseThrow(()->new CodeNotExist("code not exist", ErrorCode.CODE_NOT_EXIST)).getCodeName();
+
+            final LiquorInfoDto dto= LiquorInfoDto.builder()
+                    .liquorId(l.getLiquorId())
+                    .name(l.getName())
+                    .averageRating(l.getAverageRating())
+                    .lowestPrice(l.getLowestPrice())
+                    .imageUrl(l.getImageUrl())
+                    .liquorCategory(liquorCategory)
+                    .ratingNumber(reviewRepository.countByLiquor(l))
+                    .flagScrap(true)
+                    .scrapDate(scrap.get().getScrapDate())
+                    .build();
+            result.add(dto);
+        }
+
+        switch (sorting) {
+            case "date":
+                return byDate(result);
+            case "star":
+                return byStar(result);
+            case "lowest-cost":
+                return byLowestCost(result);
+            case "highest-cost":
+                return byHighestCost(result);
+            default:
+                return result;
+        }
+    }
+
+
+    private List<LiquorInfoDto> byDate(List<LiquorInfoDto> result){
+        return result.stream()
+                .sorted(Comparator.comparing(LiquorInfoDto::getScrapDate).reversed())
+                .collect(Collectors.toList());
+    }
+
+    private List<LiquorInfoDto> byStar(List<LiquorInfoDto> result){
+        return result.stream()
+                .sorted(Comparator.comparing(LiquorInfoDto::getAverageRating).reversed())
+                .collect(Collectors.toList());
+    }
+
+    private List<LiquorInfoDto> byLowestCost(List<LiquorInfoDto> result){
+        return result.stream()
+                .sorted(Comparator.comparing(LiquorInfoDto::getLowestPrice))
+                .collect(Collectors.toList());
+    }
+
+    private List<LiquorInfoDto> byHighestCost(List<LiquorInfoDto> result){
+        return result.stream()
+                .sorted(Comparator.comparing(LiquorInfoDto::getLowestPrice).reversed())
+                .collect(Collectors.toList());
     }
 
 }

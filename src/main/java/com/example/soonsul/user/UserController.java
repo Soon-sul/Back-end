@@ -1,8 +1,12 @@
 package com.example.soonsul.user;
 
+import com.example.soonsul.liquor.dto.LiquorInfoDto;
+import com.example.soonsul.liquor.response.LiquorInfoListResponse;
+import com.example.soonsul.liquor.service.LiquorService;
 import com.example.soonsul.main.dto.RegionLiquorDto;
 import com.example.soonsul.promotion.PromotionService;
 import com.example.soonsul.promotion.dto.PromotionDto;
+import com.example.soonsul.promotion.response.PromotionListResponse;
 import com.example.soonsul.response.result.ResultCode;
 import com.example.soonsul.response.result.ResultResponse;
 import com.example.soonsul.scan.ScanService;
@@ -34,6 +38,7 @@ public class UserController {
     private final UserService userService;
     private final PromotionService promotionService;
     private final ScanService scanService;
+    private final LiquorService liquorService;
 
 
     @ApiOperation(value = "유저 프로필 변경")
@@ -54,10 +59,10 @@ public class UserController {
 
     @ApiOperation(value = "유저 찜 리스트 조회")
     @GetMapping("/zzims")
-    public ResponseEntity<ResultResponse> getUserZzim() {
+    public ResponseEntity<PromotionListResponse> getUserZzim() {
         final List<PromotionDto> result= promotionService.getPromotionList();
         final List<PromotionDto> data= result.stream().filter(PromotionDto::isFlagZzim).collect(Collectors.toList());
-        return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_USER_ZZIM_SUCCESS, data));
+        return ResponseEntity.ok(PromotionListResponse.of(ResultCode.GET_USER_ZZIM_SUCCESS, data));
     }
 
 
@@ -66,5 +71,13 @@ public class UserController {
     public ResponseEntity<ScanResponse> getUserHistory(@PageableDefault(size=10, sort = "scan_id", direction = Sort.Direction.DESC) Pageable pageable) {
         final List<ScanDto> data= scanService.getScanList(pageable);
         return ResponseEntity.ok(ScanResponse.of(ResultCode.GET_USER_HISTORY_SUCCESS, data));
+    }
+
+
+    @ApiOperation(value = "스크랩한 전통주 조회")
+    @GetMapping("/scraps")
+    public ResponseEntity<LiquorInfoListResponse> getUserScrap(@PageableDefault(size=10, sort = "scan_id", direction = Sort.Direction.DESC) Pageable pageable, String sorting) {
+        final List<LiquorInfoDto> data= liquorService.getScrapList(pageable, sorting);
+        return ResponseEntity.ok(LiquorInfoListResponse.of(ResultCode.GET_USER_SCRAP_SUCCESS, data));
     }
 }

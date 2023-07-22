@@ -128,4 +128,21 @@ public class LiquorController {
         liquorService.updateFiltering();
         return ResponseEntity.ok(ResultResponse.of(ResultCode.UPDATE_LIQUOR_FILTERING_SUCCESS));
     }
+
+
+    @ApiOperation(value = "스크랩 등록하기")
+    @PostMapping("/{liquorId}/scrap")
+    public ResponseEntity<ResultResponse> postScrap(@PathVariable("liquorId") String liquorId) {
+        liquorService.postScrap(liquorId);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.POST_SCRAP_SUCCESS));
+    }
+
+
+    @ApiOperation(value = "스크랩 삭제하기")
+    @DeleteMapping("/{liquorId}/scrap")
+    public ResponseEntity<ResultResponse> deleteScrap(@PathVariable("liquorId") String liquorId) {
+        liquorService.deleteScrap(liquorId);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.DELETE_SCRAP_SUCCESS));
+    }
+
 }

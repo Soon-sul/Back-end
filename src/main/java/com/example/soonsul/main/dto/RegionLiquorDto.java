@@ -42,8 +42,8 @@ public class RegionLiquorDto {
     @ApiModelProperty(value = "최저가", position = 8)
     private Long lowestPrice;
 
-    @ApiModelProperty(value = "찜 여부", position = 9)
-    private boolean flagZzim;
+    @ApiModelProperty(value = "스크랩 여부", position = 9)
+    private boolean flagScrap;
 
     @ApiModelProperty(value = "리뷰 평가수", position = 10)
     private Integer ratingNumber;

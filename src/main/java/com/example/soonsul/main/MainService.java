@@ -11,6 +11,7 @@ import com.example.soonsul.liquor.repository.*;
 import com.example.soonsul.main.dto.RegionLiquorDto;
 import com.example.soonsul.main.dto.WeekLiquorDto;
 import com.example.soonsul.response.error.ErrorCode;
+import com.example.soonsul.user.entity.User;
 import com.example.soonsul.util.UserUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,7 @@ public class MainService {
     private final LocationRepository locationRepository;
     private final LocationInfoRepository locationInfoRepository;
     private final CodeRepository codeRepository;
+    private final ScrapRepository scrapRepository;
 
 
     @Transactional(readOnly = true)
@@ -104,6 +106,7 @@ public class MainService {
 
     //내주변
     private List<RegionLiquorDto> aroundMeLiquor(String sorting, Double latitude, Double longitude){
+        final User user= userUtil.getUserByAuthentication();
         final HashMap<String, Integer> map = new HashMap<>();   //전통주pk, 클릭수
         final List<RegionClick> clickList= (List<RegionClick>) regionClickRepository.findAll();
 
@@ -147,7 +150,7 @@ public class MainService {
                     .liquorCategory(liquorCategory)
                     .locationList(locationList)
                     .lowestPrice(liquor.getLowestPrice())
-                    .flagZzim(true)     // 추후에 구현 -> 찜기능 추가한 뒤에
+                    .flagScrap(scrapRepository.existsByUserAndLiquor(user, liquor))
                     .ratingNumber(reviewRepository.countByLiquor(liquor))
                     .imageUrl(liquor.getImageUrl())
                     .clickNumber(map.get(liquorId))
@@ -192,6 +195,7 @@ public class MainService {
 
     //지역
     private List<RegionLiquorDto> regionLiquor(String sorting, List<String> codeList){
+        final User user= userUtil.getUserByAuthentication();
         final HashMap<String, Integer> map = new HashMap<>();
 
         for(String regionCode: codeList){
@@ -226,7 +230,7 @@ public class MainService {
                     .liquorCategory(liquorCategory)
                     .locationList(locationList)
                     .lowestPrice(liquor.getLowestPrice())
-                    .flagZzim(true)     // 추후에 구현 -> 찜기능 추가한 뒤에
+                    .flagScrap(scrapRepository.existsByUserAndLiquor(user, liquor))
                     .ratingNumber(reviewRepository.countByLiquor(liquor))
                     .imageUrl(liquor.getImageUrl())
                     .clickNumber(map.get(liquorId))
