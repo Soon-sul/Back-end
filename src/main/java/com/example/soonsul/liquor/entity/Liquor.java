@@ -51,4 +51,8 @@ public class Liquor {
         this.averageRating= averageRating;
     }
 
+    public void updateImageUrl(String imageUrl){
+        this.imageUrl= imageUrl;
+    }
+
 }

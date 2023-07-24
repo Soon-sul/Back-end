@@ -71,7 +71,11 @@ public enum ResultCode {
     GET_PROMOTION_LIST_SUCCESS(200,"P001","모든 프로모션을 조회했습니다."),
     GET_PROMOTION_SUCCESS(200,"P002","해당 프로모션을 조회했습니다."),
     POST_ZZIM_SUCCESS(201,"P003","찜을 등록했습니다."),
-    DELETE_ZZIM_SUCCESS(200,"P004","해당 찜을 삭제했습니다.")
+    DELETE_ZZIM_SUCCESS(200,"P004","해당 찜을 삭제했습니다."),
+
+
+    //manager
+    POST_MAIN_PHOTO(201,"M001","S3에 모든 전통주 메인사진을 등록했습니다.")
     ;
 
 

@@ -72,4 +72,23 @@ public class S3Uploader {
         amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, fileName));
     }
 
+
+    public String liquorMainUpload(MultipartFile multipartFile){
+        final String dirName= "/liquor/main";
+        try{
+            File uploadFile = convert(multipartFile)
+                    .orElseThrow(() -> new UploadFileNotExist("upload file not exist", ErrorCode.UPLOAD_FILE_NOT_EXIST));
+            return upload(uploadFile, dirName);
+        }catch (Exception e){
+            throw new FileUpload("file upload error", ErrorCode.FILE_UPLOAD_ERROR);
+        }
+    }
+
+    private String liquorMainUpload(File uploadFile, String dirName) {
+        String fileName = dirName + "/" + uploadFile.getName();
+        String uploadImageUrl = putS3(uploadFile, fileName);
+        removeNewFile(uploadFile);
+        return uploadImageUrl;
+    }
+
 }
