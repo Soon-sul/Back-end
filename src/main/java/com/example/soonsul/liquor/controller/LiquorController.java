@@ -97,4 +97,11 @@ public class LiquorController {
         return ResponseEntity.ok(ResultResponse.of(ResultCode.DELETE_SCRAP_SUCCESS));
     }
 
+
+    @ApiOperation(value = "모든 전통주 평가, 평가수 추가", notes = "전통주 데이터 넣은 후  해당 api 실행하기")
+    @PostMapping("/init")
+    public ResponseEntity<ResultResponse> postInit() {
+        liquorService.postInit();
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.POST_LIQUOR_INIT_SUCCESS));
+    }
 }

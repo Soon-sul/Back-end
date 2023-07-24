@@ -50,6 +50,7 @@ public enum ResultCode {
     GET_PERSONAL_RATING_SUCCESS(200,"L029","전통주 개인 평점을 조회했습니다."),
     POST_SCRAP_SUCCESS(201,"L030","스크랩을 등록했습니다."),
     DELETE_SCRAP_SUCCESS(200,"L031","스크랩을 삭제했습니다."),
+    POST_LIQUOR_INIT_SUCCESS(201,"L032","모든 전통주 평가, 평가수를 등록했습니다."),
 
     //user
     PUT_PROFILE_SUCCESS(200,"U001","유저 프로필을 수정했습니다."),
