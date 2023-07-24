@@ -37,7 +37,6 @@ public class LiquorService {
     private final LiquorFilteringRepository filteringRepository;
     private final FilteringClickRepository filteringClickRepository;
     private final ScrapRepository scrapRepository;
-    private final EvaluationNumberRepository numberRepository;
 
 
     @Transactional(readOnly = true)
@@ -343,38 +342,5 @@ public class LiquorService {
                 .collect(Collectors.toList());
     }
 
-
-    @Transactional
-    public void postInit(){
-        final List<Liquor> list= liquorRepository.findAll();
-
-        for(Liquor liquor: list){
-            final Optional<Evaluation> e= evaluationRepository.findById(liquor.getLiquorId());
-            if(e.isPresent()) continue;
-
-            final Evaluation evaluation= Evaluation.builder()
-                    .evaluationId(liquor.getLiquorId())
-                    .sweetness(0.0)
-                    .acidity(0.0)
-                    .carbonicAcid(0.0)
-                    .heavy(0.0)
-                    .scent(0.0)
-                    .density(0.0)
-                    .build();
-            evaluationRepository.save(evaluation);
-
-            final EvaluationNumber number= EvaluationNumber.builder()
-                    .liquorId(liquor.getLiquorId())
-                    .averageRating(0)
-                    .sweetness(0)
-                    .acidity(0)
-                    .carbonicAcid(0)
-                    .heavy(0)
-                    .scent(0)
-                    .density(0)
-                    .build();
-            numberRepository.save(number);
-        }
-    }
 
 }
