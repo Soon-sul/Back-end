@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ErrorController {
 
-    @GetMapping("/api/error/1")
+    @RequestMapping("/api/error/1")
     public void accessTokenExpiredError()  {
         throw new AccessTokenExpired("access token expired", ErrorCode.ACCESS_TOKEN_EXPIRED);
     }
 
-    @GetMapping("/api/error/2")
+    @RequestMapping("/api/error/2")
     public void accessTokenNotSameError()  {
         throw new AccessTokenNotSame("access token not same", ErrorCode.ACCESS_TOKEN_NOT_SAME);
     }
