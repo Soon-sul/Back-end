@@ -51,9 +51,8 @@ public class ScanService {
 
     @Transactional(readOnly = true)
     public String getLiquor(String name){
-        final Liquor liquor= liquorRepository.findByName(name)
-                .orElseThrow(()-> new LiquorNotExist("liquor not exist", ErrorCode.LIQUOR_NOT_EXIST));
-        return liquor.getLiquorId();
+        final Optional<Liquor> liquor= liquorRepository.findByName(name);
+        return (liquor.isPresent()) ? liquor.get().getLiquorId() : "";
     }
 
 
