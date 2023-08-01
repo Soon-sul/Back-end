@@ -33,7 +33,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             String token = req.getHeader(AuthConstants.AUTH_HEADER_ACCESS);
             if (token != null) {
-                Long userId = jwtTokenProvider.getUserIdFromToken(token);
+                String userId = jwtTokenProvider.getUserIdFromToken(token);
                 AbstractAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         userId,
                         null,

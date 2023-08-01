@@ -21,7 +21,7 @@ public class Click {
     private String liquorId;
 
     @Indexed
-    private Long userId;
+    private String userId;
 
     @TimeToLive
     private long ttl;

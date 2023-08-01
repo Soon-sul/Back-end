@@ -33,7 +33,7 @@ public class CommentService {
 
     @Transactional(readOnly = true)
     public List<CommentDto> getCommentList(Pageable pageable, Long reviewId){
-        final Long userId= userUtil.getUserByAuthentication().getUserId();
+        final String userId= userUtil.getUserByAuthentication().getUserId();
         final List<Comment> commentList= commentRepository.findAllByLatest(pageable, reviewId).toList();
         final List<CommentDto> result= new ArrayList<>();
 

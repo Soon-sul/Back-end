@@ -22,12 +22,12 @@ public interface PersonalEvaluationRepository extends JpaRepository<PersonalEval
     @Query(nativeQuery = true,
             value = "SELECT * FROM personal_evaluation p WHERE p.user_id = :userId " +
                     "AND p.liquor_id = :liquorId ")
-    Optional<PersonalEvaluation> findPersonalEvaluation(@Param("userId") Long userId, @Param("liquorId") String liquorId);
+    Optional<PersonalEvaluation> findPersonalEvaluation(@Param("userId") String userId, @Param("liquorId") String liquorId);
 
     @Query(nativeQuery = true,
             value="SELECT * FROM personal_evaluation p WHERE p.user_id = :userId" +
                     " ORDER BY p.personal_evaluation_id DESC")
-    Page<PersonalEvaluation> findAll(Pageable pageable, @Param("userId") Long userId);
+    Page<PersonalEvaluation> findAll(Pageable pageable, @Param("userId") String userId);
 
     void deleteByUserAndLiquor(User user, Liquor liquor);
 }

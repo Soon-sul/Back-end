@@ -16,7 +16,7 @@ public class UserUtil {
 
     public User getUserByAuthentication(){
         Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
-        return userRepository.findById(Long.parseLong(authentication.getName()))
+        return userRepository.findById(authentication.getName())
                 .orElseThrow(()-> new UserNotExist("login user not exist", ErrorCode.USER_NOT_EXIST));
     }
 }

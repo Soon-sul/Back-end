@@ -14,9 +14,8 @@ import javax.persistence.*;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", nullable = false, unique = true)
-    private Long userId;
+    private String userId;
 
     @Column(name = "nickname", nullable = false, unique = true)
     private String nickname;
@@ -44,9 +43,6 @@ public class User {
 
     @Column(name = "flag_withdrawal", nullable = false)
     private boolean flagWithdrawal;
-
-    @Column(name = "oauth_id", nullable = false, unique = true)
-    private String oauthId;
 
     @Column(name = "oauth_provider")
     @Enumerated(EnumType.STRING)

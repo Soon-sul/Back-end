@@ -33,7 +33,7 @@ public class AuthService {
         final OAuthInfoResponse response = requestOAuthInfoService.request(params);
         final String oauthId= response.getId();
         final OAuthProvider oauthProvider= params.oAuthProvider();
-        final Optional<User> user= userRepository.findByOauthId(oauthId);
+        final Optional<User> user= userRepository.findById(oauthId);
 
         if(user.isPresent()) {          //이미 가입된 사용자
             final RefreshToken refreshToken= jwtTokenProvider.generateJwtRefreshToken(user.get());
@@ -55,6 +55,7 @@ public class AuthService {
     @Transactional
     public TokenDto signup(SignupDto signupDto){
         final User user= User.builder()
+                .userId(signupDto.getOauthId())
                 .nickname(RandomNickName.generate().toString())
                 .profileImage(null)
                 .phoneNumber(null)
@@ -64,7 +65,6 @@ public class AuthService {
                 .flagTerms(signupDto.isFlagTerms())
                 .flagPrivacy(signupDto.isFlagPrivacy())
                 .flagWithdrawal(false)
-                .oauthId(signupDto.getOauthId())
                 .oAuthProvider(OAuthProvider.valueOf(signupDto.getOauthProvider()))
                 .build();
         userRepository.save(user);

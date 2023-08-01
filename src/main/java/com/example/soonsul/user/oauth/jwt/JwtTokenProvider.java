@@ -75,9 +75,9 @@ public class JwtTokenProvider {
         }
     }
 
-    public Long getUserIdFromToken(String token) {
+    public String getUserIdFromToken(String token) {
         Claims claims = getClaimsFormToken(token);
-        return Long.valueOf(claims.get("userId").toString());
+        return claims.get("userId").toString();
     }
 
 }

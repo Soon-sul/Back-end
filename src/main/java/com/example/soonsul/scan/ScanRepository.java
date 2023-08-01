@@ -14,5 +14,5 @@ public interface ScanRepository extends JpaRepository<Scan, Long> {
     @Query(nativeQuery = true,
             value="SELECT * FROM scan s WHERE s.user_id = :userId" +
                     " ORDER BY s.scan_id DESC")
-    Page<Scan> findAllByUser(Pageable pageable, @Param("userId") Long userId);
+    Page<Scan> findAllByUser(Pageable pageable, @Param("userId") String userId);
 }

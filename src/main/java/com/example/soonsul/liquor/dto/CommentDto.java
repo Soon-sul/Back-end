@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class CommentDto {
 
     @ApiModelProperty(value = "작성자 pk", position = 1)
-    private Long userId;
+    private String userId;
 
     @ApiModelProperty(value = "작성자 닉네임", position = 2)
     private String nickname;

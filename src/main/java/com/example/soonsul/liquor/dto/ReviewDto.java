@@ -35,7 +35,7 @@ public class ReviewDto {
 
 
     @ApiModelProperty(value = "유저 pk", position = 7)
-    private Long userId;
+    private String userId;
 
     @ApiModelProperty(value = "유저 닉네임", position = 8)
     private String nickname;
