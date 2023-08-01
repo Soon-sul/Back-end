@@ -32,6 +32,7 @@ public class ManagerService {
             final String liquorId= image.getOriginalFilename().substring(0,8);
             final Liquor liquor= liquorRepository.findById(liquorId)
                     .orElseThrow(()-> new LiquorNotExist("liquor not exist", ErrorCode.LIQUOR_NOT_EXIST));
+            if(!liquor.getImageUrl().equals("")||liquor.getImageUrl()!=null) s3Uploader.deleteFile(liquor.getImageUrl());
             liquor.updateImageUrl(s3Uploader.liquorMainUpload(image));
         }
     }
