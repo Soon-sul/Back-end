@@ -18,7 +18,8 @@ public class SoonsulApplication {
 	public static void main(String[] args) {
 
 		System.setProperty("logging.file.name", "/home/ubuntu/log/"
-				+ LocalDate.now(ZoneId.of("Asia/Seoul"))+".log");
+				+ "error.log");
+				//+ LocalDate.now(ZoneId.of("Asia/Seoul"))+".log");
 
 		new SpringApplicationBuilder(SoonsulApplication.class)
 				.properties(APPLICATION_LOCATIONS)
