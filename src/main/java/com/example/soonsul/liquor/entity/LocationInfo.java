@@ -28,4 +28,13 @@ public class LocationInfo {
 
     @Column(name = "brewery")
     private String brewery;
+
+
+    public void updateLatitude(Double latitude){
+        this.latitude= latitude;
+    }
+
+    public void updateLongitude(Double longitude){
+        this.longitude= longitude;
+    }
 }

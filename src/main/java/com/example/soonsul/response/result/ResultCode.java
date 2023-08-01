@@ -74,8 +74,9 @@ public enum ResultCode {
 
 
     //manager
-    POST_MAIN_PHOTO(201,"M001","S3에 모든 전통주 메인사진을 등록했습니다."),
-    POST_LIQUOR_INIT_SUCCESS(201,"M002","모든 전통주 평가, 평가수를 등록했습니다.")
+    POST_MAIN_PHOTO(200,"M001","S3에 모든 전통주 메인사진을 등록했습니다."),
+    POST_LIQUOR_INIT_SUCCESS(201,"M002","모든 전통주 평가, 평가수를 등록했습니다."),
+    POST_LOCATION_INIT_SUCCESS(200,"M003","모든 소재지의 위도, 경도값을 등록했습니다.")
     ;
 
 

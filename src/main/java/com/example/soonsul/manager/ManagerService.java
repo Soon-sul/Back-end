@@ -4,14 +4,20 @@ import com.example.soonsul.config.s3.S3Uploader;
 import com.example.soonsul.liquor.entity.Evaluation;
 import com.example.soonsul.liquor.entity.EvaluationNumber;
 import com.example.soonsul.liquor.entity.Liquor;
+import com.example.soonsul.liquor.entity.LocationInfo;
 import com.example.soonsul.liquor.exception.LiquorNotExist;
 import com.example.soonsul.liquor.repository.EvaluationNumberRepository;
 import com.example.soonsul.liquor.repository.EvaluationRepository;
 import com.example.soonsul.liquor.repository.LiquorRepository;
+import com.example.soonsul.liquor.repository.LocationInfoRepository;
+import com.example.soonsul.manager.dto.LocationRes;
 import com.example.soonsul.response.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -24,29 +30,39 @@ public class ManagerService {
     private final LiquorRepository liquorRepository;
     private final EvaluationRepository evaluationRepository;
     private final EvaluationNumberRepository numberRepository;
+    private final LocationInfoRepository locationInfoRepository;
+
+    @Value("${map.kakao.apiKey}")
+    private String apiKey;
+
+    @Value("${map.kakao.apiUrl}")
+    private String apiUrl;
+
+    private final RestTemplate restTemplate;
 
 
     @Transactional
-    public void postMainPhoto(List<MultipartFile> images){
-        for(MultipartFile image: images){
-            final String liquorId= image.getOriginalFilename().substring(0,8);
-            final Liquor liquor= liquorRepository.findById(liquorId)
-                    .orElseThrow(()-> new LiquorNotExist("liquor not exist", ErrorCode.LIQUOR_NOT_EXIST));
-            if(!liquor.getImageUrl().equals("")||liquor.getImageUrl()!=null) s3Uploader.deleteFile(liquor.getImageUrl());
+    public void postMainPhoto(List<MultipartFile> images) {
+        for (MultipartFile image : images) {
+            final String liquorId = image.getOriginalFilename().substring(0, 8);
+            final Liquor liquor = liquorRepository.findById(liquorId)
+                    .orElseThrow(() -> new LiquorNotExist("liquor not exist", ErrorCode.LIQUOR_NOT_EXIST));
+            if (!liquor.getImageUrl().equals("") || liquor.getImageUrl() != null)
+                s3Uploader.deleteFile(liquor.getImageUrl());
             liquor.updateImageUrl(s3Uploader.liquorMainUpload(image));
         }
     }
 
 
     @Transactional
-    public void postInit(){
-        final List<Liquor> list= liquorRepository.findAll();
+    public void postLiquorInit() {
+        final List<Liquor> list = liquorRepository.findAll();
 
-        for(Liquor liquor: list){
-            final Optional<Evaluation> e= evaluationRepository.findById(liquor.getLiquorId());
-            if(e.isPresent()) continue;
+        for (Liquor liquor : list) {
+            final Optional<Evaluation> e = evaluationRepository.findById(liquor.getLiquorId());
+            if (e.isPresent()) continue;
 
-            final Evaluation evaluation= Evaluation.builder()
+            final Evaluation evaluation = Evaluation.builder()
                     .evaluationId(liquor.getLiquorId())
                     .sweetness(0.0)
                     .acidity(0.0)
@@ -57,7 +73,7 @@ public class ManagerService {
                     .build();
             evaluationRepository.save(evaluation);
 
-            final EvaluationNumber number= EvaluationNumber.builder()
+            final EvaluationNumber number = EvaluationNumber.builder()
                     .liquorId(liquor.getLiquorId())
                     .averageRating(0)
                     .sweetness(0)
@@ -71,5 +87,23 @@ public class ManagerService {
         }
     }
 
+
+    @Transactional
+    public void postLocationInit() {
+        final List<LocationInfo> list = locationInfoRepository.findAll();
+
+        for(LocationInfo info: list){
+            final String url = apiUrl + "?query=" + info.getName();
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", apiKey);
+
+            final HttpEntity<String> request = new HttpEntity<>(headers);
+            LocationRes response= restTemplate.exchange(url, HttpMethod.GET, request, LocationRes.class).getBody();
+
+            info.updateLatitude(response.documents[0].latitude);
+            info.updateLongitude(response.documents[0].longitude);
+        }
+    }
 
 }
