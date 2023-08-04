@@ -45,4 +45,8 @@ public class ReviewDto {
 
     @ApiModelProperty(value = "유저가 남긴 리뷰 개수", position = 10)
     private Integer reviewNumber;
+
+
+    @ApiModelProperty(value = "좋아요 유무", position = 11)
+    private boolean flagGood;
 }

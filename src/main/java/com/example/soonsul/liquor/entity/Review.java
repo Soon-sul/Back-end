@@ -23,9 +23,6 @@ public class Review {
     @Column(name = "content", nullable = false)
     private String content;
 
-    @Column(name = "good")
-    private Integer good;
-
     @Column(name = "created_date", nullable = false)
     private LocalDateTime createdDate;
 
@@ -49,5 +46,4 @@ public class Review {
         this.liquorRating= liquorRating;
     }
 
-    public void addGood(Integer number) {this.good+= number;}
 }

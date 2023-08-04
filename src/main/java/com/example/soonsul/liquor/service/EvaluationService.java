@@ -58,7 +58,6 @@ public class EvaluationService {
         if(request.getReviewContent()!=null){
             final Review review= Review.builder()
                     .content(request.getReviewContent())
-                    .good(0)
                     .createdDate(LocalDateTime.now())
                     .liquorRating(request.getLiquorPersonalRating())
                     .user(user)
