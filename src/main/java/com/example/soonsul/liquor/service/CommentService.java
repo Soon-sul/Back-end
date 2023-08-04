@@ -3,6 +3,7 @@ package com.example.soonsul.liquor.service;
 import com.example.soonsul.liquor.dto.CommentDto;
 import com.example.soonsul.liquor.dto.CommentRequest;
 import com.example.soonsul.liquor.entity.Comment;
+import com.example.soonsul.liquor.entity.CommentGood;
 import com.example.soonsul.liquor.entity.Review;
 import com.example.soonsul.liquor.exception.CommentNotExist;
 import com.example.soonsul.liquor.exception.ReviewNotExist;
@@ -29,11 +30,12 @@ public class CommentService {
     private final UserUtil userUtil;
     private final ReviewRepository reviewRepository;
     private final CommentRepository commentRepository;
+    private final CommentGoodRepository commentGoodRepository;
 
 
     @Transactional(readOnly = true)
     public List<CommentDto> getCommentList(Pageable pageable, Long reviewId){
-        final String userId= userUtil.getUserByAuthentication().getUserId();
+        final User user= userUtil.getUserByAuthentication();
         final List<Comment> commentList= commentRepository.findAllByLatest(pageable, reviewId).toList();
         final List<CommentDto> result= new ArrayList<>();
 
@@ -51,9 +53,10 @@ public class CommentService {
                     .commentId(c.getCommentId())
                     .content(c.getContent())
                     .createdDate(dateConversion(c.getCreatedDate()))
-                    .good(c.getGood())
+                    .good(commentGoodRepository.countByComment(c))
                     .upperCommentNickname(upperCommentNickname)
-                    .flagMySelf(Objects.equals(c.getUser().getUserId(), userId))
+                    .flagMySelf(Objects.equals(c.getUser().getUserId(), user.getUserId()))
+                    .flagGood(commentGoodRepository.existsByCommentAndUser(c, user))
                     .build();
             result.add(commentDto);
         }
@@ -70,7 +73,6 @@ public class CommentService {
         final Comment comment= Comment.builder()
                 .content(request.getContent())
                 .createdDate(LocalDateTime.now())
-                .good(0)
                 .user(user)
                 .review(review)
                 .upperCommentId(null)
@@ -106,7 +108,6 @@ public class CommentService {
         final Comment comment= Comment.builder()
                 .content(request.getContent())
                 .createdDate(LocalDateTime.now())
-                .good(0)
                 .user(user)
                 .review(upperComment.getReview())
                 .upperCommentId(upperComment.getCommentId())
@@ -123,17 +124,25 @@ public class CommentService {
 
     @Transactional
     public void postCommentLike(Long commentId){
+        final User user= userUtil.getUserByAuthentication();
         final Comment comment= commentRepository.findById(commentId)
                 .orElseThrow(()-> new CommentNotExist("comment not exist", ErrorCode.COMMENT_NOT_EXIST));
-        comment.addGood(1);
+
+        final CommentGood good= CommentGood.builder()
+                .comment(comment)
+                .user(user)
+                .build();
+        commentGoodRepository.save(good);
     }
 
 
     @Transactional
     public void deleteCommentLike(Long commentId){
+        final User user= userUtil.getUserByAuthentication();
         final Comment comment= commentRepository.findById(commentId)
                 .orElseThrow(()-> new CommentNotExist("comment not exist", ErrorCode.COMMENT_NOT_EXIST));
-        comment.addGood(-1);
+
+        commentGoodRepository.deleteByCommentAndUser(comment, user);
     }
 
 
@@ -141,7 +150,7 @@ public class CommentService {
     public Integer getCommentLike(Long commentId){
         final Comment comment= commentRepository.findById(commentId)
                 .orElseThrow(()-> new CommentNotExist("comment not exist", ErrorCode.COMMENT_NOT_EXIST));
-        return comment.getGood();
+        return commentGoodRepository.countByComment(comment);
     }
 
 

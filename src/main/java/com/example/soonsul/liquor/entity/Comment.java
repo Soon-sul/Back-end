@@ -25,9 +25,6 @@ public class Comment {
     @Column(name = "created_date", nullable = false)
     private LocalDateTime createdDate;
 
-    @Column(name = "good")
-    private Integer good;
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="review_id")
@@ -49,5 +46,4 @@ public class Comment {
         this.upperCommentId= upperCommentId;
     }
 
-    public void addGood(Integer number) {this.good+= number;}
 }

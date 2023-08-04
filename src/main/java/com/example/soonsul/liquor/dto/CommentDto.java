@@ -45,4 +45,8 @@ public class CommentDto {
 
     @ApiModelProperty(value = "댓글 작성자가 본인인지에 대한 여부", position = 10)
     private boolean flagMySelf;
+
+
+    @ApiModelProperty(value = "좋아요 유무", position = 11)
+    private boolean flagGood;
 }
