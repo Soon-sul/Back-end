@@ -15,20 +15,20 @@ import lombok.NoArgsConstructor;
 public class EvaluationDto {
 
     @ApiModelProperty(value = "단맛")
-    private Double sweetness;
+    private Integer sweetness;
 
     @ApiModelProperty(value = "산미")
-    private Double acidity;
+    private Integer acidity;
 
     @ApiModelProperty(value = "탄산")
-    private Double carbonicAcid;
+    private Integer carbonicAcid;
 
     @ApiModelProperty(value = "묵직함")
-    private Double heavy;
+    private Integer heavy;
 
     @ApiModelProperty(value = "향")
-    private Double scent;
+    private Integer scent;
 
     @ApiModelProperty(value = "꾸덕함")
-    private Double density;
+    private Integer density;
 }

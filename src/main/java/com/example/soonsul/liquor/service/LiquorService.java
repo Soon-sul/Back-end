@@ -166,12 +166,12 @@ public class LiquorService {
                 .orElseThrow(()-> new LiquorNotExist("liquor evaluation not exist", ErrorCode.LIQUOR_NOT_EXIST));
 
         return EvaluationDto.builder()
-                .sweetness(evaluation.getSweetness())
-                .acidity(evaluation.getAcidity())
-                .carbonicAcid(evaluation.getCarbonicAcid())
-                .heavy(evaluation.getHeavy())
-                .scent(evaluation.getScent())
-                .density(evaluation.getDensity())
+                .sweetness(Math.toIntExact(Math.round(evaluation.getSweetness())))
+                .acidity(Math.toIntExact(Math.round(evaluation.getAcidity())))
+                .carbonicAcid(Math.toIntExact(Math.round(evaluation.getCarbonicAcid())))
+                .heavy(Math.toIntExact(Math.round(evaluation.getHeavy())))
+                .scent(Math.toIntExact(Math.round(evaluation.getScent())))
+                .density(Math.toIntExact(Math.round(evaluation.getDensity())))
                 .build();
     }
 
