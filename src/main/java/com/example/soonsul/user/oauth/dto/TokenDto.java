@@ -21,9 +21,15 @@ public class TokenDto {
     @ApiModelProperty(value = "리프레쉬 토큰 (기존 유저일 경우)", position = 2)
     private String refreshToken;
 
-    @ApiModelProperty(value = "oauth id (새로운 유저일 경우)", position = 3)
+    @ApiModelProperty(value = "유저 닉네임 (기존 유저일 경우)", position = 3)
+    private String nickname;
+
+    @ApiModelProperty(value = "유저 프로필 사진 url (기존 유저일 경우)", position = 4)
+    private String profileImage;
+
+    @ApiModelProperty(value = "oauth id (새로운 유저일 경우)", position = 5)
     private String oauthId;
 
-    @ApiModelProperty(value = "oauth를 제공하는 플랫폼 (새로운 유저일 경우)", position = 4)
+    @ApiModelProperty(value = "oauth를 제공하는 플랫폼 (새로운 유저일 경우)", position = 6)
     private OAuthProvider oauthProvider;
 }

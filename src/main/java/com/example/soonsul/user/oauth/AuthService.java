@@ -41,6 +41,8 @@ public class AuthService {
             return TokenDto.builder()
                     .accessToken(jwtTokenProvider.generateJwtToken(user.get()))
                     .refreshToken(refreshToken.getRefreshToken())
+                    .nickname(user.get().getNickname())
+                    .profileImage(user.get().getProfileImage())
                     .build();
         }
         else{                          //신규가입자
