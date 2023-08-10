@@ -19,6 +19,13 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     @Query(nativeQuery = true,
             value="SELECT * FROM comment c WHERE c.review_id = :reviewId" +
-                    " ORDER BY c.upper_comment_id DESC, c.comment_id DESC")
+                    " AND c.comment_id = c.upper_comment_id" +
+                    " ORDER BY c.comment_id DESC")
     Page<Comment> findAllByLatest(Pageable pageable, @Param("reviewId") Long reviewId);
+
+    @Query(nativeQuery = true,
+            value="SELECT * FROM comment c WHERE c.upper_comment_id = :upperCommentId" +
+                    " AND c.comment_id <> :upperCommentId" +
+                    " ORDER BY c.comment_id DESC LIMIT 2")
+    List<Comment> findAllByUpperComment(@Param("upperCommentId") Long upperCommentId);
 }

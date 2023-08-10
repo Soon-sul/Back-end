@@ -2,6 +2,7 @@ package com.example.soonsul.liquor.service;
 
 import com.example.soonsul.liquor.dto.CommentDto;
 import com.example.soonsul.liquor.dto.CommentRequest;
+import com.example.soonsul.liquor.dto.ReCommentDto;
 import com.example.soonsul.liquor.entity.Comment;
 import com.example.soonsul.liquor.entity.CommentGood;
 import com.example.soonsul.liquor.entity.Review;
@@ -40,11 +41,24 @@ public class CommentService {
         final List<CommentDto> result= new ArrayList<>();
 
         for(Comment c: commentList){
-            String upperCommentNickname= null;
-            if(c.getUpperCommentId()!=null){
-                upperCommentNickname= commentRepository.findById(c.getUpperCommentId())
-                        .orElseThrow(()-> new CommentNotExist("comment not exist", ErrorCode.COMMENT_NOT_EXIST)).getUser().getNickname();
+            final List<Comment> reComments= commentRepository.findAllByUpperComment(c.getCommentId());
+            final List<ReCommentDto> reCommentList= new ArrayList<>();
+            for(Comment rc: reComments){
+                final ReCommentDto dto= ReCommentDto.builder()
+                        .userId(rc.getUser().getUserId())
+                        .nickname(rc.getUser().getNickname())
+                        .profileImage(rc.getUser().getProfileImage())
+                        .reCommentId(rc.getCommentId())
+                        .upperCommentNickname(c.getUser().getNickname())
+                        .content(rc.getContent())
+                        .createdDate(dateConversion(rc.getCreatedDate()))
+                        .good(commentGoodRepository.countByComment(rc))
+                        .flagMySelf(Objects.equals(rc.getUser().getUserId(), user.getUserId()))
+                        .flagGood(commentGoodRepository.existsByCommentAndUser(rc, user))
+                        .build();
+                reCommentList.add(dto);
             }
+
             final CommentDto commentDto= CommentDto.builder()
                     .userId(c.getUser().getUserId())
                     .nickname(c.getUser().getNickname())
@@ -54,7 +68,7 @@ public class CommentService {
                     .content(c.getContent())
                     .createdDate(dateConversion(c.getCreatedDate()))
                     .good(commentGoodRepository.countByComment(c))
-                    .upperCommentNickname(upperCommentNickname)
+                    .reCommentList(reCommentList)
                     .flagMySelf(Objects.equals(c.getUser().getUserId(), user.getUserId()))
                     .flagGood(commentGoodRepository.existsByCommentAndUser(c, user))
                     .build();
