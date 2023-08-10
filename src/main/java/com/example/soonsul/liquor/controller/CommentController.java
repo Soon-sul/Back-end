@@ -1,14 +1,22 @@
 package com.example.soonsul.liquor.controller;
 
+import com.example.soonsul.liquor.dto.CommentDto;
 import com.example.soonsul.liquor.dto.CommentRequest;
+import com.example.soonsul.liquor.dto.ReCommentDto;
+import com.example.soonsul.liquor.response.ReCommentListResponse;
 import com.example.soonsul.liquor.service.CommentService;
 import com.example.soonsul.response.result.ResultCode;
 import com.example.soonsul.response.result.ResultResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Api(tags="Comment")
 @RestController
@@ -86,6 +94,15 @@ public class CommentController {
     public ResponseEntity<ResultResponse> getCommentLike(@PathVariable("commentId") Long commentId) {
         final Integer data= commentService.getCommentLike(commentId);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_COMMENT_LIKE_SUCCESS, data));
+    }
+
+
+    @ApiOperation(value = "대댓글 전체 조회 - 최신순")
+    @GetMapping("/comments/{commentId}/re-comments")
+    public ResponseEntity<ReCommentListResponse> getReCommentList(@PageableDefault(size=10, sort = "comment_id", direction = Sort.Direction.DESC) Pageable pageable,
+                                                                  @PathVariable("commentId") Long commentId) {
+        final List<ReCommentDto> data= commentService.getReCommentList(pageable, commentId);
+        return ResponseEntity.ok(ReCommentListResponse.of(ResultCode.GET_RECOMMENT_LIST_SUCCESS, data));
     }
 
 }

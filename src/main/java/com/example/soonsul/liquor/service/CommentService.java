@@ -78,6 +78,34 @@ public class CommentService {
     }
 
 
+    @Transactional(readOnly = true)
+    public List<ReCommentDto> getReCommentList(Pageable pageable, Long commentId){
+        final User user= userUtil.getUserByAuthentication();
+        final Comment c= commentRepository.findById(commentId)
+                .orElseThrow(()-> new CommentNotExist("comment not exist", ErrorCode.COMMENT_NOT_EXIST));
+
+        final List<Comment> reCommentList= commentRepository.findByUpperComment(pageable, commentId).toList();
+        final List<ReCommentDto> result= new ArrayList<>();
+
+        for(Comment rc: reCommentList){
+            final ReCommentDto dto= ReCommentDto.builder()
+                    .userId(rc.getUser().getUserId())
+                    .nickname(rc.getUser().getNickname())
+                    .profileImage(rc.getUser().getProfileImage())
+                    .reCommentId(rc.getCommentId())
+                    .upperCommentNickname(c.getUser().getNickname())
+                    .content(rc.getContent())
+                    .createdDate(dateConversion(rc.getCreatedDate()))
+                    .good(commentGoodRepository.countByComment(rc))
+                    .flagMySelf(Objects.equals(rc.getUser().getUserId(), user.getUserId()))
+                    .flagGood(commentGoodRepository.existsByCommentAndUser(rc, user))
+                    .build();
+            result.add(dto);
+        }
+        return result;
+    }
+
+
     @Transactional
     public void postComment(Long reviewId, CommentRequest request){
         final User user= userUtil.getUserByAuthentication();
