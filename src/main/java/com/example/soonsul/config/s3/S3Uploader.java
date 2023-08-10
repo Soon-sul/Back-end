@@ -84,7 +84,7 @@ public class S3Uploader {
     }
 
     private String liquorMainUpload(File uploadFile) {
-        String fileName = "/liquor/main/" + uploadFile.getName();
+        String fileName = "liquor/main/" + uploadFile.getName();
         String uploadImageUrl = putS3(uploadFile, fileName);
         removeNewFile(uploadFile);
         return uploadImageUrl;
