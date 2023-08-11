@@ -109,4 +109,11 @@ public class GlobalExceptionHandler {
         final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
         return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
     }
+
+    @ExceptionHandler(PersonalRatingNull.class)
+    public ResponseEntity<ErrorResponse> handlePersonalRatingNull(PersonalRatingNull ex){
+        log.error("handlePersonalRatingNull",ex);
+        final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
+    }
 }

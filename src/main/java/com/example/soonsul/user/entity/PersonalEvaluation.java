@@ -1,5 +1,6 @@
 package com.example.soonsul.user.entity;
 
+import com.example.soonsul.liquor.entity.FlavorType;
 import com.example.soonsul.liquor.entity.Liquor;
 import lombok.*;
 
@@ -57,28 +58,47 @@ public class PersonalEvaluation {
         this.liquorPersonalRating= liquorPersonalRating;
     }
 
-    public void updateSweetness(Integer sweetness){
-        this.sweetness= sweetness;
+    public void updateFlavor(FlavorType flavorType, Integer value){
+        switch (flavorType){
+            case SWEETNESS:
+                this.sweetness= value;
+                break;
+            case ACIDITY:
+                this.acidity= value;
+                break;
+            case CARBONIC_ACID:
+                this.carbonicAcid= value;
+                break;
+            case HEAVY:
+                this.heavy= value;
+                break;
+            case SCENT:
+                this.scent= value;
+                break;
+            case DENSITY:
+                this.density= value;
+                break;
+        }
     }
 
-    public void updateAcidity(Integer acidity){
-        this.acidity= acidity;
-    }
 
-    public void updateCarbonicAcid(Integer carbonicAcid){
-        this.carbonicAcid= carbonicAcid;
-    }
-
-    public void updateHeavy(Integer heavy){
-        this.heavy= heavy;
-    }
-
-    public void updateScent(Integer scent){
-        this.scent= scent;
-    }
-
-    public void updateDensity(Integer density){
-        this.density= density;
+    public Integer getFlavor(FlavorType flavorType){
+        switch (flavorType){
+            case SWEETNESS:
+                return this.sweetness;
+            case ACIDITY:
+                return this.acidity;
+            case CARBONIC_ACID:
+                return this.carbonicAcid;
+            case HEAVY:
+                return this.heavy;
+            case SCENT:
+                return this.scent;
+            case DENSITY:
+                return this.density;
+            default:
+                return 1;
+        }
     }
 
 }

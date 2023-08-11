@@ -45,27 +45,53 @@ public class EvaluationNumber {
         this.averageRating+= number;
     }
 
-    public void addSweetness(Integer number){
-        this.sweetness+= number;
+
+    public void updateFlavor(FlavorType fType, CalculationType cType){
+        switch (fType){
+            case SWEETNESS:
+                if(cType.equals(CalculationType.ADD)) this.sweetness++;
+                else this.sweetness--;
+                break;
+            case ACIDITY:
+                if(cType.equals(CalculationType.ADD)) this.acidity++;
+                else this.acidity--;
+                break;
+            case CARBONIC_ACID:
+                if(cType.equals(CalculationType.ADD)) this.carbonicAcid++;
+                else this.carbonicAcid--;
+                break;
+            case HEAVY:
+                if(cType.equals(CalculationType.ADD)) this.heavy++;
+                else this.heavy--;
+                break;
+            case SCENT:
+                if(cType.equals(CalculationType.ADD)) this.scent++;
+                else this.scent--;
+                break;
+            case DENSITY:
+                if(cType.equals(CalculationType.ADD)) this.density++;
+                else this.density--;
+                break;
+        }
     }
 
-    public void addAcidity(Integer number){
-        this.acidity+= number;
-    }
 
-    public void addCarbonicAcid(Integer number){
-        this.carbonicAcid+= number;
-    }
-
-    public void addHeavy(Integer number){
-        this.heavy+= number;
-    }
-
-    public void addScent(Integer number){
-        this.scent+= number;
-    }
-
-    public void addDensity(Integer number){
-        this.density+= number;
+    public Integer getFlavor(FlavorType fType){
+        switch (fType){
+            case SWEETNESS:
+                return this.sweetness;
+            case ACIDITY:
+                return this.acidity;
+            case CARBONIC_ACID:
+                return this.carbonicAcid;
+            case HEAVY:
+                return this.heavy;
+            case SCENT:
+                return this.scent;
+            case DENSITY:
+                return this.density;
+            default:
+                return 1;
+        }
     }
 }

@@ -1,10 +1,13 @@
 package com.example.soonsul.liquor.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.example.soonsul.liquor.entity.FlavorType;
+import lombok.*;
 
 @Getter
+@Setter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class EvaluationRequest {
     private Double liquorPersonalRating;
     private Integer sweetness;
@@ -14,4 +17,24 @@ public class EvaluationRequest {
     private Integer scent;
     private Integer density;
     private String reviewContent;
+
+
+    public Integer getFlavor(FlavorType fType){
+        switch (fType){
+            case SWEETNESS:
+                return this.sweetness;
+            case ACIDITY:
+                return this.acidity;
+            case CARBONIC_ACID:
+                return this.carbonicAcid;
+            case HEAVY:
+                return this.heavy;
+            case SCENT:
+                return this.scent;
+            case DENSITY:
+                return this.density;
+            default:
+                return 1;
+        }
+    }
 }
