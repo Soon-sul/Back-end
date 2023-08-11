@@ -5,13 +5,12 @@ import com.example.soonsul.liquor.entity.Evaluation;
 import com.example.soonsul.liquor.entity.EvaluationNumber;
 import com.example.soonsul.liquor.entity.Liquor;
 import com.example.soonsul.liquor.entity.LocationInfo;
-import com.example.soonsul.liquor.exception.LiquorNotExist;
 import com.example.soonsul.liquor.repository.EvaluationNumberRepository;
 import com.example.soonsul.liquor.repository.EvaluationRepository;
 import com.example.soonsul.liquor.repository.LiquorRepository;
 import com.example.soonsul.liquor.repository.LocationInfoRepository;
 import com.example.soonsul.manager.dto.LocationRes;
-import com.example.soonsul.response.error.ErrorCode;
+import com.example.soonsul.util.LiquorUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -27,6 +26,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ManagerService {
     private final S3Uploader s3Uploader;
+    private final LiquorUtil liquorUtil;
     private final LiquorRepository liquorRepository;
     private final EvaluationRepository evaluationRepository;
     private final EvaluationNumberRepository numberRepository;
@@ -45,8 +45,7 @@ public class ManagerService {
     public void postMainPhoto(List<MultipartFile> images) {
         for (MultipartFile image : images) {
             final String liquorId = image.getOriginalFilename().substring(0, 8);
-            final Liquor liquor = liquorRepository.findById(liquorId)
-                    .orElseThrow(() -> new LiquorNotExist("liquor not exist", ErrorCode.LIQUOR_NOT_EXIST));
+            final Liquor liquor = liquorUtil.getLiquor(liquorId);
             if (!liquor.getImageUrl().equals("") || liquor.getImageUrl() != null)
                 s3Uploader.deleteFile(liquor.getImageUrl());
             liquor.updateImageUrl(s3Uploader.liquorMainUpload(image));

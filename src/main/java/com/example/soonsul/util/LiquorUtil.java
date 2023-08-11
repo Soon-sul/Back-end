@@ -1,14 +1,8 @@
 package com.example.soonsul.util;
 
-import com.example.soonsul.liquor.entity.Evaluation;
-import com.example.soonsul.liquor.entity.EvaluationNumber;
-import com.example.soonsul.liquor.entity.Liquor;
-import com.example.soonsul.liquor.exception.EvaluationNotExist;
-import com.example.soonsul.liquor.exception.LiquorNotExist;
-import com.example.soonsul.liquor.repository.EvaluationNumberRepository;
-import com.example.soonsul.liquor.repository.EvaluationRepository;
-import com.example.soonsul.liquor.repository.LiquorRepository;
-import com.example.soonsul.liquor.repository.ReviewRepository;
+import com.example.soonsul.liquor.entity.*;
+import com.example.soonsul.liquor.exception.*;
+import com.example.soonsul.liquor.repository.*;
 import com.example.soonsul.response.error.ErrorCode;
 import com.example.soonsul.user.entity.PersonalEvaluation;
 import com.example.soonsul.user.entity.User;
@@ -28,6 +22,11 @@ public class LiquorUtil {
     private final EvaluationRepository evaluationRepository;
     private final ReviewRepository reviewRepository;
     private final EvaluationNumberRepository evaluationNumberRepository;
+    private final LocationInfoRepository locationInfoRepository;
+    private final CommentRepository commentRepository;
+    private final CodeRepository codeRepository;
+    private final PrizeInfoRepository prizeInfoRepository;
+    private final SalePlaceInfoRepository salePlaceInfoRepository;
 
 
     public Liquor getLiquor(String liquorId){
@@ -48,5 +47,35 @@ public class LiquorUtil {
     public PersonalEvaluation getPersonalEvaluation(User user, Liquor liquor){
         return personalEvaluationRepository.findByUserAndLiquor(user, liquor)
                 .orElseThrow(()-> new PersonalEvaluationNotExist("liquor evaluation not exist", ErrorCode.PERSONAL_EVALUATION_NOT_EXIST));
+    }
+
+    public LocationInfo getLocationInfo(Long locationInfoId){
+        return locationInfoRepository.findById(locationInfoId)
+                .orElseThrow(()-> new LocationInfoNotExist("location info not exist",ErrorCode.LOCATION_INFO_NOT_EXIST));
+    }
+
+    public PrizeInfo getPrizeInfo(Long prizeInfoId){
+        return prizeInfoRepository.findById(prizeInfoId)
+                .orElseThrow(()-> new PrizeInfoNotExist("prize info not exist",ErrorCode.PRIZE_INFO_NOT_EXIST));
+    }
+
+    public SalePlaceInfo getSalePlaceInfo(Long salePlaceInfoId){
+        return salePlaceInfoRepository.findById(salePlaceInfoId)
+                .orElseThrow(()-> new SalePlaceInfoNotExist("sale place info not exist",ErrorCode.SALE_PLACE_INFO_NOT_EXIST));
+    }
+
+    public Review getReview(Long reviewId) {
+        return reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new ReviewNotExist("review not exist", ErrorCode.REVIEW_NOT_EXIST));
+    }
+
+    public Comment getComment(Long commentId){
+        return commentRepository.findById(commentId)
+                .orElseThrow(()-> new CommentNotExist("comment not exist", ErrorCode.COMMENT_NOT_EXIST));
+    }
+
+    public String getCodeName(String codeId){
+        return codeRepository.findById(codeId)
+                .orElseThrow(()->new CodeNotExist("code not exist", ErrorCode.CODE_NOT_EXIST)).getCodeName();
     }
 }

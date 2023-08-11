@@ -12,6 +12,7 @@ import com.example.soonsul.liquor.repository.LocationRepository;
 import com.example.soonsul.main.dto.RegionLiquorDto;
 import com.example.soonsul.response.error.ErrorCode;
 import com.example.soonsul.search.dto.SearchDto;
+import com.example.soonsul.util.LiquorUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,7 @@ public class SearchService {
     private final CodeRepository codeRepository;
     private final LocationRepository locationRepository;
     private final LocationInfoRepository locationInfoRepository;
+    private final LiquorUtil liquorUtil;
 
 
     @Transactional(readOnly = true)
@@ -36,14 +38,12 @@ public class SearchService {
         final List<SearchDto> result= new ArrayList<>();
 
         for(Liquor l: list){
-            final String liquorCategory= codeRepository.findById(l.getLiquorCategory())
-                    .orElseThrow(()->new CodeNotExist("code not exist", ErrorCode.CODE_NOT_EXIST)).getCodeName();
+            final String liquorCategory= liquorUtil.getCodeName(l.getLiquorCategory());
 
             final List<Location> locations = locationRepository.findAllByLiquor(l);
             final List<String> locationList = new ArrayList<>();
             for (Location location : locations) {
-                final LocationInfo info = locationInfoRepository.findById(location.getLocationInfoId())
-                        .orElseThrow(() -> new LocationInfoNotExist("location info not exist", ErrorCode.LOCATION_INFO_NOT_EXIST));
+                final LocationInfo info = liquorUtil.getLocationInfo(location.getLocationInfoId());
                 locationList.add(info.getBrewery());
             }
 

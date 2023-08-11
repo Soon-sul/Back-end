@@ -2,13 +2,11 @@ package com.example.soonsul.liquor.service;
 
 import com.example.soonsul.liquor.dto.*;
 import com.example.soonsul.liquor.entity.*;
-import com.example.soonsul.liquor.exception.*;
 import com.example.soonsul.liquor.repository.*;
-import com.example.soonsul.response.error.ErrorCode;
 import com.example.soonsul.user.entity.PersonalEvaluation;
 import com.example.soonsul.user.entity.User;
-import com.example.soonsul.user.exception.PersonalEvaluationNotExist;
 import com.example.soonsul.user.repository.PersonalEvaluationRepository;
+import com.example.soonsul.util.LiquorUtil;
 import com.example.soonsul.util.UserUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -25,14 +23,10 @@ public class LiquorService {
     private final LiquorRepository liquorRepository;
     private final PersonalEvaluationRepository personalEvaluationRepository;
     private final UserUtil userUtil;
+    private final LiquorUtil liquorUtil;
     private final PrizeRepository prizeRepository;
-    private final EvaluationRepository evaluationRepository;
-    private final CodeRepository codeRepository;
     private final LocationRepository locationRepository;
     private final SalePlaceRepository salePlaceRepository;
-    private final PrizeInfoRepository prizeInfoRepository;
-    private final LocationInfoRepository locationInfoRepository;
-    private final SalePlaceInfoRepository salePlaceInfoRepository;
     private final ReviewRepository reviewRepository;
     private final LiquorFilteringRepository filteringRepository;
     private final FilteringClickRepository filteringClickRepository;
@@ -42,8 +36,7 @@ public class LiquorService {
     @Transactional(readOnly = true)
     public LiquorInfoDto getLiquorInfo(String liquorId){
         final User user= userUtil.getUserByAuthentication();
-        final Liquor liquor= liquorRepository.findById(liquorId)
-                .orElseThrow(()-> new LiquorNotExist("liquor not exist", ErrorCode.LIQUOR_NOT_EXIST));
+        final Liquor liquor= liquorUtil.getLiquor(liquorId);
         final Optional<PersonalEvaluation> personalEvaluation= personalEvaluationRepository.findByUserAndLiquor(user,liquor);
 
         Double liquorPersonalRating= null;
@@ -51,10 +44,8 @@ public class LiquorService {
             liquorPersonalRating= personalEvaluation.get().getLiquorPersonalRating();
         }
 
-        final String region= codeRepository.findById(liquor.getRegion())
-                .orElseThrow(()->new CodeNotExist("code not exist", ErrorCode.CODE_NOT_EXIST)).getCodeName();
-        final String liquorCategory= codeRepository.findById(liquor.getLiquorCategory())
-                .orElseThrow(()->new CodeNotExist("code not exist", ErrorCode.CODE_NOT_EXIST)).getCodeName();
+        final String region= liquorUtil.getCodeName(liquor.getRegion());
+        final String liquorCategory= liquorUtil.getCodeName(liquor.getLiquorCategory());
 
         final List<LiquorFilteringDto> filtering= new ArrayList<>();
         final List<LiquorFiltering> filteringList= filteringRepository.findAllByLiquorId(liquorId);
@@ -86,14 +77,12 @@ public class LiquorService {
 
     @Transactional(readOnly = true)
     public List<PrizeListDto> getLiquorPrize(String liquorId){
-        final Liquor liquor= liquorRepository.findById(liquorId)
-                .orElseThrow(()-> new LiquorNotExist("liquor not exist", ErrorCode.LIQUOR_NOT_EXIST));
+        final Liquor liquor= liquorUtil.getLiquor(liquorId);
         final List<Prize> prizeList= prizeRepository.findAllByLiquor(liquor);
 
         final List<PrizeListDto> result= new ArrayList<>();
         for(Prize p: prizeList){
-            final PrizeInfo info= prizeInfoRepository.findById(p.getPrizeInfoId())
-                    .orElseThrow(()-> new PrizeInfoNotExist("prize info not exist",ErrorCode.PRIZE_INFO_NOT_EXIST));
+            final PrizeInfo info= liquorUtil.getPrizeInfo(p.getPrizeInfoId());
             final PrizeListDto dto = PrizeListDto.builder()
                     .prizeId(p.getPrizeId())
                     .name(info.getName())
@@ -106,14 +95,12 @@ public class LiquorService {
 
     @Transactional(readOnly = true)
     public List<LocationListDto> getLiquorLocation(String liquorId){
-        final Liquor liquor= liquorRepository.findById(liquorId)
-                .orElseThrow(()-> new LiquorNotExist("liquor not exist", ErrorCode.LIQUOR_NOT_EXIST));
+        final Liquor liquor= liquorUtil.getLiquor(liquorId);
         final List<Location> locationList= locationRepository.findAllByLiquor(liquor);
 
         final List<LocationListDto> result= new ArrayList<>();
         for(Location l: locationList){
-            final LocationInfo info= locationInfoRepository.findById(l.getLocationInfoId())
-                    .orElseThrow(()-> new LocationInfoNotExist("location info not exist",ErrorCode.LOCATION_INFO_NOT_EXIST));
+            final LocationInfo info= liquorUtil.getLocationInfo(l.getLocationInfoId());
             final LocationListDto dto = LocationListDto.builder()
                     .locationInfoId(l.getLocationId())
                     .name(info.getName())
@@ -129,14 +116,12 @@ public class LiquorService {
 
     @Transactional(readOnly = true)
     public List<SalePlaceListDto> getLiquorSalePlace(String liquorId){
-        final Liquor liquor= liquorRepository.findById(liquorId)
-                .orElseThrow(()-> new LiquorNotExist("liquor not exist", ErrorCode.LIQUOR_NOT_EXIST));
+        final Liquor liquor= liquorUtil.getLiquor(liquorId);
         final List<SalePlace> salePlaceList= salePlaceRepository.findAllByLiquor(liquor);
 
         final List<SalePlaceListDto> result= new ArrayList<>();
         for(SalePlace s: salePlaceList){
-            final SalePlaceInfo info= salePlaceInfoRepository.findById(s.getSalePlaceInfoId())
-                    .orElseThrow(()-> new SalePlaceInfoNotExist("sale place info not exist",ErrorCode.SALE_PLACE_INFO_NOT_EXIST));
+            final SalePlaceInfo info= liquorUtil.getSalePlaceInfo(s.getSalePlaceInfoId());
             final SalePlaceListDto dto = SalePlaceListDto.builder()
                     .salePlaceId(s.getSalePlaceId())
                     .name(info.getName())
@@ -152,8 +137,7 @@ public class LiquorService {
     @Transactional(readOnly = true)
     public boolean getEvaluationCheck(String liquorId){
         final User user= userUtil.getUserByAuthentication();
-        final Liquor liquor= liquorRepository.findById(liquorId)
-                .orElseThrow(()-> new LiquorNotExist("liquor not exist", ErrorCode.LIQUOR_NOT_EXIST));
+        final Liquor liquor= liquorUtil.getLiquor(liquorId);
         final Optional<PersonalEvaluation> evaluation= personalEvaluationRepository.findByUserAndLiquor(user, liquor);
 
         return evaluation.isPresent();
@@ -162,8 +146,7 @@ public class LiquorService {
 
     @Transactional(readOnly = true)
     public EvaluationDto getFlavorAverage(String liquorId){
-        final Evaluation evaluation= evaluationRepository.findById(liquorId)
-                .orElseThrow(()-> new LiquorNotExist("liquor evaluation not exist", ErrorCode.LIQUOR_NOT_EXIST));
+        final Evaluation evaluation= liquorUtil.getEvaluation(liquorId);
 
         return EvaluationDto.builder()
                 .sweetness(Math.toIntExact(Math.round(evaluation.getSweetness())))
@@ -179,10 +162,8 @@ public class LiquorService {
     @Transactional(readOnly = true)
     public PersonEvaluationDto getFlavorPerson(String liquorId){
         final User user= userUtil.getUserByAuthentication();
-        final Liquor liquor= liquorRepository.findById(liquorId)
-                .orElseThrow(()-> new LiquorNotExist("liquor not exist", ErrorCode.LIQUOR_NOT_EXIST));
-        final PersonalEvaluation evaluation= personalEvaluationRepository.findByUserAndLiquor(user, liquor)
-                .orElseThrow(()-> new LiquorNotExist("liquor evaluation not exist", ErrorCode.LIQUOR_NOT_EXIST));
+        final Liquor liquor= liquorUtil.getLiquor(liquorId);
+        final PersonalEvaluation evaluation= liquorUtil.getPersonalEvaluation(user, liquor);
 
         return PersonEvaluationDto.builder()
                 .sweetness(evaluation.getSweetness())
@@ -198,10 +179,8 @@ public class LiquorService {
     @Transactional(readOnly = true)
     public boolean getFlavorCheck(String liquorId){
         final User user= userUtil.getUserByAuthentication();
-        final Liquor liquor= liquorRepository.findById(liquorId)
-                .orElseThrow(()-> new LiquorNotExist("liquor not exist", ErrorCode.LIQUOR_NOT_EXIST));
-        final PersonalEvaluation evaluation= personalEvaluationRepository.findByUserAndLiquor(user, liquor)
-                .orElseThrow(()-> new PersonalEvaluationNotExist("liquor evaluation not exist", ErrorCode.PERSONAL_EVALUATION_NOT_EXIST));
+        final Liquor liquor= liquorUtil.getLiquor(liquorId);
+        final PersonalEvaluation evaluation= liquorUtil.getPersonalEvaluation(user, liquor);
 
         boolean flag= false;
         if(evaluation.getSweetness()!=null) flag= true;
@@ -254,8 +233,7 @@ public class LiquorService {
     @Transactional
     public void postScrap(String liquorId){
         final User user= userUtil.getUserByAuthentication();
-        final Liquor liquor= liquorRepository.findById(liquorId)
-                .orElseThrow(()-> new LiquorNotExist("liquor not exist", ErrorCode.LIQUOR_NOT_EXIST));
+        final Liquor liquor= liquorUtil.getLiquor(liquorId);
 
         final Scrap scrap= Scrap.builder()
                 .scrapDate(LocalDate.now())
@@ -269,8 +247,7 @@ public class LiquorService {
     @Transactional
     public void deleteScrap(String liquorId){
         final User user= userUtil.getUserByAuthentication();
-        final Liquor liquor= liquorRepository.findById(liquorId)
-                .orElseThrow(()-> new LiquorNotExist("liquor not exist", ErrorCode.LIQUOR_NOT_EXIST));
+        final Liquor liquor= liquorUtil.getLiquor(liquorId);
 
         scrapRepository.deleteByUserAndLiquor(user, liquor);
     }
@@ -286,8 +263,7 @@ public class LiquorService {
             final Optional<Scrap> scrap= scrapRepository.findByUserAndLiquor(user,l);
             if(scrap.isEmpty()) continue;
 
-            final String liquorCategory= codeRepository.findById(l.getLiquorCategory())
-                    .orElseThrow(()->new CodeNotExist("code not exist", ErrorCode.CODE_NOT_EXIST)).getCodeName();
+            final String liquorCategory= liquorUtil.getCodeName(l.getLiquorCategory());
 
             final LiquorInfoDto dto= LiquorInfoDto.builder()
                     .liquorId(l.getLiquorId())

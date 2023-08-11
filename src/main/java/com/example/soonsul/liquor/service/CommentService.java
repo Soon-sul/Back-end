@@ -6,12 +6,9 @@ import com.example.soonsul.liquor.dto.ReCommentDto;
 import com.example.soonsul.liquor.entity.Comment;
 import com.example.soonsul.liquor.entity.CommentGood;
 import com.example.soonsul.liquor.entity.Review;
-import com.example.soonsul.liquor.exception.CommentNotExist;
-import com.example.soonsul.liquor.exception.ReviewNotExist;
 import com.example.soonsul.liquor.repository.*;
-import com.example.soonsul.response.error.ErrorCode;
 import com.example.soonsul.user.entity.User;
-import com.example.soonsul.user.repository.PersonalEvaluationRepository;
+import com.example.soonsul.util.LiquorUtil;
 import com.example.soonsul.util.UserUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -29,7 +26,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class CommentService {
     private final UserUtil userUtil;
-    private final ReviewRepository reviewRepository;
+    private final LiquorUtil liquorUtil;
     private final CommentRepository commentRepository;
     private final CommentGoodRepository commentGoodRepository;
 
@@ -81,8 +78,7 @@ public class CommentService {
     @Transactional(readOnly = true)
     public List<ReCommentDto> getReCommentList(Pageable pageable, Long commentId){
         final User user= userUtil.getUserByAuthentication();
-        final Comment c= commentRepository.findById(commentId)
-                .orElseThrow(()-> new CommentNotExist("comment not exist", ErrorCode.COMMENT_NOT_EXIST));
+        final Comment c= liquorUtil.getComment(commentId);
 
         final List<Comment> reCommentList= commentRepository.findByUpperComment(pageable, commentId).toList();
         final List<ReCommentDto> result= new ArrayList<>();
@@ -109,8 +105,7 @@ public class CommentService {
     @Transactional
     public void postComment(Long reviewId, CommentRequest request){
         final User user= userUtil.getUserByAuthentication();
-        final Review review= reviewRepository.findById(reviewId)
-                .orElseThrow(()-> new ReviewNotExist("review not exist", ErrorCode.REVIEW_NOT_EXIST));
+        final Review review= liquorUtil.getReview(reviewId);
 
         final Comment comment= Comment.builder()
                 .content(request.getContent())
@@ -126,8 +121,7 @@ public class CommentService {
 
     @Transactional
     public void putComment(Long commentId, CommentRequest request){
-        final Comment comment= commentRepository.findById(commentId)
-                .orElseThrow(()-> new CommentNotExist("comment not exist", ErrorCode.COMMENT_NOT_EXIST));
+        final Comment comment= liquorUtil.getComment(commentId);
 
         if(!comment.getContent().equals(request.getContent()))
             comment.updateContent(request.getContent());
@@ -144,8 +138,7 @@ public class CommentService {
     @Transactional
     public void postReComment(Long upperCommentId, CommentRequest request){
         final User user= userUtil.getUserByAuthentication();
-        final Comment upperComment= commentRepository.findById(upperCommentId)
-                .orElseThrow(()-> new CommentNotExist("upper comment not exist", ErrorCode.COMMENT_NOT_EXIST));
+        final Comment upperComment= liquorUtil.getComment(upperCommentId);
 
         final Comment comment= Comment.builder()
                 .content(request.getContent())
@@ -167,8 +160,7 @@ public class CommentService {
     @Transactional
     public void postCommentLike(Long commentId){
         final User user= userUtil.getUserByAuthentication();
-        final Comment comment= commentRepository.findById(commentId)
-                .orElseThrow(()-> new CommentNotExist("comment not exist", ErrorCode.COMMENT_NOT_EXIST));
+        final Comment comment= liquorUtil.getComment(commentId);
 
         final CommentGood good= CommentGood.builder()
                 .comment(comment)
@@ -181,8 +173,7 @@ public class CommentService {
     @Transactional
     public void deleteCommentLike(Long commentId){
         final User user= userUtil.getUserByAuthentication();
-        final Comment comment= commentRepository.findById(commentId)
-                .orElseThrow(()-> new CommentNotExist("comment not exist", ErrorCode.COMMENT_NOT_EXIST));
+        final Comment comment= liquorUtil.getComment(commentId);
 
         commentGoodRepository.deleteByCommentAndUser(comment, user);
     }
@@ -190,8 +181,7 @@ public class CommentService {
 
     @Transactional(readOnly = true)
     public Integer getCommentLike(Long commentId){
-        final Comment comment= commentRepository.findById(commentId)
-                .orElseThrow(()-> new CommentNotExist("comment not exist", ErrorCode.COMMENT_NOT_EXIST));
+        final Comment comment= liquorUtil.getComment(commentId);
         return commentGoodRepository.countByComment(comment);
     }
 

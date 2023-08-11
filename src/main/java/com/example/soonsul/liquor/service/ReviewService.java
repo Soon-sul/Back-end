@@ -4,13 +4,10 @@ import com.example.soonsul.liquor.dto.ReviewDto;
 import com.example.soonsul.liquor.entity.Liquor;
 import com.example.soonsul.liquor.entity.Review;
 import com.example.soonsul.liquor.entity.ReviewGood;
-import com.example.soonsul.liquor.exception.LiquorNotExist;
-import com.example.soonsul.liquor.exception.ReviewNotExist;
 import com.example.soonsul.liquor.repository.*;
-import com.example.soonsul.response.error.ErrorCode;
 import com.example.soonsul.user.entity.PersonalEvaluation;
 import com.example.soonsul.user.entity.User;
-import com.example.soonsul.user.repository.PersonalEvaluationRepository;
+import com.example.soonsul.util.LiquorUtil;
 import com.example.soonsul.util.UserUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -26,25 +23,22 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ReviewService {
-    private final LiquorRepository liquorRepository;
-    private final PersonalEvaluationRepository personalEvaluationRepository;
     private final ReviewRepository reviewRepository;
     private final CommentRepository commentRepository;
     private final UserUtil userUtil;
+    private final LiquorUtil liquorUtil;
     private final ReviewGoodRepository reviewGoodRepository;
 
 
     @Transactional(readOnly = true)
     public List<ReviewDto> getReviewListByLatest(Pageable pageable, String liquorId){
         final User user= userUtil.getUserByAuthentication();
-        final Liquor liquor= liquorRepository.findById(liquorId)
-                .orElseThrow(()-> new LiquorNotExist("liquor not exist", ErrorCode.LIQUOR_NOT_EXIST));
+        final Liquor liquor= liquorUtil.getLiquor(liquorId);
         final List<Review> reviews= reviewRepository.findAllByLatest(pageable, liquorId).toList();
 
         final List<ReviewDto> result= new ArrayList<>();
         for(Review r: reviews){
-            final PersonalEvaluation evaluation= personalEvaluationRepository.findByUserAndLiquor(r.getUser(), liquor)
-                    .orElseThrow(()-> new LiquorNotExist("liquor evaluation not exist", ErrorCode.LIQUOR_NOT_EXIST));
+            final PersonalEvaluation evaluation= liquorUtil.getPersonalEvaluation(r.getUser(), liquor);
 
             final ReviewDto reviewDto= ReviewDto.builder()
                     .reviewId(r.getReviewId())
@@ -68,14 +62,12 @@ public class ReviewService {
     @Transactional(readOnly = true)
     public List<ReviewDto> getReviewListByRating(Pageable pageable, String liquorId){
         final User user= userUtil.getUserByAuthentication();
-        final Liquor liquor= liquorRepository.findById(liquorId)
-                .orElseThrow(()-> new LiquorNotExist("liquor not exist", ErrorCode.LIQUOR_NOT_EXIST));
+        final Liquor liquor= liquorUtil.getLiquor(liquorId);
         final List<Review> reviews= reviewRepository.findAllByRating(pageable, liquorId).toList();
 
         final List<ReviewDto> result= new ArrayList<>();
         for(Review r: reviews){
-            final PersonalEvaluation evaluation= personalEvaluationRepository.findByUserAndLiquor(r.getUser(), liquor)
-                    .orElseThrow(()-> new LiquorNotExist("liquor evaluation not exist", ErrorCode.LIQUOR_NOT_EXIST));
+            final PersonalEvaluation evaluation= liquorUtil.getPersonalEvaluation(r.getUser(), liquor);
 
             final ReviewDto reviewDto= ReviewDto.builder()
                     .reviewId(r.getReviewId())
@@ -99,10 +91,8 @@ public class ReviewService {
     @Transactional(readOnly = true)
     public ReviewDto getReview(Long reviewId){
         final User user= userUtil.getUserByAuthentication();
-        final Review review= reviewRepository.findById(reviewId)
-                .orElseThrow(()-> new ReviewNotExist("review not exist", ErrorCode.REVIEW_NOT_EXIST));
-        final PersonalEvaluation evaluation= personalEvaluationRepository.findByUserAndLiquor(review.getUser(), review.getLiquor())
-                .orElseThrow(()-> new LiquorNotExist("liquor evaluation not exist", ErrorCode.LIQUOR_NOT_EXIST));
+        final Review review= liquorUtil.getReview(reviewId);
+        final PersonalEvaluation evaluation= liquorUtil.getPersonalEvaluation(review.getUser(), review.getLiquor());
 
         return ReviewDto.builder()
                 .reviewId(review.getReviewId())
@@ -123,8 +113,7 @@ public class ReviewService {
     @Transactional
     public void postReviewLike(Long reviewId){
         final User user= userUtil.getUserByAuthentication();
-        final Review review= reviewRepository.findById(reviewId)
-                .orElseThrow(()-> new ReviewNotExist("review not exist", ErrorCode.REVIEW_NOT_EXIST));
+        final Review review= liquorUtil.getReview(reviewId);
 
         final ReviewGood good= ReviewGood.builder()
                 .review(review)
@@ -137,8 +126,7 @@ public class ReviewService {
     @Transactional
     public void deleteReviewLike(Long reviewId){
         final User user= userUtil.getUserByAuthentication();
-        final Review review= reviewRepository.findById(reviewId)
-                .orElseThrow(()-> new ReviewNotExist("review not exist", ErrorCode.REVIEW_NOT_EXIST));
+        final Review review= liquorUtil.getReview(reviewId);
 
         reviewGoodRepository.deleteByReviewAndUser(review, user);
     }
@@ -146,8 +134,7 @@ public class ReviewService {
 
     @Transactional(readOnly = true)
     public Integer getReviewLike(Long reviewId){
-        final Review review= reviewRepository.findById(reviewId)
-                .orElseThrow(()-> new ReviewNotExist("review not exist", ErrorCode.REVIEW_NOT_EXIST));
+        final Review review= liquorUtil.getReview(reviewId);
         return reviewGoodRepository.countByReview(review);
     }
 

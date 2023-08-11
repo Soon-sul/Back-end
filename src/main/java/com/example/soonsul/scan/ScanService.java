@@ -4,12 +4,7 @@ import com.example.soonsul.config.s3.S3Uploader;
 import com.example.soonsul.liquor.entity.Liquor;
 import com.example.soonsul.liquor.entity.Location;
 import com.example.soonsul.liquor.entity.LocationInfo;
-import com.example.soonsul.liquor.exception.CodeNotExist;
-import com.example.soonsul.liquor.exception.LiquorNotExist;
-import com.example.soonsul.liquor.exception.LocationInfoNotExist;
-import com.example.soonsul.liquor.repository.CodeRepository;
 import com.example.soonsul.liquor.repository.LiquorRepository;
-import com.example.soonsul.liquor.repository.LocationInfoRepository;
 import com.example.soonsul.liquor.repository.LocationRepository;
 import com.example.soonsul.response.error.ErrorCode;
 import com.example.soonsul.scan.dto.ScanDto;
@@ -17,6 +12,7 @@ import com.example.soonsul.scan.exception.ScanNotExist;
 import com.example.soonsul.user.entity.PersonalEvaluation;
 import com.example.soonsul.user.entity.User;
 import com.example.soonsul.user.repository.PersonalEvaluationRepository;
+import com.example.soonsul.util.LiquorUtil;
 import com.example.soonsul.util.UserUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,10 +34,9 @@ public class ScanService {
     private final ScanRepository scanRepository;
     private final LiquorRepository liquorRepository;
     private final UserUtil userUtil;
+    private final LiquorUtil liquorUtil;
     private final S3Uploader s3Uploader;
-    private final CodeRepository codeRepository;
     private final LocationRepository locationRepository;
-    private final LocationInfoRepository locationInfoRepository;
     private final PersonalEvaluationRepository personalEvaluationRepository;
 
 
@@ -59,8 +54,7 @@ public class ScanService {
     @Transactional
     public void postScan(String liquorId, MultipartFile image){
         final User user= userUtil.getUserByAuthentication();
-        final Liquor liquor= liquorRepository.findById(liquorId)
-                .orElseThrow(()-> new LiquorNotExist("liquor not exist", ErrorCode.LIQUOR_NOT_EXIST));
+        final Liquor liquor= liquorUtil.getLiquor(liquorId);
         final Scan scan= Scan.builder()
                 .scanDate(LocalDate.now())
                 .imageUrl(s3Uploader.upload(image,"scan"))
@@ -80,14 +74,12 @@ public class ScanService {
         for(Scan s: scanList){
             final Liquor liquor= s.getLiquor();
 
-            final String liquorCategory= codeRepository.findById(liquor.getLiquorCategory())
-                    .orElseThrow(()->new CodeNotExist("code not exist", ErrorCode.CODE_NOT_EXIST)).getCodeName();
+            final String liquorCategory= liquorUtil.getCodeName(liquor.getLiquorCategory());
 
             final List<Location> locations = locationRepository.findAllByLiquor(liquor);
             final List<String> locationList = new ArrayList<>();
             for (Location l : locations) {
-                final LocationInfo info = locationInfoRepository.findById(l.getLocationInfoId())
-                        .orElseThrow(() -> new LocationInfoNotExist("location info not exist", ErrorCode.LOCATION_INFO_NOT_EXIST));
+                final LocationInfo info = liquorUtil.getLocationInfo(l.getLocationInfoId());
                 locationList.add(info.getBrewery());
             }
 
