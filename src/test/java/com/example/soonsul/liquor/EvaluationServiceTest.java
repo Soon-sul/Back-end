@@ -1,4 +1,4 @@
-package com.example.soonsul.liquor.evaluation;
+package com.example.soonsul.liquor;
 
 import com.example.soonsul.liquor.dto.EvaluationRequest;
 import com.example.soonsul.liquor.entity.*;
