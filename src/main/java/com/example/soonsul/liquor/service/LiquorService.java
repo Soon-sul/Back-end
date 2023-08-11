@@ -208,20 +208,14 @@ public class LiquorService {
         filteringRepository.deleteAll();
         for(Integer a: age){
             for(String g: gender){
-                final HashMap<String, Integer> map = new HashMap<>();
-                final List<FilteringClick> clickList= filteringClickRepository.findAllByAgeAndGender(a,g);
+                final String liquorId= getPopularLiquor(a, g);
 
-                for(FilteringClick f: clickList){
-                    map.put(f.getLiquorId(), (map.get(f.getLiquorId())==null) ? 1: map.get(f.getLiquorId())+1);
-                }
-                if(map.size()==0) continue;
-                List<Map.Entry<String, Integer>> entries = new LinkedList<>(map.entrySet());
-                entries.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
+                if(liquorId.equals("continue")) continue;
 
                 final LiquorFiltering filtering= LiquorFiltering.builder()
                         .age(a)
                         .gender(g)
-                        .liquorId(entries.get(0).getKey())
+                        .liquorId(liquorId)
                         .build();
                 filteringRepository.save(filtering);
             }
@@ -229,6 +223,18 @@ public class LiquorService {
         filteringClickRepository.deleteAll();
     }
 
+    public String getPopularLiquor(Integer age, String gender){
+        final HashMap<String, Integer> map = new HashMap<>();
+        final List<FilteringClick> clickList= filteringClickRepository.findAllByAgeAndGender(age, gender);
+
+        for(FilteringClick f: clickList){
+            map.put(f.getLiquorId(), (map.get(f.getLiquorId())==null) ? 1: map.get(f.getLiquorId())+1);
+        }
+        if(map.size()==0) return "continue";
+        List<Map.Entry<String, Integer>> entries = new LinkedList<>(map.entrySet());
+        entries.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
+        return entries.get(0).getKey();
+    }
 
     @Transactional
     public void postScrap(String liquorId){
