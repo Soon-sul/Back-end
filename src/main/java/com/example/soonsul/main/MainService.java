@@ -1,18 +1,18 @@
 package com.example.soonsul.main;
 
 import com.example.soonsul.liquor.entity.Liquor;
-import com.example.soonsul.liquor.entity.Location;
-import com.example.soonsul.liquor.entity.LocationInfo;
 import com.example.soonsul.liquor.entity.RegionClick;
 import com.example.soonsul.liquor.repository.*;
 import com.example.soonsul.main.dto.RegionLiquorDto;
 import com.example.soonsul.main.dto.WeekLiquorDto;
+import com.example.soonsul.main.entity.Sort;
 import com.example.soonsul.user.entity.User;
 import com.example.soonsul.util.LiquorUtil;
 import com.example.soonsul.util.UserUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.util.Pair;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -26,7 +26,6 @@ public class MainService {
     private final LiquorRepository liquorRepository;
     private final RegionClickRepository regionClickRepository;
     private final ReviewRepository reviewRepository;
-    private final LocationRepository locationRepository;
     private final ScrapRepository scrapRepository;
 
 
@@ -35,13 +34,13 @@ public class MainService {
         final PriorityQueue<Pair> pq = new PriorityQueue<>();
         final List<Liquor> liquorList= liquorRepository.findAll();
         for(Liquor l: liquorList){
-            pq.add(new Pair(clickRepository.findAllByLiquorId(l.getLiquorId()).size(), l.getLiquorId()));
+            pq.add(Pair.of(clickRepository.findAllByLiquorId(l.getLiquorId()).size(), l.getLiquorId()));
         }
 
         final List<String> tenLiquor= new ArrayList<>();
         int ten= 10;
         while(ten>0){
-            tenLiquor.add(pq.peek().second);
+            tenLiquor.add((String) pq.peek().getSecond());
             pq.remove();
             ten--;
         }
@@ -60,7 +59,7 @@ public class MainService {
 
 
     @Transactional(readOnly = true)
-    public List<RegionLiquorDto> getRegionLiquor(String region, String sorting, Double latitude, Double longitude){
+    public List<RegionLiquorDto> getRegionLiquor(String region, Sort sorting, Double latitude, Double longitude){
         final List<RegionLiquorDto> result= new ArrayList<>();
         final List<String> codeList= new ArrayList<>();
         switch (region) {
@@ -101,71 +100,77 @@ public class MainService {
 
 
     //내주변
-    private List<RegionLiquorDto> aroundMeLiquor(String sorting, Double latitude, Double longitude){
+    private List<RegionLiquorDto> aroundMeLiquor(Sort sorting, Double latitude, Double longitude){
         final User user= userUtil.getUserByAuthentication();
-        final HashMap<String, Integer> map = new HashMap<>();   //전통주pk, 클릭수
+
         final List<RegionClick> clickList= (List<RegionClick>) regionClickRepository.findAll();
+        HashMap<String, Pair<Integer, Double>> liquorMap = makeLiquorMap(clickList, latitude, longitude);
+        liquorMap= sortByClickNumber(liquorMap);
 
-        final HashMap<String, Double> disMap = new HashMap<>();    //전통주pk, 거리차
-        for(RegionClick r: clickList){
-            if(disMap.get(r.getLiquorId())!=null) {    //거리차를 계산한 적 있는 경우
-                map.put(r.getLiquorId(), map.get(r.getLiquorId())+1);
-                continue;
-            }
+        return sortByCategory(sorting, makeList(liquorMap, user));
+    }
 
-            final List<Location> locationList= locationRepository.findAllById(r.getLiquorId());
-            final LocationInfo info= liquorUtil.getLocationInfo(locationList.get(0).getLocationInfoId());
 
-            map.put(r.getLiquorId(), (map.get(r.getLiquorId())==null) ? 1: map.get(r.getLiquorId())+1);
-            disMap.put(r.getLiquorId(), distanceDifference(latitude, longitude, info.getLatitude(), info.getLongitude()));
+    //지역
+    private List<RegionLiquorDto> regionLiquor(Sort sorting, List<String> codeList){
+        final User user= userUtil.getUserByAuthentication();
+
+        final List<RegionClick> clickList= new ArrayList<>();
+        for(String regionCode: codeList){
+            clickList.addAll(regionClickRepository.findAllByRegion(regionCode));
         }
+        HashMap<String, Pair<Integer, Double>> liquorMap = makeLiquorMap(clickList, null, null);
+        liquorMap= sortByClickNumber(liquorMap);
 
+        return sortByCategory(sorting, makeList(liquorMap, user));
+    }
+
+
+    public HashMap<String, Pair<Integer, Double>> makeLiquorMap(List<RegionClick> clickList, Double latitude, Double longitude){
+        final HashMap<String, Pair<Integer, Double>> map = new HashMap<>();
+
+        for(RegionClick r: clickList){
+            if(map.get(r.getLiquorId())!=null && map.get(r.getLiquorId()).getSecond() == -1.0) continue;
+
+            Double distance;
+            if(latitude==null && longitude==null) distance= 0.0;
+            else distance= distanceDifference(latitude, longitude, r.getLatitude(), r.getLongitude());
+
+            if(map.get(r.getLiquorId()) == null)
+                map.put(r.getLiquorId(), Pair.of(1, distance));
+            else
+                map.put(r.getLiquorId(), Pair.of(map.get(r.getLiquorId()).getFirst()+1, map.get(r.getLiquorId()).getSecond()));
+        }
+        return map;
+    }
+
+
+    public List<RegionLiquorDto> makeList(HashMap<String, Pair<Integer, Double>> liquorMap, User user){
         final List<RegionLiquorDto> list= new ArrayList<>();
-        for(String liquorId: map.keySet()){
+        for(String liquorId: liquorMap.keySet()){
             final Liquor liquor = liquorUtil.getLiquor(liquorId);
-
-            final List<Location> locations = locationRepository.findAllByLiquor(liquor);
-            final List<String> locationList = new ArrayList<>();
-            for (Location l : locations) {
-                final LocationInfo info = liquorUtil.getLocationInfo(l.getLocationInfoId());
-                locationList.add(info.getBrewery());
-            }
-
-            final String liquorCategory= liquorUtil.getCodeName(liquor.getLiquorCategory());
-
             final RegionLiquorDto dto= RegionLiquorDto.builder()
                     .liquorId(liquorId)
                     .name(liquor.getName())
                     .averageRating(liquor.getAverageRating())
                     .alcohol(liquor.getAlcohol())
                     .capacity(liquor.getCapacity())
-                    .liquorCategory(liquorCategory)
-                    .locationList(locationList)
+                    .liquorCategory(liquorUtil.getCodeName(liquor.getLiquorCategory()))
+                    .locationList(liquorUtil.getBreweryList(liquorId))
                     .lowestPrice(liquor.getLowestPrice())
                     .flagScrap(scrapRepository.existsByUserAndLiquor(user, liquor))
                     .ratingNumber(reviewRepository.countByLiquor(liquor))
                     .imageUrl(liquor.getImageUrl())
-                    .clickNumber(map.get(liquorId))
-                    .distance(disMap.get(liquorId))
+                    .clickNumber(liquorMap.get(liquorId).getFirst())
+                    .distance(liquorMap.get(liquorId).getSecond())
                     .build();
             list.add(dto);
         }
-
-        switch (sorting) {
-            case "star":
-                return byStar(list);
-            case "review":
-                return byReview(list);
-            case "lowest-cost":
-                return byLowestCost(list);
-            case "highest-cost":
-                return byHighestCost(list);
-            default:
-                return list;
-        }
+        return list;
     }
 
-    private Double distanceDifference(Double myLat, Double myLon, Double comLat, Double comLon){
+
+    public Double distanceDifference(Double myLat, Double myLon, Double comLat, Double comLon){
         double R = 6371;
         final Double lat1= Math.toRadians(myLat);
         final Double lon1= Math.toRadians(myLon);
@@ -185,57 +190,15 @@ public class MainService {
     }
 
 
-    //지역
-    private List<RegionLiquorDto> regionLiquor(String sorting, List<String> codeList){
-        final User user= userUtil.getUserByAuthentication();
-        final HashMap<String, Integer> map = new HashMap<>();
-
-        for(String regionCode: codeList){
-            List<RegionClick> clickList= regionClickRepository.findAllByRegion(regionCode);
-            for(RegionClick r: clickList){
-                map.put(r.getLiquorId(), (map.get(r.getLiquorId())==null) ? 1: map.get(r.getLiquorId())+1);
-            }
-        }
-
-        final List<RegionLiquorDto> list= new ArrayList<>();
-        for (String liquorId : map.keySet()) {
-            final Liquor liquor = liquorUtil.getLiquor(liquorId);
-
-            final List<Location> locations = locationRepository.findAllByLiquor(liquor);
-            final List<String> locationList = new ArrayList<>();
-            for (Location l : locations) {
-                final LocationInfo info = liquorUtil.getLocationInfo(l.getLocationInfoId());
-                locationList.add(info.getBrewery());
-            }
-
-            final String liquorCategory= liquorUtil.getCodeName(liquor.getLiquorCategory());
-
-            final RegionLiquorDto dto = RegionLiquorDto.builder()
-                    .liquorId(liquorId)
-                    .name(liquor.getName())
-                    .averageRating(liquor.getAverageRating())
-                    .alcohol(liquor.getAlcohol())
-                    .capacity(liquor.getCapacity())
-                    .liquorCategory(liquorCategory)
-                    .locationList(locationList)
-                    .lowestPrice(liquor.getLowestPrice())
-                    .flagScrap(scrapRepository.existsByUserAndLiquor(user, liquor))
-                    .ratingNumber(reviewRepository.countByLiquor(liquor))
-                    .imageUrl(liquor.getImageUrl())
-                    .clickNumber(map.get(liquorId))
-                    .distance(0.0)
-                    .build();
-            list.add(dto);
-        }
-
+    public List<RegionLiquorDto> sortByCategory(Sort sorting, List<RegionLiquorDto> list){
         switch (sorting) {
-            case "star":
+            case STAR:
                 return byStar(list);
-            case "review":
+            case REVIEW:
                 return byReview(list);
-            case "lowest-cost":
+            case LOWEST_COST:
                 return byLowestCost(list);
-            case "highest-cost":
+            case HIGHEST_COST:
                 return byHighestCost(list);
             default:
                 return list;
@@ -243,57 +206,52 @@ public class MainService {
     }
 
 
+    public HashMap<String, Pair<Integer,Double>> sortByClickNumber(HashMap<String, Pair<Integer,Double>> map){
+        return map.entrySet()
+                .stream()
+                .filter(m -> m.getValue().getFirst() > 0 && m.getValue().getSecond() != -1.0)
+                .sorted(
+                        (entry1, entry2) -> {
+                            int compareResult = entry2.getValue().getFirst().compareTo(entry1.getValue().getFirst());
+                            if (compareResult != 0) {
+                                return compareResult;
+                            }
+                            return Double.compare(entry1.getValue().getSecond(), entry2.getValue().getSecond());
+                        }
+                )
+                .limit(10)
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (oldValue, newValue) -> oldValue,
+                        LinkedHashMap::new
+                ));
+    }
+
+
     //필터링
     private List<RegionLiquorDto> byStar(List<RegionLiquorDto> list){
         return list.stream()
-                .filter(dto -> dto.getDistance()<=10000)
-                .sorted(Comparator.comparing(RegionLiquorDto::getClickNumber).reversed().
-                        thenComparing(RegionLiquorDto::getAverageRating).reversed())
-                .limit(10)
+                .sorted(Comparator.comparing(RegionLiquorDto::getAverageRating).reversed())
                 .collect(Collectors.toList());
     }
 
     private List<RegionLiquorDto> byReview(List<RegionLiquorDto> list){
         return list.stream()
-                .filter(dto -> dto.getDistance()<=10000)
-                .sorted(Comparator.comparing(RegionLiquorDto::getClickNumber).reversed().
-                        thenComparing(RegionLiquorDto::getRatingNumber).reversed())
-                .limit(10)
+                .sorted(Comparator.comparing(RegionLiquorDto::getRatingNumber).reversed())
                 .collect(Collectors.toList());
     }
 
     private List<RegionLiquorDto> byLowestCost(List<RegionLiquorDto> list){
         return list.stream()
-                .filter(dto -> dto.getDistance()<=10000)
-                .sorted(Comparator.comparing(RegionLiquorDto::getClickNumber).reversed().
-                        thenComparing(RegionLiquorDto::getLowestPrice))
-                .limit(10)
+                .sorted(Comparator.comparing(RegionLiquorDto::getLowestPrice))
                 .collect(Collectors.toList());
     }
 
     private List<RegionLiquorDto> byHighestCost(List<RegionLiquorDto> list){
         return list.stream()
-                .filter(dto -> dto.getDistance()<=10000)
-                .sorted(Comparator.comparing(RegionLiquorDto::getClickNumber).reversed().
-                        thenComparing(RegionLiquorDto::getLowestPrice).reversed())
-                .limit(10)
+                .sorted(Comparator.comparing(RegionLiquorDto::getLowestPrice).reversed())
                 .collect(Collectors.toList());
     }
 
-}
-
-
-class Pair implements Comparable<Pair> {
-    double first;
-    String second;
-
-    Pair(double f, String s) {
-        this.first = f;
-        this.second = s;
-    }
-
-    public int compareTo(Pair p) {
-        if(this.first > p.first) return -1;
-        return 1;
-    }
 }

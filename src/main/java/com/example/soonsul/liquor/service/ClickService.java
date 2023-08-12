@@ -52,7 +52,7 @@ public class ClickService {
         Double longitude= 0.0;
         if(list.size()>0){
             final LocationInfo info= liquorUtil.getLocationInfo(list.get(0).getLocationInfoId());
-                    latitude= info.getLatitude();
+            latitude= info.getLatitude();
             longitude= info.getLongitude();
         }
 

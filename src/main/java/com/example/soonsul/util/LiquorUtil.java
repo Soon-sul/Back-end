@@ -14,6 +14,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 @RequiredArgsConstructor
 public class LiquorUtil {
@@ -27,6 +30,7 @@ public class LiquorUtil {
     private final CodeRepository codeRepository;
     private final PrizeInfoRepository prizeInfoRepository;
     private final SalePlaceInfoRepository salePlaceInfoRepository;
+    private final LocationRepository locationRepository;
 
 
     public Liquor getLiquor(String liquorId){
@@ -77,5 +81,14 @@ public class LiquorUtil {
     public String getCodeName(String codeId){
         return codeRepository.findById(codeId)
                 .orElseThrow(()->new CodeNotExist("code not exist", ErrorCode.CODE_NOT_EXIST)).getCodeName();
+    }
+
+    public List<String> getBreweryList(String liquorId){
+        final List<String> locationList = new ArrayList<>();
+        final List<Location> locations = locationRepository.findAllById(liquorId);
+        for (Location l : locations) {
+            locationList.add(getLocationInfo(l.getLocationInfoId()).getBrewery());
+        }
+        return locationList;
     }
 }

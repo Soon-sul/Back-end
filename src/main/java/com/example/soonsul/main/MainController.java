@@ -2,6 +2,7 @@ package com.example.soonsul.main;
 
 import com.example.soonsul.main.dto.RegionLiquorDto;
 import com.example.soonsul.main.dto.WeekLiquorDto;
+import com.example.soonsul.main.entity.Sort;
 import com.example.soonsul.main.response.RegionLiquorResponse;
 import com.example.soonsul.main.response.WeekLiquorResponse;
 import com.example.soonsul.response.result.ResultCode;
@@ -35,7 +36,7 @@ public class MainController {
     public ResponseEntity<RegionLiquorResponse> getRegionLiquor(@RequestParam("region") String region, @RequestParam("sorting") String sorting,
                                                                 @RequestParam(value = "latitude", required = false) Double latitude,
                                                                 @RequestParam(value = "longitude", required = false) Double longitude) {
-        final List<RegionLiquorDto> data= mainService.getRegionLiquor(region, sorting, latitude, longitude);
+        final List<RegionLiquorDto> data= mainService.getRegionLiquor(region, Sort.valueOf(sorting), latitude, longitude);
         return ResponseEntity.ok(RegionLiquorResponse.of(ResultCode.GET_WEEK_LIQUOR_SUCCESS, data));
     }
 }
