@@ -31,25 +31,30 @@ public class MainService {
 
     @Transactional(readOnly = true)
     public List<WeekLiquorDto> getWeekLiquor(){
-        final PriorityQueue<Pair> pq = new PriorityQueue<>();
+        HashMap<String, Integer> map = new HashMap<>();
+
         final List<Liquor> liquorList= liquorRepository.findAll();
         for(Liquor l: liquorList){
-            pq.add(Pair.of(clickRepository.findAllByLiquorId(l.getLiquorId()).size(), l.getLiquorId()));
+            map.put(l.getLiquorId(), clickRepository.findAllByLiquorId(l.getLiquorId()).size());
         }
 
-        final List<String> tenLiquor= new ArrayList<>();
-        int ten= 10;
-        while(ten>0){
-            tenLiquor.add((String) pq.peek().getSecond());
-            pq.remove();
-            ten--;
-        }
+        map= map.entrySet()
+                .stream()
+                .filter(m -> m.getValue() > 0)
+                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+                .limit(10)
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (oldValue, newValue) -> oldValue,
+                        LinkedHashMap::new
+                ));
 
         final List<WeekLiquorDto> result= new ArrayList<>();
-        for(String s: tenLiquor){
+        for(String key : map.keySet()){
             final WeekLiquorDto dto= WeekLiquorDto.builder()
-                    .liquorId(s)
-                    .imageUrl(liquorRepository.findById(s).get().getImageUrl())
+                    .liquorId(key)
+                    .imageUrl(liquorRepository.findById(key).get().getImageUrl())
                     .build();
             result.add(dto);
         }

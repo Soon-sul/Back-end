@@ -84,8 +84,8 @@ public class UserController {
     }
 
 
-    @ApiOperation(value = "스크랩한 전통주 조회", notes = "sorting: [최신순: date] [별점순: star] [가격 낮은순: lowest-cost] " +
-            "[가격 높은순: highest-cost]")
+    @ApiOperation(value = "스크랩한 전통주 조회", notes = "sorting: [최신순: DATE] [별점순: STAR] [가격 낮은순: LOWEST_COST] " +
+            "[가격 높은순: HIGHEST_COST]")
     @GetMapping("/scraps")
     public ResponseEntity<LiquorInfoListResponse> getUserScrap(@PageableDefault(size=10) Pageable pageable, String sorting) {
         final List<LiquorInfoDto> data= liquorService.getScrapList(pageable, Sorting.valueOf(sorting));
