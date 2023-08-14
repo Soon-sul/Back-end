@@ -6,11 +6,13 @@ import com.example.soonsul.response.result.ResultResponse;
 import com.example.soonsul.user.oauth.dto.SignupDto;
 import com.example.soonsul.user.oauth.dto.TokenDto;
 import com.example.soonsul.user.exception.OAuthLoginException;
+import com.example.soonsul.user.oauth.dto.ValidationDto;
 import com.example.soonsul.user.oauth.jwt.AuthConstants;
 import com.example.soonsul.user.oauth.param.GoogleParams;
 import com.example.soonsul.user.oauth.param.KakaoParams;
 import com.example.soonsul.user.oauth.param.NaverParams;
 import com.example.soonsul.user.oauth.response.TokenResponse;
+import com.example.soonsul.user.oauth.response.ValidationResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -92,9 +94,9 @@ public class AuthController {
 
     @ApiOperation(value = "액세스토큰 유효성 검사")
     @GetMapping("/token")
-    public ResponseEntity<ResultResponse> isValidToken(@RequestHeader(value="Authorization") String token) {
-        boolean data= authService.isValidToken(token);
-        return ResponseEntity.ok(ResultResponse.of(ResultCode.TOKEN_VALID_CHECK_SUCCESS, data));
+    public ResponseEntity<ValidationResponse> isValidToken(@RequestHeader(value="Authorization") String token) {
+        final ValidationDto data= authService.isValidToken(token);
+        return ResponseEntity.ok(ValidationResponse.of(ResultCode.TOKEN_VALID_CHECK_SUCCESS, data));
     }
 
 }

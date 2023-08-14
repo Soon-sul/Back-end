@@ -1,6 +1,7 @@
 package com.example.soonsul.user.oauth;
 
 import com.example.soonsul.response.error.ErrorCode;
+import com.example.soonsul.user.oauth.dto.ValidationDto;
 import com.example.soonsul.user.oauth.jwt.JwtTokenProvider;
 import com.example.soonsul.user.entity.User;
 import com.example.soonsul.user.repository.UserRepository;
@@ -94,7 +95,19 @@ public class AuthService {
 
     //액세스토큰 유효성 검사
     @Transactional(readOnly = true)
-    public boolean isValidToken(String token) {
-        return jwtTokenProvider.isValidToken(token);
+    public ValidationDto isValidToken(String token) {
+        final boolean flag= jwtTokenProvider.isValidToken(token);
+        if(flag) {
+            final User user= userRepository.findById(jwtTokenProvider.getUserIdFromToken(token))
+                    .orElseThrow(()-> new UserNotExist("user not exist", ErrorCode.USER_NOT_EXIST));
+            return ValidationDto.builder()
+                    .flagValidation(true)
+                    .nickname(user.getNickname())
+                    .profileImage(user.getProfileImage())
+                    .build();
+        }
+        return ValidationDto.builder()
+                .flagValidation(false)
+                .build();
     }
 }
