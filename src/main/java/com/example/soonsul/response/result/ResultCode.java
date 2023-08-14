@@ -60,6 +60,8 @@ public enum ResultCode {
     GET_USER_SCRAP_SUCCESS(200,"U005","유저가 스크랩한 전통주 리스트를 조회했습니다."),
     GET_USER_EVALUATION_SUCCESS(200,"U006","유저가 남긴 평가리스트를 조회했습니다."),
     DELETE_USER_EVALUATION_SUCCESS(200,"U007","유저가 남긴 평가를 삭제했습니다."),
+    PUT_PROFILE_NICKNAME_SUCCESS(200,"U008","유저 닉네임을 수정했습니다."),
+    PUT_PROFILE_IMAGE_SUCCESS(200,"U009","유저 프로필 이미지를 수정했습니다."),
 
     //click
     POST_CLICK_SUCCESS(201,"C001","전통주 클릭을 등록했습니다."),

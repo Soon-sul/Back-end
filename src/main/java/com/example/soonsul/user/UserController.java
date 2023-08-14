@@ -42,11 +42,19 @@ public class UserController {
     private final EvaluationService evaluationService;
 
 
-    @ApiOperation(value = "유저 프로필 변경")
-    @PutMapping(value = "/profile", produces = MediaType.APPLICATION_JSON_VALUE, consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<ResultResponse> putProfile(@RequestPart("nickname") String nickname, @RequestPart("image") MultipartFile image) {
-        userService.putProfile(nickname, image);
-        return ResponseEntity.ok(ResultResponse.of(ResultCode.PUT_PROFILE_SUCCESS));
+    @ApiOperation(value = "유저 닉네임 변경")
+    @PutMapping(value = "/profile/nickname")
+    public ResponseEntity<ResultResponse> putNickname(@RequestParam("nickname") String nickname) {
+        userService.putNickname(nickname);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.PUT_PROFILE_NICKNAME_SUCCESS));
+    }
+
+
+    @ApiOperation(value = "유저 프로필 이미지 변경")
+    @PutMapping(value = "/profile/image", produces = MediaType.APPLICATION_JSON_VALUE, consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<ResultResponse> putProfileImage(@RequestPart("image") MultipartFile image) {
+        userService.putProfileImage(image);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.PUT_PROFILE_IMAGE_SUCCESS));
     }
 
 
