@@ -28,6 +28,6 @@ public class ValidationResponse {
     }
 
     public static ValidationResponse of(ResultCode resultCode, ValidationDto data) {
-        return new TokenResponse(resultCode, data);
+        return new ValidationResponse(resultCode, data);
     }
 }

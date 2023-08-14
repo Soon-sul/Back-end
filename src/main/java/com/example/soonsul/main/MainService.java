@@ -5,7 +5,7 @@ import com.example.soonsul.liquor.entity.RegionClick;
 import com.example.soonsul.liquor.repository.*;
 import com.example.soonsul.main.dto.RegionLiquorDto;
 import com.example.soonsul.main.dto.WeekLiquorDto;
-import com.example.soonsul.main.entity.Sort;
+import com.example.soonsul.main.entity.Sorting;
 import com.example.soonsul.user.entity.User;
 import com.example.soonsul.util.LiquorUtil;
 import com.example.soonsul.util.UserUtil;
@@ -59,7 +59,7 @@ public class MainService {
 
 
     @Transactional(readOnly = true)
-    public List<RegionLiquorDto> getRegionLiquor(String region, Sort sorting, Double latitude, Double longitude){
+    public List<RegionLiquorDto> getRegionLiquor(String region, Sorting sorting, Double latitude, Double longitude){
         final List<RegionLiquorDto> result= new ArrayList<>();
         final List<String> codeList= new ArrayList<>();
         switch (region) {
@@ -100,7 +100,7 @@ public class MainService {
 
 
     //내주변
-    private List<RegionLiquorDto> aroundMeLiquor(Sort sorting, Double latitude, Double longitude){
+    private List<RegionLiquorDto> aroundMeLiquor(Sorting sorting, Double latitude, Double longitude){
         final User user= userUtil.getUserByAuthentication();
 
         final List<RegionClick> clickList= (List<RegionClick>) regionClickRepository.findAll();
@@ -112,7 +112,7 @@ public class MainService {
 
 
     //지역
-    private List<RegionLiquorDto> regionLiquor(Sort sorting, List<String> codeList){
+    private List<RegionLiquorDto> regionLiquor(Sorting sorting, List<String> codeList){
         final User user= userUtil.getUserByAuthentication();
 
         final List<RegionClick> clickList= new ArrayList<>();
@@ -190,7 +190,7 @@ public class MainService {
     }
 
 
-    public List<RegionLiquorDto> sortByCategory(Sort sorting, List<RegionLiquorDto> list){
+    public List<RegionLiquorDto> sortByCategory(Sorting sorting, List<RegionLiquorDto> list){
         switch (sorting) {
             case STAR:
                 return byStar(list);

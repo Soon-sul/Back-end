@@ -7,6 +7,7 @@ import com.example.soonsul.liquor.response.PersonalListResponse;
 import com.example.soonsul.liquor.service.EvaluationService;
 import com.example.soonsul.liquor.service.LiquorService;
 import com.example.soonsul.liquor.service.PersonalService;
+import com.example.soonsul.main.entity.Sorting;
 import com.example.soonsul.promotion.PromotionService;
 import com.example.soonsul.promotion.dto.PromotionDto;
 import com.example.soonsul.promotion.response.PromotionListResponse;
@@ -87,7 +88,7 @@ public class UserController {
             "[가격 높은순: highest-cost]")
     @GetMapping("/scraps")
     public ResponseEntity<LiquorInfoListResponse> getUserScrap(@PageableDefault(size=10) Pageable pageable, String sorting) {
-        final List<LiquorInfoDto> data= liquorService.getScrapList(pageable, sorting);
+        final List<LiquorInfoDto> data= liquorService.getScrapList(pageable, Sorting.valueOf(sorting));
         return ResponseEntity.ok(LiquorInfoListResponse.of(ResultCode.GET_USER_SCRAP_SUCCESS, data));
     }
 
