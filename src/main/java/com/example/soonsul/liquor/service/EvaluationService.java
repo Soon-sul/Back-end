@@ -45,11 +45,11 @@ public class EvaluationService {
         final PersonalEvaluation pe= personalEvaluationRepository.save(personalEvaluation);
 
 
-        calAverageRating(CalculationType.ADD, liquor, number, request.getLiquorPersonalRating(), pe);
+        calAverageRating(MethodType.POST, liquor, number, request.getLiquorPersonalRating(), pe);
 
         for(FlavorType fType: flavorTypes){
             if(request.getFlavor(fType)!=null)
-                calAverageFlavor(fType, CalculationType.ADD, evaluation, number, request.getFlavor(fType), pe);
+                calAverageFlavor(fType, MethodType.POST, evaluation, number, request.getFlavor(fType), pe);
         }
 
 
@@ -78,14 +78,14 @@ public class EvaluationService {
 
 
         if(!pe.getLiquorPersonalRating().equals(request.getLiquorPersonalRating())){
-            calAverageRating(CalculationType.SUB_AND_ADD, liquor, number, request.getLiquorPersonalRating(), pe);
+            calAverageRating(MethodType.PUT, liquor, number, request.getLiquorPersonalRating(), pe);
         }
 
         for(FlavorType fType: flavorTypes){
             if(checkByEqual(pe.getFlavor(fType),request.getFlavor(fType))){
-                if(pe.getFlavor(fType)==null && request.getFlavor(fType)!=null) calAverageFlavor(fType, CalculationType.ADD, evaluation, number, request.getFlavor(fType), pe);
-                else if(pe.getFlavor(fType)!=null && request.getFlavor(fType)==null) calAverageFlavor(fType, CalculationType.SUB, evaluation, number, null, pe);
-                else if(pe.getFlavor(fType) != null) calAverageFlavor(fType, CalculationType.SUB_AND_ADD, evaluation, number, request.getFlavor(fType), pe);
+                if(pe.getFlavor(fType)==null && request.getFlavor(fType)!=null) calAverageFlavor(fType, MethodType.POST, evaluation, number, request.getFlavor(fType), pe);
+                else if(pe.getFlavor(fType)!=null && request.getFlavor(fType)==null) calAverageFlavor(fType, MethodType.DELETE, evaluation, number, null, pe);
+                else if(pe.getFlavor(fType) != null) calAverageFlavor(fType, MethodType.PUT, evaluation, number, request.getFlavor(fType), pe);
             }
         }
 
@@ -125,11 +125,11 @@ public class EvaluationService {
         final PersonalEvaluation pe= liquorUtil.getPersonalEvaluation(user, liquor);
 
 
-        calAverageRating(CalculationType.SUB, liquor, number, null, pe);
+        calAverageRating(MethodType.DELETE, liquor, number, null, pe);
 
         for(FlavorType fType: flavorTypes){
             if(pe.getFlavor(fType)!=null)
-                calAverageFlavor(fType, CalculationType.SUB, evaluation, number, null, pe);
+                calAverageFlavor(fType, MethodType.DELETE, evaluation, number, null, pe);
         }
 
 
@@ -139,46 +139,50 @@ public class EvaluationService {
     }
 
 
-    public void calAverageRating(CalculationType cType, Liquor liquor, EvaluationNumber number, Double request, PersonalEvaluation pe){
-        if(cType.equals(CalculationType.ADD)){
-            liquor.updateAverageRating(calAverage(CalculationType.ADD, liquor.getAverageRating(), number.getAverageRating(), request));
-            number.addAverageRating(CalculationType.ADD);
-            pe.updateLiquorPersonalRating(request);
-        }
-        else if(cType.equals(CalculationType.SUB)){
-            liquor.updateAverageRating(calAverage(CalculationType.SUB, liquor.getAverageRating(), number.getAverageRating(), pe.getLiquorPersonalRating()));
-            number.addAverageRating(CalculationType.SUB);
-            pe.updateLiquorPersonalRating(null);
-        }
-        else if(cType.equals(CalculationType.SUB_AND_ADD)){
-            liquor.updateAverageRating(calAverage(CalculationType.SUB, liquor.getAverageRating(), number.getAverageRating(), pe.getLiquorPersonalRating()));
-            number.addAverageRating(CalculationType.SUB);
-            liquor.updateAverageRating(calAverage(CalculationType.ADD, liquor.getAverageRating(), number.getAverageRating(), request));
-            number.addAverageRating(CalculationType.ADD);
-            pe.updateLiquorPersonalRating(request);
+    public void calAverageRating(MethodType mType, Liquor liquor, EvaluationNumber number, Double request, PersonalEvaluation pe){
+        switch (mType){
+            case POST:
+                liquor.updateAverageRating(calAverage(CalculationType.ADD, liquor.getAverageRating(), number.getAverageRating(), request));
+                number.addAverageRating(CalculationType.ADD);
+                pe.updateLiquorPersonalRating(request);
+                break;
+            case DELETE:
+                liquor.updateAverageRating(calAverage(CalculationType.SUB, liquor.getAverageRating(), number.getAverageRating(), pe.getLiquorPersonalRating()));
+                number.addAverageRating(CalculationType.SUB);
+                pe.updateLiquorPersonalRating(null);
+                break;
+            case PUT:
+                liquor.updateAverageRating(calAverage(CalculationType.SUB, liquor.getAverageRating(), number.getAverageRating(), pe.getLiquorPersonalRating()));
+                number.addAverageRating(CalculationType.SUB);
+                liquor.updateAverageRating(calAverage(CalculationType.ADD, liquor.getAverageRating(), number.getAverageRating(), request));
+                number.addAverageRating(CalculationType.ADD);
+                pe.updateLiquorPersonalRating(request);
+                break;
         }
     }
 
 
-    public void calAverageFlavor(FlavorType fType, CalculationType cType, Evaluation evaluation, EvaluationNumber number,
+    public void calAverageFlavor(FlavorType fType, MethodType mType, Evaluation evaluation, EvaluationNumber number,
                       Integer request, PersonalEvaluation pe){
 
-        if(cType.equals(CalculationType.ADD)){
-            evaluation.updateFlavor(fType, calAverage(fType, cType, evaluation, number, request));
-            number.updateFlavor(fType, cType);
-            pe.updateFlavor(fType, request);
-        }
-        else if(cType.equals(CalculationType.SUB)){
-            evaluation.updateFlavor(fType, calAverage(fType, cType, evaluation, number, pe.getFlavor(fType)));
-            number.updateFlavor(fType,cType);
-            pe.updateFlavor(fType, null);
-        }
-        else if(cType.equals(CalculationType.SUB_AND_ADD)){
-            evaluation.updateFlavor(fType, calAverage(fType, CalculationType.SUB, evaluation, number, pe.getFlavor(fType)));
-            number.updateFlavor(fType,CalculationType.SUB);
-            evaluation.updateFlavor(fType, calAverage(fType, CalculationType.ADD, evaluation, number, request));
-            number.updateFlavor(fType,CalculationType.ADD);
-            pe.updateFlavor(fType, request);
+        switch (mType){
+            case POST:
+                evaluation.updateFlavor(fType, calAverage(fType, CalculationType.ADD, evaluation, number, request));
+                number.updateFlavor(fType, CalculationType.ADD);
+                pe.updateFlavor(fType, request);
+                break;
+            case DELETE:
+                evaluation.updateFlavor(fType, calAverage(fType, CalculationType.SUB, evaluation, number, pe.getFlavor(fType)));
+                number.updateFlavor(fType,CalculationType.SUB);
+                pe.updateFlavor(fType, null);
+                break;
+            case PUT:
+                evaluation.updateFlavor(fType, calAverage(fType, CalculationType.SUB, evaluation, number, pe.getFlavor(fType)));
+                number.updateFlavor(fType,CalculationType.SUB);
+                evaluation.updateFlavor(fType, calAverage(fType, CalculationType.ADD, evaluation, number, request));
+                number.updateFlavor(fType,CalculationType.ADD);
+                pe.updateFlavor(fType, request);
+                break;
         }
     }
 

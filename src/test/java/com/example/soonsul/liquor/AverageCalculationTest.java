@@ -30,7 +30,7 @@ public class AverageCalculationTest {
 
 
             //when
-            evaluationService.calAverageRating(CalculationType.ADD, liquor, number, 4.5, pe);
+            evaluationService.calAverageRating(MethodType.POST, liquor, number, 4.5, pe);
 
 
             //then
@@ -56,7 +56,7 @@ public class AverageCalculationTest {
             number.addAverageRating(CalculationType.ADD);
 
             //when
-            evaluationService.calAverageRating(CalculationType.ADD, liquor, number, 3.5, pe);
+            evaluationService.calAverageRating(MethodType.POST, liquor, number, 3.5, pe);
 
 
             //then
@@ -84,7 +84,7 @@ public class AverageCalculationTest {
             pe.updateLiquorPersonalRating(3.5);
 
             //when
-            evaluationService.calAverageRating(CalculationType.SUB_AND_ADD, liquor, number, 4.0, pe);
+            evaluationService.calAverageRating(MethodType.PUT, liquor, number, 4.0, pe);
 
 
             //then
@@ -112,7 +112,7 @@ public class AverageCalculationTest {
             pe.updateLiquorPersonalRating(3.5);
 
             //when
-            evaluationService.calAverageRating(CalculationType.SUB, liquor, number, null, pe);
+            evaluationService.calAverageRating(MethodType.DELETE, liquor, number, null, pe);
 
 
             //then
@@ -135,7 +135,7 @@ public class AverageCalculationTest {
 
 
             //when
-            evaluationService.calAverageFlavor(FlavorType.SWEETNESS, CalculationType.ADD, evaluation,
+            evaluationService.calAverageFlavor(FlavorType.SWEETNESS, MethodType.POST, evaluation,
                     number, 2, pe);
 
 
@@ -161,7 +161,7 @@ public class AverageCalculationTest {
             number.updateFlavor(FlavorType.SWEETNESS, CalculationType.ADD);
 
             //when
-            evaluationService.calAverageFlavor(FlavorType.SWEETNESS, CalculationType.ADD, evaluation,
+            evaluationService.calAverageFlavor(FlavorType.SWEETNESS, MethodType.POST, evaluation,
                     number, 0, pe);
 
 
@@ -192,7 +192,7 @@ public class AverageCalculationTest {
 
 
             //when
-            evaluationService.calAverageFlavor(FlavorType.SWEETNESS, CalculationType.SUB_AND_ADD, evaluation,
+            evaluationService.calAverageFlavor(FlavorType.SWEETNESS, MethodType.PUT, evaluation,
                     number, 5, pe);
 
 
@@ -221,7 +221,7 @@ public class AverageCalculationTest {
 
 
             //when
-            evaluationService.calAverageFlavor(FlavorType.SWEETNESS, CalculationType.SUB_AND_ADD, evaluation,
+            evaluationService.calAverageFlavor(FlavorType.SWEETNESS, MethodType.PUT, evaluation,
                     number, 0, pe);
 
 
@@ -250,7 +250,7 @@ public class AverageCalculationTest {
 
 
             //when
-            evaluationService.calAverageFlavor(FlavorType.SWEETNESS, CalculationType.SUB, evaluation,
+            evaluationService.calAverageFlavor(FlavorType.SWEETNESS, MethodType.DELETE, evaluation,
                     number, null, pe);
 
 
