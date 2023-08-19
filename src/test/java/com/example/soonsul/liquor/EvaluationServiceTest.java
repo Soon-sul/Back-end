@@ -186,7 +186,7 @@ public class EvaluationServiceTest {
             void 수정할값이_이전이랑_다른_경우(){
                 //given
                 pe.updateLiquorPersonalRating(3.0);
-                number.addAverageRating(1);
+                number.addAverageRating(CalculationType.ADD);
                 request.setLiquorPersonalRating(4.0);
 
                 //when

@@ -141,20 +141,20 @@ public class EvaluationService {
 
     public void calAverageRating(CalculationType cType, Liquor liquor, EvaluationNumber number, Double request, PersonalEvaluation pe){
         if(cType.equals(CalculationType.ADD)){
-            liquor.updateAverageRating(calAverage(liquor.getAverageRating(), number.getAverageRating(), request, 1));
-            number.addAverageRating(1);
+            liquor.updateAverageRating(calAverage(CalculationType.ADD, liquor.getAverageRating(), number.getAverageRating(), request));
+            number.addAverageRating(CalculationType.ADD);
             pe.updateLiquorPersonalRating(request);
         }
         else if(cType.equals(CalculationType.SUB)){
-            liquor.updateAverageRating(calAverage(liquor.getAverageRating(), number.getAverageRating(), pe.getLiquorPersonalRating(), -1));
-            number.addAverageRating(-1);
+            liquor.updateAverageRating(calAverage(CalculationType.SUB, liquor.getAverageRating(), number.getAverageRating(), pe.getLiquorPersonalRating()));
+            number.addAverageRating(CalculationType.SUB);
             pe.updateLiquorPersonalRating(null);
         }
         else if(cType.equals(CalculationType.SUB_AND_ADD)){
-            liquor.updateAverageRating(calAverage(liquor.getAverageRating(), number.getAverageRating(), pe.getLiquorPersonalRating(), -1));
-            number.addAverageRating(-1);
-            liquor.updateAverageRating(calAverage(liquor.getAverageRating(), number.getAverageRating(), request, 1));
-            number.addAverageRating(1);
+            liquor.updateAverageRating(calAverage(CalculationType.SUB, liquor.getAverageRating(), number.getAverageRating(), pe.getLiquorPersonalRating()));
+            number.addAverageRating(CalculationType.SUB);
+            liquor.updateAverageRating(calAverage(CalculationType.ADD, liquor.getAverageRating(), number.getAverageRating(), request));
+            number.addAverageRating(CalculationType.ADD);
             pe.updateLiquorPersonalRating(request);
         }
     }
@@ -184,10 +184,16 @@ public class EvaluationService {
 
 
 
-    private Double calAverage(Double origin, Integer number, Double rating, Integer mark){
-        double result= ((origin*number)+(mark*rating))/(number+mark);
+    private Double calAverage(CalculationType cType, Double origin, Integer number, Double request){
+        int mark= 0;
+        if(cType.equals(CalculationType.ADD)) mark= 1;
+        else if(cType.equals(CalculationType.SUB)) mark= -1;
+
+        if(number+mark==0) return 0.0;
+        double result= ((origin*number)+(mark*request))/(number+mark);
         return Math.round(result*10)/10.0;
     }
+
 
     private Double calAverage(FlavorType fType, CalculationType cType, Evaluation evaluation,
                               EvaluationNumber evaluationNumber, Integer request){
@@ -199,7 +205,7 @@ public class EvaluationService {
         int number= evaluationNumber.getFlavor(fType);
 
         if(number+mark==0) return 0.0;
-        double result= (double) ((origin*number)+(mark*request))/(number+mark);
+        double result= ((origin*number)+(mark*request)) /(number+mark);
         return Math.round(result*10)/10.0;
     }
 }

@@ -53,7 +53,7 @@ public class AverageCalculationTest {
             final PersonalEvaluation pe= personalEvaluation();
 
             liquor.updateAverageRating(2.5);
-            number.addAverageRating(1);
+            number.addAverageRating(CalculationType.ADD);
 
             //when
             evaluationService.calAverageRating(CalculationType.ADD, liquor, number, 3.5, pe);
@@ -79,7 +79,8 @@ public class AverageCalculationTest {
             final PersonalEvaluation pe= personalEvaluation();
 
             liquor.updateAverageRating(3.0);
-            number.addAverageRating(2);
+            number.addAverageRating(CalculationType.ADD);
+            number.addAverageRating(CalculationType.ADD);
             pe.updateLiquorPersonalRating(3.5);
 
             //when
@@ -106,7 +107,8 @@ public class AverageCalculationTest {
             final PersonalEvaluation pe= personalEvaluation();
 
             liquor.updateAverageRating(3.0);
-            number.addAverageRating(2);
+            number.addAverageRating(CalculationType.ADD);
+            number.addAverageRating(CalculationType.ADD);
             pe.updateLiquorPersonalRating(3.5);
 
             //when
