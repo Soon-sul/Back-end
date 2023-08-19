@@ -68,8 +68,8 @@ public class MainServiceTest {
         final List<WeekLiquorDto> result= mainService.getWeekLiquor();
 
         //then
-        assertEquals(result.get(0).getLiquorId(), "L008");
-        assertEquals(result.get(1).getLiquorId(), "L013");
+        assertEquals(result.get(0).getLiquorId(), "L013");
+        assertEquals(result.get(1).getLiquorId(), "L008");
         assertEquals(result.get(9).getLiquorId(), "L003");
     }
 
@@ -320,7 +320,10 @@ public class MainServiceTest {
     private List<Liquor> liquorList(){
         final List<Liquor> list= new ArrayList<>();
         for(int i=1;i<=15;i++){
-            list.add(liquor("L"+String.format("%03d", i), 0.0,0L));
+            final Liquor liquor= liquor("L"+String.format("%03d", i), 0.0,0L);
+            list.add(liquor);
+            if(i==1||i==2||i==6||i==9||i==10) continue;
+            doReturn(Optional.of(liquor)).when(liquorRepository).findById("L"+String.format("%03d", i));
         }
         return list;
     }
