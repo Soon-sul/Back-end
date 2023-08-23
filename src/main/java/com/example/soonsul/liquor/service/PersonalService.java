@@ -31,8 +31,11 @@ public class PersonalService {
 
 
     @Transactional(readOnly = true)
-    public List<PersonalDto> getPersonalEvaluationList(Pageable pageable){
-        final User user= userUtil.getUserByAuthentication();
+    public List<PersonalDto> getPersonalEvaluationList(String userId, Pageable pageable){
+        User user;
+        if(userId==null) user= userUtil.getUserByAuthentication();
+        else user= userUtil.getUserById(userId);
+
         final List<PersonalEvaluation> list= personalEvaluationRepository.findAll(pageable, user.getUserId()).toList();
 
         final List<PersonalDto> result= new ArrayList<>();
@@ -61,12 +64,12 @@ public class PersonalService {
                     .personalRating(p.getLiquorPersonalRating())
                     .reviewId(review.map(Review::getReviewId).orElse(null))
                     .reviewContent(review.map(Review::getContent).orElse(null))
-                    .sweetness(p.getSweetness())
-                    .acidity(p.getAcidity())
-                    .carbonicAcid(p.getCarbonicAcid())
-                    .heavy(p.getHeavy())
-                    .scent(p.getScent())
-                    .density(p.getDensity())
+                    .sweetness((userId==null) ? p.getSweetness() : null)
+                    .acidity((userId==null) ? p.getAcidity() : null)
+                    .carbonicAcid((userId==null) ? p.getCarbonicAcid() : null)
+                    .heavy((userId==null) ? p.getHeavy() : null)
+                    .scent((userId==null) ? p.getScent() : null)
+                    .density((userId==null) ? p.getDensity() : null)
                     .build();
             result.add(dto);
         }

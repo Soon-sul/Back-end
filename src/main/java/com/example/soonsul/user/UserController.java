@@ -98,7 +98,7 @@ public class UserController {
     @ApiOperation(value = "내가 남긴 평가리스트 조회")
     @GetMapping("/evaluations")
     public ResponseEntity<PersonalListResponse> getUserEvaluation(@PageableDefault(size=10, sort = "personal_evaluation_id", direction = Sort.Direction.DESC) Pageable pageable) {
-        final List<PersonalDto> data= personalService.getPersonalEvaluationList(pageable);
+        final List<PersonalDto> data= personalService.getPersonalEvaluationList(null, pageable);
         return ResponseEntity.ok(PersonalListResponse.of(ResultCode.GET_USER_EVALUATION_SUCCESS, data));
     }
 
@@ -116,6 +116,14 @@ public class UserController {
     public ResponseEntity<UserProfileResponse> getUserProfile(@PathVariable("userId") String userId) {
         final UserProfileDto data= userService.getUserProfile(userId);
         return ResponseEntity.ok(UserProfileResponse.of(ResultCode.GET_USER_PROFILE_SUCCESS, data));
+    }
+
+
+    @ApiOperation(value = "다른 유저의 리뷰 조회")
+    @GetMapping("/{userId}/reviews")
+    public ResponseEntity<PersonalListResponse> getUserReviewList(@PathVariable("userId") String userId, @PageableDefault(size=10, sort = "personal_evaluation_id", direction = Sort.Direction.DESC) Pageable pageable) {
+        final List<PersonalDto> data= personalService.getPersonalEvaluationList(userId, pageable);
+        return ResponseEntity.ok(PersonalListResponse.of(ResultCode.GET_USER_EVALUATION_SUCCESS, data));
     }
 
 }
