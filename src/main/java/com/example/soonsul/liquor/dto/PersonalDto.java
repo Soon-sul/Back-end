@@ -69,4 +69,14 @@ public class PersonalDto {
 
     @ApiModelProperty(value = "꾸덕함", position = 17)
     private Integer density;
+
+
+    @ApiModelProperty(value = "리뷰 개수", position = 18)
+    private Integer totalReviewNumber;
+
+    @ApiModelProperty(value = "좋아요 개수", position = 19)
+    private Integer goodNumber;
+
+    @ApiModelProperty(value = "댓글 개수", position = 20)
+    private Integer commentNumber;
 }

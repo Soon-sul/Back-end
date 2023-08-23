@@ -28,6 +28,8 @@ public class PersonalService {
     private final LiquorUtil liquorUtil;
     private final LocationRepository locationRepository;
     private final ReviewRepository reviewRepository;
+    private final ReviewGoodRepository reviewGoodRepository;
+    private final CommentRepository commentRepository;
 
 
     @Transactional(readOnly = true)
@@ -37,6 +39,7 @@ public class PersonalService {
         else user= userUtil.getUserById(userId);
 
         final List<PersonalEvaluation> list= personalEvaluationRepository.findAll(pageable, user.getUserId()).toList();
+        final Integer totalReviewNumber= personalEvaluationRepository.countByUser(user);
 
         final List<PersonalDto> result= new ArrayList<>();
         for(PersonalEvaluation p: list){
@@ -70,6 +73,9 @@ public class PersonalService {
                     .heavy((userId==null) ? p.getHeavy() : null)
                     .scent((userId==null) ? p.getScent() : null)
                     .density((userId==null) ? p.getDensity() : null)
+                    .totalReviewNumber(totalReviewNumber)
+                    .goodNumber(review.map(reviewGoodRepository::countByReview).orElse(0))
+                    .commentNumber(review.map(commentRepository::countByReview).orElse(0))
                     .build();
             result.add(dto);
         }
