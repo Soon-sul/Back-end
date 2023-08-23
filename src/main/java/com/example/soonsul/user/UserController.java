@@ -16,6 +16,8 @@ import com.example.soonsul.response.result.ResultResponse;
 import com.example.soonsul.scan.ScanService;
 import com.example.soonsul.scan.dto.ScanDto;
 import com.example.soonsul.scan.response.ScanResponse;
+import com.example.soonsul.user.dto.UserProfileDto;
+import com.example.soonsul.user.response.UserProfileResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -107,4 +109,13 @@ public class UserController {
         evaluationService.deletePersonalEvaluation(liquorId);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.DELETE_USER_EVALUATION_SUCCESS));
     }
+
+
+    @ApiOperation(value = "다른 유저의 프로필 정보 (닉네임, 프로필 사진)")
+    @GetMapping("/{userId}/profile")
+    public ResponseEntity<UserProfileResponse> getUserProfile(@PathVariable("userId") String userId) {
+        final UserProfileDto data= userService.getUserProfile(userId);
+        return ResponseEntity.ok(UserProfileResponse.of(ResultCode.GET_USER_PROFILE_SUCCESS, data));
+    }
+
 }

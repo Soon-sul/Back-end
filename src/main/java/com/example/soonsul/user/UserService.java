@@ -1,6 +1,7 @@
 package com.example.soonsul.user;
 
 import com.example.soonsul.config.s3.S3Uploader;
+import com.example.soonsul.user.dto.UserProfileDto;
 import com.example.soonsul.user.entity.User;
 import com.example.soonsul.user.repository.UserRepository;
 import com.example.soonsul.util.UserUtil;
@@ -45,6 +46,16 @@ public class UserService {
     public boolean getNicknameCheck(String nickname){
         final Optional<User> user= userRepository.findByNickname(nickname);
         return user.isEmpty();
+    }
+
+
+    @Transactional(readOnly = true)
+    public UserProfileDto getUserProfile(String userId){
+        final User user= userUtil.getUserById(userId);
+        return UserProfileDto.builder()
+                .nickname(user.getNickname())
+                .profileImage(user.getProfileImage())
+                .build();
     }
 
 }
