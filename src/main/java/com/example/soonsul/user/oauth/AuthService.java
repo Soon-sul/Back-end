@@ -44,6 +44,8 @@ public class AuthService {
                     .refreshToken(refreshToken.getRefreshToken())
                     .nickname(user.get().getNickname())
                     .profileImage(user.get().getProfileImage())
+                    .oauthId(oauthId)
+                    .oauthProvider(oauthProvider)
                     .build();
         }
         else{                          //신규가입자
