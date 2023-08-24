@@ -55,7 +55,7 @@ public class UserController {
 
     @ApiOperation(value = "유저 프로필 이미지 변경")
     @PutMapping(value = "/profile/image", produces = MediaType.APPLICATION_JSON_VALUE, consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<ResultResponse> putProfileImage(@RequestPart("image") MultipartFile image) {
+    public ResponseEntity<ResultResponse> putProfileImage(@RequestPart(value = "image", required = false) MultipartFile image) {
         userService.putProfileImage(image);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.PUT_PROFILE_IMAGE_SUCCESS));
     }
