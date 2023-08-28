@@ -53,17 +53,17 @@ public class LiquorUtil {
                 .orElseThrow(()-> new PersonalEvaluationNotExist("liquor evaluation not exist", ErrorCode.PERSONAL_EVALUATION_NOT_EXIST));
     }
 
-    public LocationInfo getLocationInfo(Long locationInfoId){
+    public LocationInfo getLocationInfo(String locationInfoId){
         return locationInfoRepository.findById(locationInfoId)
                 .orElseThrow(()-> new LocationInfoNotExist("location info not exist",ErrorCode.LOCATION_INFO_NOT_EXIST));
     }
 
-    public PrizeInfo getPrizeInfo(Long prizeInfoId){
+    public PrizeInfo getPrizeInfo(String prizeInfoId){
         return prizeInfoRepository.findById(prizeInfoId)
                 .orElseThrow(()-> new PrizeInfoNotExist("prize info not exist",ErrorCode.PRIZE_INFO_NOT_EXIST));
     }
 
-    public SalePlaceInfo getSalePlaceInfo(Long salePlaceInfoId){
+    public SalePlaceInfo getSalePlaceInfo(String salePlaceInfoId){
         return salePlaceInfoRepository.findById(salePlaceInfoId)
                 .orElseThrow(()-> new SalePlaceInfoNotExist("sale place info not exist",ErrorCode.SALE_PLACE_INFO_NOT_EXIST));
     }
@@ -83,6 +83,11 @@ public class LiquorUtil {
                 .orElseThrow(()->new CodeNotExist("code not exist", ErrorCode.CODE_NOT_EXIST)).getCodeName();
     }
 
+    public String getCodeId(String codeName){
+        return codeRepository.findByCodeName(codeName)
+                .orElseThrow(()->new CodeNotExist("code not exist", ErrorCode.CODE_NOT_EXIST)).getCodeId();
+    }
+
     public List<String> getBreweryList(String liquorId){
         final List<String> locationList = new ArrayList<>();
         final List<Location> locations = locationRepository.findAllById(liquorId);
@@ -91,4 +96,5 @@ public class LiquorUtil {
         }
         return locationList;
     }
+
 }

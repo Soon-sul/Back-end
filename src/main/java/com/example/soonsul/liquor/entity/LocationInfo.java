@@ -13,9 +13,8 @@ import javax.persistence.*;
 public class LocationInfo {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "location_info_id", nullable = false, unique = true)
-    private Long locationInfoId;
+    private String locationInfoId;
 
     @Column(name = "name")
     private String name;

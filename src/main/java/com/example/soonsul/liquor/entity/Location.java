@@ -19,7 +19,7 @@ public class Location {
     private Long locationId;
 
     @Column(name = "location_info_id")
-    private Long locationInfoId;
+    private String locationInfoId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="liquor_id")

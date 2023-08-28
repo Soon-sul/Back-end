@@ -18,7 +18,7 @@ public class SalePlace {
     private Long salePlaceId;
 
     @Column(name = "sale_place_info_id")
-    private Long salePlaceInfoId;
+    private String salePlaceInfoId;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="liquor_id")
