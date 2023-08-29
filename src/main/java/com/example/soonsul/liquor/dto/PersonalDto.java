@@ -79,4 +79,7 @@ public class PersonalDto {
 
     @ApiModelProperty(value = "댓글 개수", position = 20)
     private Integer commentNumber;
+
+    @ApiModelProperty(value = "판매처", position = 21)
+    private List<String> salePlaceList;
 }

@@ -76,6 +76,7 @@ public class PersonalService {
                     .totalReviewNumber(totalReviewNumber)
                     .goodNumber(review.map(reviewGoodRepository::countByReview).orElse(0))
                     .commentNumber(review.map(commentRepository::countByReview).orElse(0))
+                    .salePlaceList(liquorUtil.getSalePlaceList(liquor.getLiquorId()))
                     .build();
             result.add(dto);
         }
