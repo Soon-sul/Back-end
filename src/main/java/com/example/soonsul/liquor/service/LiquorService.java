@@ -1,5 +1,6 @@
 package com.example.soonsul.liquor.service;
 
+import com.example.soonsul.cache.CacheKey;
 import com.example.soonsul.liquor.dto.*;
 import com.example.soonsul.liquor.entity.*;
 import com.example.soonsul.liquor.repository.*;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -35,6 +37,7 @@ public class LiquorService {
 
 
     @Transactional(readOnly = true)
+    @Cacheable(value = CacheKey.LIQUOR, cacheManager = "cacheManager")
     public LiquorInfoDto getLiquorInfo(String liquorId){
         final User user= userUtil.getUserByAuthentication();
         final Liquor liquor= liquorUtil.getLiquor(liquorId);
