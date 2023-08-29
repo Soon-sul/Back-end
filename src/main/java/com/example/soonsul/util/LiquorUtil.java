@@ -31,6 +31,7 @@ public class LiquorUtil {
     private final PrizeInfoRepository prizeInfoRepository;
     private final SalePlaceInfoRepository salePlaceInfoRepository;
     private final LocationRepository locationRepository;
+    private final SalePlaceRepository salePlaceRepository;
 
 
     public Liquor getLiquor(String liquorId){
@@ -97,4 +98,14 @@ public class LiquorUtil {
         return locationList;
     }
 
+    public List<String> getSalePlaceList(String liquorId){
+        final List<String> salePlaceList = new ArrayList<>();
+        final Liquor liquor= liquorRepository.findById(liquorId)
+                .orElseThrow(()-> new LiquorNotExist("liquor not exist", ErrorCode.LIQUOR_NOT_EXIST));
+        final List<SalePlace> salePlaces = salePlaceRepository.findAllByLiquor(liquor);
+        for (SalePlace s : salePlaces) {
+            salePlaceList.add(getSalePlaceInfo(s.getSalePlaceInfoId()).getName());
+        }
+        return salePlaceList;
+    }
 }
