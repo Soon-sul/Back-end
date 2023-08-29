@@ -30,7 +30,7 @@ public class PromotionService {
 
         final List<PromotionDto> result= new ArrayList<>();
         for(Promotion p: list){
-            if(LocalDate.now().isAfter(p.getEndDate())) continue;
+            if(p.getEndDate()!=null && LocalDate.now().isAfter(p.getEndDate())) continue;
             final PromotionDto dto= PromotionDto.builder()
                     .promotionId(p.getPromotionId())
                     .title(p.getTitle())
