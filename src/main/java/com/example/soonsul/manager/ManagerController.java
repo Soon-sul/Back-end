@@ -7,13 +7,12 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 @Api(tags="관리자")
 @RestController
@@ -21,6 +20,7 @@ import java.util.List;
 @RequestMapping("/manager")
 public class ManagerController {
     private final ManagerService managerService;
+    private final GoogleSheetsService googleSheetsService;
 
 
     @ApiOperation(value = "모든 전통주 메인사진 s3에 등록")
@@ -46,4 +46,68 @@ public class ManagerController {
         return ResponseEntity.ok(ResultResponse.of(ResultCode.POST_LOCATION_INIT_SUCCESS));
     }
 
+
+    @ApiOperation(value = "전통주 저장")
+    @PostMapping("/liquors")
+    public ResponseEntity<ResultResponse> postLiquor(String spreadsheetId, String range) throws IOException {
+        googleSheetsService.postLiquor(spreadsheetId, range);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.MANAGE_ACTION_SUCCESS));
+    }
+
+
+    @ApiOperation(value = "소재지 주소 체크", notes = "소재지가 잘못 저장된 전통주를 리스트로 반환")
+    @GetMapping("/location/check")
+    public ResponseEntity<ResultResponse> getLocationCheck(String spreadsheetId, String range) throws IOException {
+        List<String> data= googleSheetsService.getLocationCheck(spreadsheetId, range);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.MANAGE_ACTION_SUCCESS, data));
+    }
+
+    @ApiOperation(value = "지역코드 체크", notes = "지역코드가 잘못 저장된 전통주를 리스트로 반환")
+    @GetMapping("/region-code/check")
+    public ResponseEntity<ResultResponse> getRegionCodeCheck(String spreadsheetId, String range) throws IOException {
+        List<String> data= googleSheetsService.getRegionCodeCheck(spreadsheetId, range);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.MANAGE_ACTION_SUCCESS, data));
+    }
+
+    @ApiOperation(value = "소재지 정보 저장", notes = "전통주를 저장하기 전에 먼저 수행해야 함")
+    @PostMapping("/location-info")
+    public ResponseEntity<ResultResponse> postLocationInfo(String spreadsheetId, String range) throws IOException {
+        googleSheetsService.postLocationInfo(spreadsheetId, range);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.MANAGE_ACTION_SUCCESS));
+    }
+
+    @ApiOperation(value = "수상내역 정보 저장")
+    @PostMapping("/prize-info")
+    public ResponseEntity<ResultResponse> postPrizeInfo(String spreadsheetId, String range) throws IOException {
+        googleSheetsService.postPrizeInfo(spreadsheetId, range);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.MANAGE_ACTION_SUCCESS));
+    }
+
+    @ApiOperation(value = "수상내역 저장")
+    @PostMapping("/prize")
+    public ResponseEntity<ResultResponse> postPrize(String spreadsheetId, String range) throws IOException {
+        googleSheetsService.postPrize(spreadsheetId, range);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.MANAGE_ACTION_SUCCESS));
+    }
+
+    @ApiOperation(value = "판매처 종류", notes = "중복없이 판매처 종류 조회")
+    @GetMapping("/sale-place/all")
+    public ResponseEntity<ResultResponse> getSalePlaceAll(String spreadsheetId, String range) throws IOException {
+        Set<String> data= googleSheetsService.getSalePlaceAll(spreadsheetId, range);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.MANAGE_ACTION_SUCCESS, data));
+    }
+
+    @ApiOperation(value = "판매처 정보 저장", notes = "전통주를 저장하기 전에 먼저 수행해야 함")
+    @PostMapping("/sale-place-info")
+    public ResponseEntity<ResultResponse> postSalePlaceInfo(String spreadsheetId, String range) throws IOException {
+        googleSheetsService.postSalePlaceInfo(spreadsheetId, range);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.MANAGE_ACTION_SUCCESS));
+    }
+
+    @ApiOperation(value = "액세스토큰 조회")
+    @GetMapping("/token/{userId}")
+    public ResponseEntity<ResultResponse> getToken(@PathVariable("userId") String userId) throws IOException {
+        String data= googleSheetsService.getToken(userId);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.MANAGE_ACTION_SUCCESS, data));
+    }
 }

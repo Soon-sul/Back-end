@@ -46,8 +46,8 @@ public class ManagerService {
         for (MultipartFile image : images) {
             final String liquorId = image.getOriginalFilename().substring(0, 8);
             final Liquor liquor = liquorUtil.getLiquor(liquorId);
-            if (!liquor.getImageUrl().equals("") || liquor.getImageUrl() != null)
-                s3Uploader.deleteFile(liquor.getImageUrl());
+            //if (liquor.getImageUrl() != null || !liquor.getImageUrl().equals(""))
+            //    s3Uploader.deleteFile(liquor.getImageUrl());
             liquor.updateImageUrl(s3Uploader.liquorMainUpload(image));
         }
     }
