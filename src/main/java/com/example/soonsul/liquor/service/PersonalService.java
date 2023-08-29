@@ -82,4 +82,24 @@ public class PersonalService {
         return result;
     }
 
+
+    @Transactional(readOnly = true)
+    public PersonalDto getEvaluation(String liquorId){
+        final Liquor liquor= liquorUtil.getLiquor(liquorId);
+        final User user= userUtil.getUserByAuthentication();
+        final PersonalEvaluation personalEvaluation= liquorUtil.getPersonalEvaluation(user, liquor);
+        final Optional<Review> review= reviewRepository.findByUserAndLiquor(user, liquor);
+
+        return PersonalDto.builder()
+                .personalRating(personalEvaluation.getLiquorPersonalRating())
+                .sweetness(personalEvaluation.getSweetness())
+                .acidity(personalEvaluation.getAcidity())
+                .carbonicAcid(personalEvaluation.getCarbonicAcid())
+                .heavy(personalEvaluation.getHeavy())
+                .scent(personalEvaluation.getScent())
+                .density(personalEvaluation.getDensity())
+                .reviewContent(review.map(Review::getContent).orElse(null))
+                .build();
+    }
+
 }
