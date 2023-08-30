@@ -153,7 +153,7 @@ public class CommentService {
 
     @Transactional
     public void deleteReComment(Long commentId){
-        commentRepository.findById(commentId);
+        commentRepository.deleteById(commentId);
     }
 
 
