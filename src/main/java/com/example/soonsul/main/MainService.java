@@ -52,9 +52,12 @@ public class MainService {
 
         final List<WeekLiquorDto> result= new ArrayList<>();
         for(String key : map.keySet()){
+            final Liquor liquor= liquorUtil.getLiquor(key);
             final WeekLiquorDto dto= WeekLiquorDto.builder()
                     .liquorId(key)
-                    .imageUrl(liquorRepository.findById(key).get().getImageUrl())
+                    .imageUrl(liquor.getImageUrl())
+                    .name(liquor.getName())
+                    .averageRating(liquor.getAverageRating())
                     .build();
             result.add(dto);
         }
