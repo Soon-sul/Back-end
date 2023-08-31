@@ -323,7 +323,7 @@ public class MainServiceTest {
             final Liquor liquor= liquor("L"+String.format("%03d", i), 0.0,0L);
             list.add(liquor);
             if(i==1||i==2||i==6||i==9||i==10) continue;
-            doReturn(Optional.of(liquor)).when(liquorRepository).findById("L"+String.format("%03d", i));
+            doReturn(liquor).when(liquorUtil).getLiquor(liquor.getLiquorId());
         }
         return list;
     }
