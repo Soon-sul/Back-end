@@ -49,27 +49,27 @@ public class SynchronizationTest {
 
         //when
         Thread thread1 = new Thread(() -> {     // 스레드 생성
-            authentication("2804468489");
+            authentication("userId1");
             evaluationService.postEvaluation(liquorId, request1);
         });
 
         Thread thread2 = new Thread(() -> {
-            authentication("2952767450");
+            authentication("userId2");
             evaluationService.postEvaluation(liquorId, request2);
         });
 
         Thread thread3 = new Thread(() -> {
-            authentication("2953744961");
+            authentication("userId3");
             evaluationService.postEvaluation(liquorId, request3);
         });
 
         Thread thread4 = new Thread(() -> {
-            authentication("2982412952");
+            authentication("userId4");
             evaluationService.postEvaluation(liquorId, request4);
         });
 
         Thread thread5 = new Thread(() -> {
-            authentication("2985131526");
+            authentication("userId5");
             evaluationService.postEvaluation(liquorId, request5);
         });
 
