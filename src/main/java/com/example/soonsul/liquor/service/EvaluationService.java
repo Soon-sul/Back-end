@@ -12,7 +12,11 @@ import com.example.soonsul.util.LiquorUtil;
 import com.example.soonsul.util.UserUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -27,43 +31,53 @@ public class EvaluationService {
     private final UserUtil userUtil;
     private final ReviewRepository reviewRepository;
     private final LiquorUtil liquorUtil;
+    private final PlatformTransactionManager transactionManager;
 
     private final List<FlavorType> flavorTypes= Arrays.asList(FlavorType.SWEETNESS, FlavorType.ACIDITY,
             FlavorType.CARBONIC_ACID, FlavorType.HEAVY, FlavorType.SCENT, FlavorType.DENSITY);
 
 
-    @Transactional
-    public void postEvaluation(String liquorId, EvaluationRequest request){
-        final User user= userUtil.getUserByAuthentication();
-        final Liquor liquor= liquorUtil.getLiquor(liquorId);
-        final Evaluation evaluation= liquorUtil.getEvaluation(liquorId);
-        final EvaluationNumber number= liquorUtil.getEvaluationNumber(liquorId);
+    public synchronized void postEvaluation(String liquorId, EvaluationRequest request){
+        DefaultTransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
+        transactionDefinition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
 
-        final PersonalEvaluation personalEvaluation= PersonalEvaluation.builder()
-                .evaluationDate(LocalDate.now())
-                .user(user)
-                .liquor(liquor)
-                .build();
-        final PersonalEvaluation pe= personalEvaluationRepository.save(personalEvaluation);
+        TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
+        try {
+            final User user= userUtil.getUserByAuthentication();
+            final Liquor liquor= liquorUtil.getLiquor(liquorId);
+            final Evaluation evaluation= liquorUtil.getEvaluation(liquorId);
+            final EvaluationNumber number= liquorUtil.getEvaluationNumber(liquorId);
 
-        calAverageRating(MethodType.POST, liquor, number, request.getLiquorPersonalRating(), pe);
-
-        for(FlavorType fType: flavorTypes){
-            if(request.getFlavor(fType)!=null)
-                calAverageFlavor(fType, MethodType.POST, evaluation, number, request.getFlavor(fType), pe);
-        }
-
-
-        if(request.getReviewContent()!=null){
-            final Review review= Review.builder()
-                    .content(request.getReviewContent())
-                    .createdDate(LocalDateTime.now())
-                    .liquorRating(request.getLiquorPersonalRating())
+            final PersonalEvaluation personalEvaluation= PersonalEvaluation.builder()
+                    .evaluationDate(LocalDate.now())
                     .user(user)
                     .liquor(liquor)
                     .build();
-            reviewRepository.save(review);
+            final PersonalEvaluation pe= personalEvaluationRepository.save(personalEvaluation);
+
+            calAverageRating(MethodType.POST, liquor, number, request.getLiquorPersonalRating(), pe);
+
+            for(FlavorType fType: flavorTypes){
+                if(request.getFlavor(fType)!=null)
+                    calAverageFlavor(fType, MethodType.POST, evaluation, number, request.getFlavor(fType), pe);
+            }
+
+            if(request.getReviewContent()!=null){
+                final Review review= Review.builder()
+                        .content(request.getReviewContent())
+                        .createdDate(LocalDateTime.now())
+                        .liquorRating(request.getLiquorPersonalRating())
+                        .user(user)
+                        .liquor(liquor)
+                        .build();
+                reviewRepository.save(review);
+            }
+
+            transactionManager.commit(transactionStatus);
+        } catch (Exception e) {
+            transactionManager.rollback(transactionStatus);
+            throw e;
         }
     }
 
