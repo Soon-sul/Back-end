@@ -35,6 +35,7 @@ public class ReviewService {
         final User user= userUtil.getUserByAuthentication();
         final Liquor liquor= liquorUtil.getLiquor(liquorId);
         final List<Review> reviews= reviewRepository.findAllByLatest(pageable, liquorId).toList();
+        final Integer totalReviewNumber= reviewRepository.countByLiquor(liquor);
 
         final List<ReviewDto> result= new ArrayList<>();
         for(Review r: reviews){
@@ -52,6 +53,7 @@ public class ReviewService {
                     .profileImage(r.getUser().getProfileImage())
                     .reviewNumber(reviewRepository.countByUser(r.getUser()))
                     .flagGood(reviewGoodRepository.existsByReviewAndUser(r, user))
+                    .totalReviewNumber(totalReviewNumber)
                     .build();
             result.add(reviewDto);
         }
@@ -64,6 +66,7 @@ public class ReviewService {
         final User user= userUtil.getUserByAuthentication();
         final Liquor liquor= liquorUtil.getLiquor(liquorId);
         final List<Review> reviews= reviewRepository.findAllByRating(pageable, liquorId).toList();
+        final Integer totalReviewNumber= reviewRepository.countByLiquor(liquor);
 
         final List<ReviewDto> result= new ArrayList<>();
         for(Review r: reviews){
@@ -81,6 +84,7 @@ public class ReviewService {
                     .profileImage(r.getUser().getProfileImage())
                     .reviewNumber(reviewRepository.countByUser(r.getUser()))
                     .flagGood(reviewGoodRepository.existsByReviewAndUser(r, user))
+                    .totalReviewNumber(totalReviewNumber)
                     .build();
             result.add(reviewDto);
         }
