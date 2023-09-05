@@ -15,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.transaction.PlatformTransactionManager;
 
 
 import java.util.Optional;
@@ -43,6 +44,8 @@ public class EvaluationServiceTest {
     @Mock
     private ReviewRepository reviewRepository;
 
+    @Mock
+    private PlatformTransactionManager transactionManager;
 
     private final User user= user();
 
