@@ -252,12 +252,14 @@ public class MainService {
 
     private List<RegionLiquorDto> byLowestCost(List<RegionLiquorDto> list){
         return list.stream()
+                .filter(dto -> dto.getLowestPrice()!= null)
                 .sorted(Comparator.comparing(RegionLiquorDto::getLowestPrice))
                 .collect(Collectors.toList());
     }
 
     private List<RegionLiquorDto> byHighestCost(List<RegionLiquorDto> list){
         return list.stream()
+                .filter(dto -> dto.getLowestPrice()!= null)
                 .sorted(Comparator.comparing(RegionLiquorDto::getLowestPrice).reversed())
                 .collect(Collectors.toList());
     }
