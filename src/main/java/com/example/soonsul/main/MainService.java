@@ -251,17 +251,35 @@ public class MainService {
     }
 
     private List<RegionLiquorDto> byLowestCost(List<RegionLiquorDto> list){
-        return list.stream()
+        final List<RegionLiquorDto> noPriceLiquors= new ArrayList<>();
+        for(RegionLiquorDto dto: list){
+            if(dto.getLowestPrice()==null) noPriceLiquors.add(dto);
+        }
+
+        final List<RegionLiquorDto> sortedLiquors= list.stream()
                 .filter(dto -> dto.getLowestPrice()!= null)
                 .sorted(Comparator.comparing(RegionLiquorDto::getLowestPrice))
                 .collect(Collectors.toList());
+
+        sortedLiquors.addAll(noPriceLiquors);
+
+        return sortedLiquors;
     }
 
     private List<RegionLiquorDto> byHighestCost(List<RegionLiquorDto> list){
-        return list.stream()
+        final List<RegionLiquorDto> noPriceLiquors= new ArrayList<>();
+        for(RegionLiquorDto dto: list){
+            if(dto.getLowestPrice()==null) noPriceLiquors.add(dto);
+        }
+
+        final List<RegionLiquorDto> sortedLiquors= list.stream()
                 .filter(dto -> dto.getLowestPrice()!= null)
                 .sorted(Comparator.comparing(RegionLiquorDto::getLowestPrice).reversed())
                 .collect(Collectors.toList());
+
+        sortedLiquors.addAll(noPriceLiquors);
+
+        return sortedLiquors;
     }
 
 }
