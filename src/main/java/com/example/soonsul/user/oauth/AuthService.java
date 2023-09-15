@@ -1,6 +1,7 @@
 package com.example.soonsul.user.oauth;
 
 import com.example.soonsul.response.error.ErrorCode;
+import com.example.soonsul.user.exception.WithdrawalUser;
 import com.example.soonsul.user.oauth.dto.ValidationDto;
 import com.example.soonsul.user.oauth.jwt.JwtTokenProvider;
 import com.example.soonsul.user.entity.User;
@@ -14,6 +15,7 @@ import com.example.soonsul.user.redis.RefreshToken;
 import com.example.soonsul.user.redis.RefreshTokenRepository;
 import com.example.soonsul.user.oauth.response.OAuthInfoResponse;
 import com.example.soonsul.util.RandomNickName;
+import com.example.soonsul.util.UserUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +25,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
+    private final UserUtil userUtil;
     private final UserRepository userRepository;
     private final RequestOAuthInfoService requestOAuthInfoService;
     private final JwtTokenProvider jwtTokenProvider;
@@ -37,6 +40,7 @@ public class AuthService {
         final Optional<User> user= userRepository.findById(oauthId);
 
         if(user.isPresent()) {          //이미 가입된 사용자
+            if(user.get().isFlagWithdrawal()) throw new WithdrawalUser("withdrawal user", ErrorCode.WITHDRAWAL_USER);
             final RefreshToken refreshToken= jwtTokenProvider.generateJwtRefreshToken(user.get());
             refreshTokenRepository.save(refreshToken);
             return TokenDto.builder()
@@ -111,5 +115,12 @@ public class AuthService {
         return ValidationDto.builder()
                 .flagValidation(false)
                 .build();
+    }
+
+
+    @Transactional
+    public void withdrawal() {
+        final User user= userUtil.getUserByAuthentication();
+        user.updateFlagWithdrawal(true);
     }
 }

@@ -56,4 +56,8 @@ public class User {
     public void updateProfileImage(String profileImage){
         this.profileImage= profileImage;
     }
+
+    public void updateFlagWithdrawal(boolean flagWithdrawal){
+        this.flagWithdrawal= flagWithdrawal;
+    }
 }

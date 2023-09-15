@@ -99,4 +99,12 @@ public class AuthController {
         return ResponseEntity.ok(ValidationResponse.of(ResultCode.TOKEN_VALID_CHECK_SUCCESS, data));
     }
 
+
+    @ApiOperation(value = "회원탈퇴")
+    @DeleteMapping("/withdrawal")
+    public ResponseEntity<ResultResponse> withdrawal() {
+        authService.withdrawal();
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.DELETE_USER_SUCCESS));
+    }
+
 }
