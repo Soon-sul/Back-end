@@ -16,7 +16,9 @@ import com.example.soonsul.response.result.ResultResponse;
 import com.example.soonsul.scan.ScanService;
 import com.example.soonsul.scan.dto.ScanDto;
 import com.example.soonsul.scan.response.ScanResponse;
+import com.example.soonsul.user.dto.FollowDto;
 import com.example.soonsul.user.dto.UserProfileDto;
+import com.example.soonsul.user.response.FollowResponse;
 import com.example.soonsul.user.response.UserProfileResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -126,4 +128,35 @@ public class UserController {
         return ResponseEntity.ok(PersonalListResponse.of(ResultCode.GET_USER_EVALUATION_SUCCESS, data));
     }
 
+
+    @ApiOperation(value = "팔로잉 추가", notes = "userId : 팔로잉하는 유저 ID (상대방ID)")
+    @PostMapping("/{userId}/following")
+    public ResponseEntity<ResultResponse> postFollowing(@PathVariable("userId") String userId) {
+        userService.postFollowing(userId);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.POST_FOLLOWING_SUCCESS));
+    }
+
+
+    @ApiOperation(value = "팔로잉 취소", notes = "userId : 팔로잉하는 유저 ID (상대방ID)")
+    @DeleteMapping("/{userId}/following")
+    public ResponseEntity<ResultResponse> deleteFollowing(@PathVariable("userId") String userId) {
+        userService.deleteFollowing(userId);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.DELETE_FOLLOWING_SUCCESS));
+    }
+
+
+    @ApiOperation(value = "팔로잉 조회")
+    @GetMapping("/{userId}/followings")
+    public ResponseEntity<FollowResponse> getFollowingList(@PathVariable("userId") String userId) {
+        final List<FollowDto> data= userService.getFollowingList(userId);
+        return ResponseEntity.ok(FollowResponse.of(ResultCode.GET_FOLLOWING_SUCCESS, data));
+    }
+
+
+    @ApiOperation(value = "팔로워 조회")
+    @GetMapping("/{userId}/followers")
+    public ResponseEntity<FollowResponse> getFollowerList(@PathVariable("userId") String userId) {
+        final List<FollowDto> data= userService.getFollowerList(userId);
+        return ResponseEntity.ok(FollowResponse.of(ResultCode.GET_FOLLOWER_SUCCESS, data));
+    }
 }

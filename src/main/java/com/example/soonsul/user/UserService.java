@@ -1,8 +1,11 @@
 package com.example.soonsul.user;
 
 import com.example.soonsul.config.s3.S3Uploader;
+import com.example.soonsul.user.dto.FollowDto;
 import com.example.soonsul.user.dto.UserProfileDto;
+import com.example.soonsul.user.entity.Follow;
 import com.example.soonsul.user.entity.User;
+import com.example.soonsul.user.repository.FollowRepository;
 import com.example.soonsul.user.repository.UserRepository;
 import com.example.soonsul.util.UserUtil;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,6 +24,7 @@ public class UserService {
     private final UserUtil userUtil;
     private final S3Uploader s3Uploader;
     private final UserRepository userRepository;
+    private final FollowRepository followRepository;
 
     @Value("${cloud.aws.s3.bucket.url}")
     private String AWS_S3_BUCKET_URL;
@@ -56,6 +62,66 @@ public class UserService {
                 .nickname(user.getNickname())
                 .profileImage(user.getProfileImage())
                 .build();
+    }
+
+
+    @Transactional
+    public void postFollowing(String userId){
+        final User user= userUtil.getUserByAuthentication();
+        final User following= userUtil.getUserById(userId);
+
+        final Follow follow= Follow.builder()
+                .follower(user)
+                .following(following)
+                .build();
+        followRepository.save(follow);
+    }
+
+
+    @Transactional
+    public void deleteFollowing(String userId){
+        final User user= userUtil.getUserByAuthentication();
+        final User following= userUtil.getUserById(userId);
+
+        followRepository.deleteByFollowerAndFollowing(user, following);
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<FollowDto> getFollowingList(String userId){
+        final User user= userUtil.getUserById(userId);
+        final List<Follow> followingList= followRepository.findAllByFollower(user);
+
+        final List<FollowDto> result= new ArrayList<>();
+        for(Follow follow: followingList){
+            final User following= follow.getFollowing();
+            final FollowDto dto= FollowDto.builder()
+                    .userId(following.getUserId())
+                    .nickname(following.getNickname())
+                    .profileImage(following.getProfileImage())
+                    .build();
+            result.add(dto);
+        }
+        return result;
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<FollowDto> getFollowerList(String userId){
+        final User user= userUtil.getUserById(userId);
+        final List<Follow> followerList= followRepository.findAllByFollowing(user);
+
+        final List<FollowDto> result= new ArrayList<>();
+        for(Follow follow: followerList){
+            final User follower= follow.getFollower();
+            final FollowDto dto= FollowDto.builder()
+                    .userId(follower.getUserId())
+                    .nickname(follower.getNickname())
+                    .profileImage(follower.getProfileImage())
+                    .build();
+            result.add(dto);
+        }
+        return result;
     }
 
 }
