@@ -69,6 +69,7 @@ public enum ResultCode {
     PUT_PROFILE_NICKNAME_SUCCESS(200,"U008","유저 닉네임을 수정했습니다."),
     PUT_PROFILE_IMAGE_SUCCESS(200,"U009","유저 프로필 이미지를 수정했습니다."),
     GET_USER_PROFILE_SUCCESS(200, "U010", "유저 닉네임과 프로필 사진을 조회했습니다."),
+    POST_INQUIRY_SUCCESS(201, "U011", "문의글을 작성했습니다."),
 
     //click
     POST_CLICK_SUCCESS(201,"C001","전통주 클릭을 등록했습니다."),
