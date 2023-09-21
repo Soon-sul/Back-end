@@ -204,6 +204,12 @@ public class LiquorService {
     }
 
 
+    @Transactional(readOnly = true)
+    public List<String> getLiquorListId(){
+        return liquorRepository.findAllId();
+    }
+
+
     @Transactional
     public void updateFiltering(){
         final List<Integer> age= Arrays.asList(20, 30, 40, 50, 60);
