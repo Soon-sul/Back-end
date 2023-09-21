@@ -77,6 +77,7 @@ public class PersonalService {
                     .goodNumber(review.map(reviewGoodRepository::countByReview).orElse(0))
                     .commentNumber(review.map(commentRepository::countByReview).orElse(0))
                     .salePlaceList(liquorUtil.getSalePlaceList(liquor.getLiquorId()))
+                    .flagGood(review.isPresent() && reviewGoodRepository.existsByReviewAndUser(review.get(), userUtil.getUserByAuthentication()))
                     .build();
             result.add(dto);
         }

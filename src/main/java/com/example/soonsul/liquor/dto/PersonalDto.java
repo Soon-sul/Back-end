@@ -82,4 +82,7 @@ public class PersonalDto {
 
     @ApiModelProperty(value = "판매처", position = 21)
     private List<String> salePlaceList;
+
+    @ApiModelProperty(value = "좋아요 유무", position = 22)
+    private boolean flagGood;
 }
