@@ -18,7 +18,7 @@ import java.time.LocalDate;
 @ApiModel(description = "프로모션 정보")
 public class PromotionDto {
 
-    @ApiModelProperty(value = "프로모션 pk", position = 1)
+    @ApiModelProperty(value = "프로모션 또는 메인배너 pk", position = 1)
     private Long promotionId;
 
     @ApiModelProperty(value = "제목", position = 2)
@@ -36,7 +36,7 @@ public class PromotionDto {
     @ApiModelProperty(value = "위치", position = 6)
     private String location;
 
-    @ApiModelProperty(value = "메인 이미지 url", position = 7)
+    @ApiModelProperty(value = "썸네일", position = 7)
     private String image;
 
     @ApiModelProperty(value = "찜 여부", position = 8)

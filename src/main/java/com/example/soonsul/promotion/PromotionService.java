@@ -1,5 +1,8 @@
 package com.example.soonsul.promotion;
 
+import com.example.soonsul.main.entity.MainBanner;
+import com.example.soonsul.main.repository.BannerZzimRepository;
+import com.example.soonsul.main.repository.MainBannerRepository;
 import com.example.soonsul.promotion.dto.PromotionDto;
 import com.example.soonsul.promotion.entity.Promotion;
 import com.example.soonsul.promotion.entity.Zzim;
@@ -18,9 +21,11 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class PromotionService {
+    private final UserUtil userUtil;
     private final PromotionRepository promotionRepository;
     private final ZzimRepository zzimRepository;
-    private final UserUtil userUtil;
+    private final MainBannerRepository mainBannerRepository;
+    private final BannerZzimRepository bannerZzimRepository;
 
 
     @Transactional(readOnly = true)
@@ -40,6 +45,17 @@ public class PromotionService {
                     .location(p.getLocation())
                     .image(p.getImage())
                     .flagZzim(zzimRepository.existsByUserAndPromotion(user, p))
+                    .build();
+            result.add(dto);
+        }
+
+        final List<MainBanner> bannerList= mainBannerRepository.findAll();
+        for(MainBanner banner: bannerList){
+            final PromotionDto dto= PromotionDto.builder()
+                    .promotionId(banner.getMainBannerId())
+                    .content(banner.getContent())
+                    .image(banner.getThumbnail())
+                    .flagZzim(bannerZzimRepository.existsByUserAndMainBanner(user, banner))
                     .build();
             result.add(dto);
         }

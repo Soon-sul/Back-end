@@ -1,11 +1,15 @@
 package com.example.soonsul.main;
 
+import com.example.soonsul.main.dto.MainBannerDto;
 import com.example.soonsul.main.dto.RegionLiquorDto;
 import com.example.soonsul.main.dto.WeekLiquorDto;
 import com.example.soonsul.main.entity.Sorting;
+import com.example.soonsul.main.response.MainBannerListResponse;
+import com.example.soonsul.main.response.MainBannerResponse;
 import com.example.soonsul.main.response.RegionLiquorResponse;
 import com.example.soonsul.main.response.WeekLiquorResponse;
 import com.example.soonsul.response.result.ResultCode;
+import com.example.soonsul.response.result.ResultResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +24,7 @@ import java.util.List;
 @RequestMapping("/main")
 public class MainController {
     private final MainService mainService;
+    private final BannerService bannerService;
 
     @ApiOperation(value = "이번주 가장 사랑받는 전통주")
     @GetMapping("/week-liquor")
@@ -38,5 +43,36 @@ public class MainController {
                                                                 @RequestParam(value = "longitude", required = false) Double longitude) {
         final List<RegionLiquorDto> data= mainService.getRegionLiquor(region, Sorting.valueOf(sorting), latitude, longitude);
         return ResponseEntity.ok(RegionLiquorResponse.of(ResultCode.GET_WEEK_LIQUOR_SUCCESS, data));
+    }
+
+
+    @ApiOperation(value = "메인 배너 리스트 조회")
+    @GetMapping("/banners")
+    public ResponseEntity<MainBannerListResponse> getMainBannerList() {
+        final List<MainBannerDto> data= bannerService.getMainBannerList();
+        return ResponseEntity.ok(MainBannerListResponse.of(ResultCode.GET_MAIN_BANNER_LIST_SUCCESS, data));
+    }
+
+
+    @ApiOperation(value = "특정 메인 배너 조회")
+    @GetMapping("/banners/{mainBannerId}")
+    public ResponseEntity<MainBannerResponse> getMainBanner(@PathVariable("mainBannerId") Long mainBannerId) {
+        final MainBannerDto data= bannerService.getMainBanner(mainBannerId);
+        return ResponseEntity.ok(MainBannerResponse.of(ResultCode.GET_MAIN_BANNER_SUCCESS, data));
+    }
+
+
+    @ApiOperation(value = "메인 배너 찜 등록")
+    @PostMapping("/banners/{mainBannerId}")
+    public ResponseEntity<ResultResponse> postBannerZzim(@PathVariable("mainBannerId") Long mainBannerId) {
+        bannerService.postBannerZzim(mainBannerId);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.POST_BANNER_ZZIM_SUCCESS));
+    }
+
+    @ApiOperation(value = "메인 배너 찜 삭제")
+    @DeleteMapping("/banners/{mainBannerId}")
+    public ResponseEntity<ResultResponse> deleteBannerZzim(@PathVariable("mainBannerId") Long mainBannerId) {
+        bannerService.deleteBannerZzim(mainBannerId);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.DELETE_BANNER_ZZIM_SUCCESS));
     }
 }

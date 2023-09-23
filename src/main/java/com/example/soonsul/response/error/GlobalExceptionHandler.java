@@ -1,6 +1,7 @@
 package com.example.soonsul.response.error;
 
 import com.example.soonsul.liquor.exception.*;
+import com.example.soonsul.main.exception.MainBannerNotExist;
 import com.example.soonsul.user.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -120,6 +121,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(WithdrawalUser.class)
     public ResponseEntity<ErrorResponse> handleWithdrawalUser(WithdrawalUser ex){
         log.error("handleWithdrawalUser",ex);
+        final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
+    }
+
+    @ExceptionHandler(MainBannerNotExist.class)
+    public ResponseEntity<ErrorResponse> handleMainBannerNotExist(MainBannerNotExist ex){
+        log.error("handleMainBannerNotExist",ex);
         final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
         return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
     }

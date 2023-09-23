@@ -39,6 +39,7 @@ public enum ErrorCode {
 
     //promotion
     PROMOTION_NOT_EXIST(500,"P001","PROMOTION NOT EXIST"),
+    MAIN_BANNER_NOT_EXIST(500,"P002","MAIN BANNER NOT EXIST"),
 
     //scan
     SCAN_NOT_EXIST(500,"S001","SCAN NOT EXIST"),
