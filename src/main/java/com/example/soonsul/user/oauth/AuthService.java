@@ -33,7 +33,7 @@ public class AuthService {
 
 
     @Transactional
-    public TokenDto login(OAuthLoginParams params) {
+    public TokenDto login(OAuthLoginParams params) throws Exception {
         final OAuthInfoResponse response = requestOAuthInfoService.request(params);
         final String oauthId= response.getId();
         final OAuthProvider oauthProvider= params.oAuthProvider();
