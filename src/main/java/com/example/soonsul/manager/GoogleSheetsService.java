@@ -61,7 +61,10 @@ public class GoogleSheetsService {
             final String locationName= (checkEmpty(row.get(5))==null) ? null : row.get(5).toString();
             final Integer capacity= (checkEmpty(row.get(6))==null) ? null : Integer.valueOf(row.get(6).toString());
             final Long lowestPrice= (checkEmpty(row.get(7))==null) ? null : Long.valueOf(row.get(7).toString());
-            final String salePlaceName= row.get(8).toString();
+            final String salePlaceName= (checkEmpty(row.get(8))==null) ? null : row.get(8).toString();
+            final String siteUrl= (checkEmpty(row.get(9))==null) ? null : row.get(9).toString();
+            final String phoneNumber= (checkEmpty(row.get(10))==null) ? null : row.get(10).toString();
+            final String prize= (checkEmpty(row.get(11))==null) ? null : row.get(11).toString();
 
             final Liquor liquor= Liquor.builder()
                     .liquorId(liquorId)
@@ -78,23 +81,44 @@ public class GoogleSheetsService {
                     .build();
             liquorRepository.save(liquor);
 
-            for(LocationInfo info: locationInfoRepository.findByBrewery(brewery)){
-                final Location location= Location.builder()
-                        .locationInfoId(info.getLocationInfoId())
+
+            final LocationInfo locationInfo= LocationInfo.builder()
+                    .name(locationName)
+                    .brewery(brewery)
+                    .build();
+            locationInfoRepository.save(locationInfo);
+            final Location location= Location.builder()
+                    .locationInfoId(locationInfo.getLocationInfoId())
+                    .liquor(liquor)
+                    .build();
+            locationRepository.save(location);
+
+
+            final SalePlaceInfo salePlaceInfo= SalePlaceInfo.builder()
+                    .name(salePlaceName)
+                    .siteUrl(siteUrl)
+                    .phoneNumber(phoneNumber)
+                    .build();
+            salePlaceInfoRepository.save(salePlaceInfo);
+            final SalePlace salePlace= SalePlace.builder()
+                    .salePlaceInfoId(salePlaceInfo.getSalePlaceInfoId())
+                    .liquor(liquor)
+                    .build();
+            salePlaceRepository.save(salePlace);
+
+
+            final List<String> prizeList= parse(prize,"\n");
+            for(String s: prizeList){
+                final PrizeInfo prizeInfo= PrizeInfo.builder()
+                        .name(s)
+                        .build();
+                prizeInfoRepository.save(prizeInfo);
+
+                final Prize p= Prize.builder()
+                        .prizeInfoId(prizeInfo.getPrizeInfoId())
                         .liquor(liquor)
                         .build();
-                locationRepository.save(location);
-            }
-
-            for(String sName: parse(salePlaceName,", ")){
-                final Optional<SalePlaceInfo> info= salePlaceInfoRepository.findByName(sName);
-
-                if(info.isEmpty()) continue;
-                final SalePlace salePlace = SalePlace.builder()
-                        .salePlaceInfoId(info.get().getSalePlaceInfoId())
-                        .liquor(liquor)
-                        .build();
-                salePlaceRepository.save(salePlace);
+                prizeRepository.save(p);
             }
         }
     }
@@ -146,113 +170,12 @@ public class GoogleSheetsService {
     }
 
 
-    @Transactional
-    public void postLocationInfo(String spreadsheetId, String range) throws IOException {
-        ValueRange response = sheetsService.spreadsheets().values().get(spreadsheetId, range).execute();
-        final List<List<Object>> list= response.getValues();
-
-        for(List<Object> row: list){
-            final String locationInfoId= row.get(0).toString();
-            final String brewery= row.get(1).toString();
-            final String name= row.get(2).toString();
-
-            final String url = apiUrl + "?query=" + name;
-            HttpHeaders headers = new HttpHeaders();
-            headers.set("Authorization", apiKey);
-            final HttpEntity<String> request = new HttpEntity<>(headers);
-            LocationRes locationRes= restTemplate.exchange(url, HttpMethod.GET, request, LocationRes.class).getBody();
-
-            final LocationInfo info= LocationInfo.builder()
-                    .locationInfoId(locationInfoId)
-                    .name(name)
-                    .brewery(brewery)
-                    .latitude(locationRes.documents[0].latitude)
-                    .longitude(locationRes.documents[0].longitude)
-                    .build();
-            locationInfoRepository.save(info);
-        }
-    }
-
-
-    @Transactional
-    public void postPrizeInfo(String spreadsheetId, String range) throws IOException {
-        ValueRange response = sheetsService.spreadsheets().values().get(spreadsheetId, range).execute();
-        final List<List<Object>> list= response.getValues();
-
-        for(List<Object> row: list){
-            final String prizeInfoId= row.get(0).toString();
-            final String name= row.get(1).toString();
-
-            final PrizeInfo info= PrizeInfo.builder()
-                    .prizeInfoId(prizeInfoId)
-                    .name(name)
-                    .build();
-            prizeInfoRepository.save(info);
-        }
-    }
-
-
-    @Transactional
-    public void postPrize(String spreadsheetId, String range) throws IOException {
-        ValueRange response = sheetsService.spreadsheets().values().get(spreadsheetId, range).execute();
-        final List<List<Object>> list= response.getValues();
-
-        for(List<Object> row: list){
-            final String prizeInfoId= row.get(1).toString();
-            final String liquorId= row.get(2).toString();
-
-            final Prize prize= Prize.builder()
-                    .prizeInfoId(prizeInfoId)
-                    .liquor(liquorUtil.getLiquor(liquorId))
-                    .build();
-            prizeRepository.save(prize);
-        }
-    }
-
-    @Transactional(readOnly = true)
-    public Set<String> getSalePlaceAll(String spreadsheetId, String range) throws IOException {
-        ValueRange response = sheetsService.spreadsheets().values().get(spreadsheetId, range).execute();
-        final List<List<Object>> list= response.getValues();
-
-        final HashMap<String, Integer> map= new HashMap<>();
-        for(List<Object> row: list){
-            final String locationName= row.get(8).toString();
-            for(String s: parse(locationName, ", ")) {
-                map.put(s, 1);
-            }
-        }
-
-        return map.keySet();
-    }
-
-
-    @Transactional
-    public void postSalePlaceInfo(String spreadsheetId, String range) throws IOException {
-        ValueRange response = sheetsService.spreadsheets().values().get(spreadsheetId, range).execute();
-        final List<List<Object>> list= response.getValues();
-        salePlaceInfoRepository.deleteAll();
-        for(List<Object> row: list){
-            final String salePlaceInfoId= (checkEmpty(row.get(0))==null) ? null : row.get(0).toString();
-            final String name= (checkEmpty(row.get(1))==null) ? null : row.get(1).toString();
-            final String siteUrl= (checkEmpty(row.get(2))==null) ? null : row.get(2).toString();
-            final String phoneNumber= (checkEmpty(row.get(3))==null) ? null : row.get(3).toString();
-
-            final SalePlaceInfo info= SalePlaceInfo.builder()
-                    .salePlaceInfoId(salePlaceInfoId)
-                    .name(name)
-                    .phoneNumber(phoneNumber)
-                    .siteUrl(siteUrl)
-                    .build();
-            salePlaceInfoRepository.save(info);
-        }
-    }
-
-
     @Transactional(readOnly = true)
     public String getToken(String userId) {
         final User user= userRepository.findById(userId).get();
         return jwtTokenProvider.generateJwtToken(user);
     }
+
 
     private Object checkEmpty(Object obj){
         if(obj.equals("-") || obj.equals("")) return null;

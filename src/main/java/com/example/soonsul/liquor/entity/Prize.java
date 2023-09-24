@@ -18,7 +18,7 @@ public class Prize {
     private Long prizeId;
 
     @Column(name = "prize_info_id")
-    private String prizeInfoId;
+    private Long prizeInfoId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="liquor_id")

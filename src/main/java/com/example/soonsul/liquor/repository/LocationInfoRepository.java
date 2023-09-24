@@ -8,6 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface LocationInfoRepository extends JpaRepository<LocationInfo, String> {
+public interface LocationInfoRepository extends JpaRepository<LocationInfo, Long> {
     List<LocationInfo> findByBrewery(String brewery);
 }

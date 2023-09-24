@@ -54,17 +54,17 @@ public class LiquorUtil {
                 .orElseThrow(()-> new PersonalEvaluationNotExist("liquor evaluation not exist", ErrorCode.PERSONAL_EVALUATION_NOT_EXIST));
     }
 
-    public LocationInfo getLocationInfo(String locationInfoId){
+    public LocationInfo getLocationInfo(Long locationInfoId){
         return locationInfoRepository.findById(locationInfoId)
                 .orElseThrow(()-> new LocationInfoNotExist("location info not exist",ErrorCode.LOCATION_INFO_NOT_EXIST));
     }
 
-    public PrizeInfo getPrizeInfo(String prizeInfoId){
+    public PrizeInfo getPrizeInfo(Long prizeInfoId){
         return prizeInfoRepository.findById(prizeInfoId)
                 .orElseThrow(()-> new PrizeInfoNotExist("prize info not exist",ErrorCode.PRIZE_INFO_NOT_EXIST));
     }
 
-    public SalePlaceInfo getSalePlaceInfo(String salePlaceInfoId){
+    public SalePlaceInfo getSalePlaceInfo(Long salePlaceInfoId){
         return salePlaceInfoRepository.findById(salePlaceInfoId)
                 .orElseThrow(()-> new SalePlaceInfoNotExist("sale place info not exist",ErrorCode.SALE_PLACE_INFO_NOT_EXIST));
     }
