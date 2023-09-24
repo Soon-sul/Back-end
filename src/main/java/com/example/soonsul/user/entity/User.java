@@ -4,6 +4,7 @@ import com.example.soonsul.user.oauth.OAuthProvider;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Getter
 @AllArgsConstructor
@@ -48,6 +49,17 @@ public class User {
     @Enumerated(EnumType.STRING)
     private OAuthProvider oAuthProvider;
 
+    @Column(name = "birthday", nullable = false)
+    private LocalDate birthday;
+
+    @Column(name = "period")
+    private String period;
+
+    @Column(name = "liquor")
+    private String liquor;
+
+    @Column(name = "place")
+    private String place;
 
     public void updateNickname(String nickname){
         this.nickname= nickname;

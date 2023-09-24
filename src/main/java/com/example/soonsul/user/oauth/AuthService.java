@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -69,12 +70,16 @@ public class AuthService {
                 .profileImage(null)
                 .phoneNumber(null)
                 .gender(signupDto.getGender())
-                .age(signupDto.getAge())
+                .age(getAgeGroup(LocalDate.now(), signupDto.getBirthday()))
                 .flagAge(signupDto.isFlagAge())
                 .flagTerms(signupDto.isFlagTerms())
                 .flagPrivacy(signupDto.isFlagPrivacy())
                 .flagWithdrawal(false)
                 .oAuthProvider(OAuthProvider.valueOf(signupDto.getOauthProvider()))
+                .birthday(signupDto.getBirthday())
+                .period(signupDto.getPeriod())
+                .liquor(signupDto.getLiquor())
+                .place(signupDto.getPlace())
                 .build();
         userRepository.save(user);
 
@@ -122,5 +127,16 @@ public class AuthService {
     public void withdrawal() {
         final User user= userUtil.getUserByAuthentication();
         user.updateFlagWithdrawal(true);
+    }
+
+
+    private Integer getAgeGroup(LocalDate now, LocalDate birthday){
+        final int age= now.getYear()- birthday.getYear()+ 1;
+        if(age>=20 && age<=29) return 20;
+        else if(age>=30 && age<=39) return 30;
+        else if(age>=40 && age<=49) return 40;
+        else if(age>=50 && age<=59) return 50;
+        else if(age>=60) return 60;
+        else return 0;
     }
 }
