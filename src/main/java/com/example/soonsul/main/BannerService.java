@@ -34,6 +34,7 @@ public class BannerService {
                     .mainBannerId(banner.getMainBannerId())
                     .thumbnail(banner.getThumbnail())
                     .flagZzim(null)
+                    .title(banner.getTitle())
                     .build();
             result.add(dto);
         }
@@ -52,6 +53,7 @@ public class BannerService {
                 .thumbnail(banner.getThumbnail())
                 .content(banner.getContent())
                 .flagZzim(bannerZzimRepository.existsByUserAndMainBanner(user, banner))
+                .title(banner.getTitle())
                 .build();
     }
 

@@ -53,9 +53,10 @@ public class PromotionService {
         final List<MainBanner> bannerList= mainBannerRepository.findAll();
         for(MainBanner banner: bannerList){
             final PromotionDto dto= PromotionDto.builder()
-                    .promotionId(banner.getMainBannerId())
-                    .content(banner.getContent())
-                    .image(banner.getThumbnail())
+                    .mainBannerId(banner.getMainBannerId())
+                    .bannerContent(banner.getContent())
+                    .bannerThumbnail(banner.getThumbnail())
+                    .bannerName(banner.getTitle())
                     .flagZzim(bannerZzimRepository.existsByUserAndMainBanner(user, banner))
                     .build();
             result.add(dto);

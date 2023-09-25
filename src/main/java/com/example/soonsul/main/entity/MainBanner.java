@@ -22,4 +22,7 @@ public class MainBanner {
 
     @Column(name = "content")
     private String content;
+
+    @Column(name = "title")
+    private String title;
 }

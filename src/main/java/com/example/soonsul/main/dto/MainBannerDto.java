@@ -27,4 +27,7 @@ public class MainBannerDto {
 
     @ApiModelProperty(value = "메인배너 찜 유무", position = 4)
     private Boolean flagZzim;
+
+    @ApiModelProperty(value = "메인배너 이름", position = 5)
+    private String title;
 }
