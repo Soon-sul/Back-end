@@ -74,7 +74,7 @@ public class UserController {
     @ApiOperation(value = "유저 찜 리스트 조회")
     @GetMapping("/zzims")
     public ResponseEntity<PromotionListResponse> getUserZzim() {
-        final List<PromotionDto> result= promotionService.getPromotionList();
+        final List<PromotionDto> result= promotionService.getPromotionList("all");
         final List<PromotionDto> data= result.stream().filter(PromotionDto::isFlagZzim).collect(Collectors.toList());
         return ResponseEntity.ok(PromotionListResponse.of(ResultCode.GET_USER_ZZIM_SUCCESS, data));
     }

@@ -29,7 +29,7 @@ public class PromotionService {
 
 
     @Transactional(readOnly = true)
-    public List<PromotionDto> getPromotionList(){
+    public List<PromotionDto> getPromotionList(String category){
         final User user= userUtil.getUserByAuthentication();
         final List<Promotion> list= promotionRepository.findAll();
 
@@ -48,6 +48,7 @@ public class PromotionService {
                     .build();
             result.add(dto);
         }
+        if(category.equals("promotion")) return result;
 
         final List<MainBanner> bannerList= mainBannerRepository.findAll();
         for(MainBanner banner: bannerList){
