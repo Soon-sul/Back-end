@@ -9,10 +9,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.*;
 import com.nimbusds.jwt.*;
 import lombok.RequiredArgsConstructor;
-import org.bouncycastle.util.io.pem.PemObject;
-import org.bouncycastle.util.io.pem.PemReader;
+import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
@@ -20,18 +20,13 @@ import org.springframework.web.client.RestTemplate;
 import com.nimbusds.jose.crypto.ECDSASigner;
 
 import java.io.*;
-import java.net.URL;
 import java.security.interfaces.ECPrivateKey;
 import java.util.Date;
 
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.bouncycastle.openssl.PEMKeyPair;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 
 import java.io.StringReader;
-import java.security.PrivateKey;
-import java.security.Security;
 
 @Component
 @RequiredArgsConstructor
@@ -106,66 +101,25 @@ public class AppleApiClient implements OAuthApiClient {
         SignedJWT jwt = new SignedJWT(header, claimsSet);
 
         try {
-            ECPrivateKey ecPrivateKey = convertToECPrivateKey(getPrivateKey());
+            ECPrivateKey ecPrivateKey = convertToECPrivateKey();
             JWSSigner jwsSigner = new ECDSASigner(ecPrivateKey.getS());
             jwt.sign(jwsSigner);
         } catch (Exception e) {
             throw new Exception("Failed create client secret");
         }
-
         return jwt.serialize();
     }
 
-    private ECPrivateKey convertToECPrivateKey(byte[] keyBytes) throws Exception {
-        Security.addProvider(new BouncyCastleProvider());
+    private ECPrivateKey convertToECPrivateKey() throws Exception {
+        ClassPathResource resource = new ClassPathResource(keyPath);
+        String privateKey = new String(resource.getInputStream().readAllBytes());
 
-        String privateKeyPEM = new String(keyBytes);
-        PEMParser pemParser = new PEMParser(new StringReader(privateKeyPEM));
-        Object object = pemParser.readObject();
+        Reader pemReader = new StringReader(privateKey);
+        PEMParser pemParser = new PEMParser(pemReader);
+        JcaPEMKeyConverter converter = new JcaPEMKeyConverter();
+        PrivateKeyInfo object = (PrivateKeyInfo) pemParser.readObject();
 
-        JcaPEMKeyConverter converter = new JcaPEMKeyConverter().setProvider("BC");
-        PrivateKey privateKey = converter.getPrivateKey(((PEMKeyPair) object).getPrivateKeyInfo());
-
-        return (ECPrivateKey) privateKey;
+        return (ECPrivateKey) converter.getPrivateKey(object);
     }
 
-    private byte[] getPrivateKey() throws Exception {
-        byte[] content = null;
-        File file = null;
-
-        URL res = getClass().getResource(keyPath);
-
-        if ("jar".equals(res.getProtocol())) {
-            try {
-                InputStream input = getClass().getResourceAsStream(keyPath);
-                file = File.createTempFile("tempfile", ".tmp");
-                OutputStream out = new FileOutputStream(file);
-
-                int read;
-                byte[] bytes = new byte[1024];
-
-                while ((read = input.read(bytes)) != -1) {
-                    out.write(bytes, 0, read);
-                }
-
-                out.close();
-                file.deleteOnExit();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        } else file = new File(res.getFile());
-
-        if (file.exists()) {
-            try (FileReader keyReader = new FileReader(file);
-                 PemReader pemReader = new PemReader(keyReader))
-            {
-                PemObject pemObject = pemReader.readPemObject();
-                content = pemObject.getContent();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else throw new Exception("File " + file + " not found");
-
-        return content;
-    }
 }
