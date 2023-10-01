@@ -111,4 +111,11 @@ public class AuthController {
         return ResponseEntity.ok(ResultResponse.of(ResultCode.DELETE_USER_SUCCESS));
     }
 
+
+    @ApiOperation(value = "디바이스토큰 등록", notes = "로그인, 회원가입 후 디바이스토큰 등록")
+    @PostMapping("/device-token")
+    public ResponseEntity<ResultResponse> postDeviceToken(@RequestParam("token") String deviceToken) {
+        authService.postDeviceToken(deviceToken);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.POST_DEVICE_TOKEN_SUCCESS));
+    }
 }

@@ -115,8 +115,16 @@ public class UserController {
 
     @ApiOperation(value = "다른 유저의 프로필 정보 (닉네임, 프로필 사진)")
     @GetMapping("/{userId}/profile")
-    public ResponseEntity<UserProfileResponse> getUserProfile(@PathVariable("userId") String userId) {
+    public ResponseEntity<UserProfileResponse> getOtherUserProfile(@PathVariable("userId") String userId) {
         final UserProfileDto data= userService.getUserProfile(userId);
+        return ResponseEntity.ok(UserProfileResponse.of(ResultCode.GET_USER_PROFILE_SUCCESS, data));
+    }
+
+
+    @ApiOperation(value = "유저의 프로필 정보 (닉네임, 프로필 사진, 알림 허용 유무)")
+    @GetMapping("/profile")
+    public ResponseEntity<UserProfileResponse> getUserProfile() {
+        final UserProfileDto data= userService.getUserProfile(null);
         return ResponseEntity.ok(UserProfileResponse.of(ResultCode.GET_USER_PROFILE_SUCCESS, data));
     }
 
@@ -158,5 +166,21 @@ public class UserController {
     public ResponseEntity<FollowResponse> getFollowerList(@PathVariable("userId") String userId) {
         final List<FollowDto> data= userService.getFollowerList(userId);
         return ResponseEntity.ok(FollowResponse.of(ResultCode.GET_FOLLOWER_SUCCESS, data));
+    }
+
+
+    @ApiOperation(value = "알림 허용 유무 조회")
+    @GetMapping("/flag-notification")
+    public ResponseEntity<ResultResponse> getFlagNotification() {
+        final boolean data= userService.getFlagNotification();
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_FLAG_NOTIFICATION_SUCCESS, data));
+    }
+
+
+    @ApiOperation(value = "알림 허용 유무 수정")
+    @PutMapping("/flag-notification")
+    public ResponseEntity<ResultResponse> putFlagNotification(@RequestParam boolean flagNotification) {
+        userService.putFlagNotification(flagNotification);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.PUT_FLAG_NOTIFICATION_SUCCESS));
     }
 }

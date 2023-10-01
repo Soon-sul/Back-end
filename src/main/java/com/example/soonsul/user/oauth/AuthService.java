@@ -80,6 +80,7 @@ public class AuthService {
                 .period(signupDto.getPeriod())
                 .liquor(signupDto.getLiquor())
                 .place(signupDto.getPlace())
+                .flagNotification(signupDto.isFlagNotification())
                 .build();
         userRepository.save(user);
 
@@ -127,6 +128,13 @@ public class AuthService {
     public void withdrawal() {
         final User user= userUtil.getUserByAuthentication();
         user.updateFlagWithdrawal(true);
+    }
+
+
+    @Transactional
+    public void postDeviceToken(String deviceToken) {
+        final User user= userUtil.getUserByAuthentication();
+        user.updateDeviceToken(deviceToken);
     }
 
 

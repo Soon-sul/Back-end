@@ -61,6 +61,12 @@ public class User {
     @Column(name = "place")
     private String place;
 
+    @Column(name = "device_token")
+    private String deviceToken;
+
+    @Column(name = "flag_notification")
+    private boolean flagNotification;
+
     public void updateNickname(String nickname){
         this.nickname= nickname;
     }
@@ -71,5 +77,13 @@ public class User {
 
     public void updateFlagWithdrawal(boolean flagWithdrawal){
         this.flagWithdrawal= flagWithdrawal;
+    }
+
+    public void updateDeviceToken(String deviceToken){
+        this.deviceToken= deviceToken;
+    }
+
+    public void updateFlagNotification(boolean flagNotification){
+        this.flagNotification= flagNotification;
     }
 }

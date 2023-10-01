@@ -47,6 +47,8 @@ public enum ErrorCode {
     //code
     CODE_NOT_EXIST(500,"CD01","CODE NOT EXIST"),
 
+    //notification
+    NOTIFICATION_NOT_EXIST(500,"N001","NOTIFICATION NOT EXIST"),
 
     //file
     UPLOAD_FILE_NOT_EXIST(500,"F001","FILE NOT EXIST"),

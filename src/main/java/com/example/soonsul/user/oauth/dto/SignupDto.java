@@ -24,4 +24,6 @@ public class SignupDto {
     private String liquor;
     @ApiModelProperty(value = "주로 전통주 마시는 장소", position = 10)
     private String place;
+    @ApiModelProperty(value = "알림 허용 유무 (허용: true, 허용안함: false)", position = 11)
+    private boolean flagNotification;
 }

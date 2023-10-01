@@ -17,6 +17,7 @@ public enum ResultCode {
     DELETE_FOLLOWING_SUCCESS(200,"A008","팔로잉을 삭제했습니다."),
     GET_FOLLOWING_SUCCESS(200,"A009","팔로잉 리스트를 조회했습니다."),
     GET_FOLLOWER_SUCCESS(200,"A010","팔로워 리스트를 조회했습니다."),
+    POST_DEVICE_TOKEN_SUCCESS(200,"A011","디바이스 토큰을 등록했습니다."),
 
     //scan
     GET_SCANNED_LIQUOR_NAME_SUCCESS(200,"SC01","스캔한 제품의 주류명을 조회했습니다."),
@@ -69,8 +70,10 @@ public enum ResultCode {
     DELETE_USER_EVALUATION_SUCCESS(200,"U007","유저가 남긴 평가를 삭제했습니다."),
     PUT_PROFILE_NICKNAME_SUCCESS(200,"U008","유저 닉네임을 수정했습니다."),
     PUT_PROFILE_IMAGE_SUCCESS(200,"U009","유저 프로필 이미지를 수정했습니다."),
-    GET_USER_PROFILE_SUCCESS(200, "U010", "유저 닉네임과 프로필 사진을 조회했습니다."),
+    GET_USER_PROFILE_SUCCESS(200, "U010", "유저 프로필 정보를 조회했습니다."),
     POST_INQUIRY_SUCCESS(201, "U011", "문의글을 작성했습니다."),
+    GET_FLAG_NOTIFICATION_SUCCESS(200, "U012", "알림 허용 유무를 조회했습니다."),
+    PUT_FLAG_NOTIFICATION_SUCCESS(200, "U013", "알림 허용 유무를 수정했습니다."),
 
     //click
     POST_CLICK_SUCCESS(201,"C001","전통주 클릭을 등록했습니다."),
@@ -87,6 +90,11 @@ public enum ResultCode {
     GET_MAIN_BANNER_SUCCESS(200,"P006","해당 메인 배너를 조회했습니다."),
     POST_BANNER_ZZIM_SUCCESS(201,"P007","메인 배너 찜을 등록했습니다."),
     DELETE_BANNER_ZZIM_SUCCESS(200,"P008","메인 배너 찜을 삭제했습니다."),
+    
+    //notification
+    GET_NOTIFICATION_LIST_SUCCESS(200,"N001","모든 알림 내역을 조회했습니다."),
+    GET_NEW_NOTIFICATION_SUCCESS(200,"N002","새로운 알림 유무를 확인했습니다."),
+    PUT_NEW_NOTIFICATION_SUCCESS(200,"N003","알림 상태를 읽음으로 수정했습니다."),
 
     //manager
     POST_MAIN_PHOTO(200,"M001","S3에 모든 전통주 메인사진을 등록했습니다."),

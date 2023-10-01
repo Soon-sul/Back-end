@@ -57,10 +57,14 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserProfileDto getUserProfile(String userId){
-        final User user= userUtil.getUserById(userId);
+        User user;
+        if(userId==null) user= userUtil.getUserByAuthentication();
+        else user= userUtil.getUserById(userId);
+
         return UserProfileDto.builder()
                 .nickname(user.getNickname())
                 .profileImage(user.getProfileImage())
+                .flagNotification((userId==null)? user.isFlagNotification(): null)
                 .build();
     }
 
@@ -122,6 +126,20 @@ public class UserService {
             result.add(dto);
         }
         return result;
+    }
+
+
+    @Transactional(readOnly = true)
+    public boolean getFlagNotification(){
+        final User user= userUtil.getUserByAuthentication();
+        return user.isFlagNotification();
+    }
+
+
+    @Transactional
+    public void putFlagNotification(boolean flagNotification){
+        final User user= userUtil.getUserByAuthentication();
+        user.updateFlagNotification(flagNotification);
     }
 
 }
