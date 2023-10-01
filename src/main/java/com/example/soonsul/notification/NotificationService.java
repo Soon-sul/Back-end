@@ -1,6 +1,7 @@
 package com.example.soonsul.notification;
 
 import com.example.soonsul.notification.dto.NotificationDto;
+import com.example.soonsul.notification.dto.PushNotification;
 import com.example.soonsul.notification.entity.NotificationType;
 import com.example.soonsul.notification.entity.Notifications;
 import com.example.soonsul.notification.exception.NotificationNotExist;
@@ -96,12 +97,12 @@ public class NotificationService {
 
 
     @Transactional
-    public void sendNotification(NotificationType type, Long objectId, User receiveUser) throws FirebaseMessagingException {
-        final String token = receiveUser.getDeviceToken();
+    public void sendNotification(NotificationType type, PushNotification pushNotification) throws FirebaseMessagingException {
+        final String token = pushNotification.getReceiveUser().getDeviceToken();
         final User user= userUtil.getUserByAuthentication();
         final String content = getContent(type, user.getNickname());
 
-        saveNotifications(content, type, objectId, user.getUserId(), receiveUser);
+        saveNotifications(content, type, pushNotification.getObjectId(), user.getUserId(), pushNotification.getReceiveUser());
         sendPersonalAlarm(content, token);
     }
 

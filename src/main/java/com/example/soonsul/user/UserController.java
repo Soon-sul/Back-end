@@ -8,6 +8,9 @@ import com.example.soonsul.liquor.service.EvaluationService;
 import com.example.soonsul.liquor.service.LiquorService;
 import com.example.soonsul.liquor.service.PersonalService;
 import com.example.soonsul.main.entity.Sorting;
+import com.example.soonsul.notification.NotificationService;
+import com.example.soonsul.notification.dto.PushNotification;
+import com.example.soonsul.notification.entity.NotificationType;
 import com.example.soonsul.promotion.PromotionService;
 import com.example.soonsul.promotion.dto.PromotionDto;
 import com.example.soonsul.promotion.response.PromotionListResponse;
@@ -20,6 +23,7 @@ import com.example.soonsul.user.dto.FollowDto;
 import com.example.soonsul.user.dto.UserProfileDto;
 import com.example.soonsul.user.response.FollowResponse;
 import com.example.soonsul.user.response.UserProfileResponse;
+import com.google.firebase.messaging.FirebaseMessagingException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +49,7 @@ public class UserController {
     private final LiquorService liquorService;
     private final PersonalService personalService;
     private final EvaluationService evaluationService;
+    private final NotificationService notificationService;
 
 
     @ApiOperation(value = "유저 닉네임 변경")
@@ -139,8 +144,9 @@ public class UserController {
 
     @ApiOperation(value = "팔로잉 추가", notes = "userId : 팔로잉하는 유저 ID (상대방ID)")
     @PostMapping("/{userId}/following")
-    public ResponseEntity<ResultResponse> postFollowing(@PathVariable("userId") String userId) {
-        userService.postFollowing(userId);
+    public ResponseEntity<ResultResponse> postFollowing(@PathVariable("userId") String userId) throws FirebaseMessagingException {
+        final PushNotification pushNotification= userService.postFollowing(userId);
+        notificationService.sendNotification(NotificationType.FOLLOW, pushNotification);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.POST_FOLLOWING_SUCCESS));
     }
 

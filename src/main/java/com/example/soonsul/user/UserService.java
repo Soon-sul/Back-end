@@ -1,6 +1,7 @@
 package com.example.soonsul.user;
 
 import com.example.soonsul.config.s3.S3Uploader;
+import com.example.soonsul.notification.dto.PushNotification;
 import com.example.soonsul.user.dto.FollowDto;
 import com.example.soonsul.user.dto.UserProfileDto;
 import com.example.soonsul.user.entity.Follow;
@@ -70,7 +71,7 @@ public class UserService {
 
 
     @Transactional
-    public void postFollowing(String userId){
+    public PushNotification postFollowing(String userId){
         final User user= userUtil.getUserByAuthentication();
         final User following= userUtil.getUserById(userId);
 
@@ -78,7 +79,11 @@ public class UserService {
                 .follower(user)
                 .following(following)
                 .build();
-        followRepository.save(follow);
+
+        return PushNotification.builder()
+                .objectId(followRepository.save(follow).getFollowId())
+                .receiveUser(following)
+                .build();
     }
 
 
