@@ -5,6 +5,7 @@ import com.example.soonsul.liquor.entity.Liquor;
 import com.example.soonsul.liquor.entity.Review;
 import com.example.soonsul.liquor.entity.ReviewGood;
 import com.example.soonsul.liquor.repository.*;
+import com.example.soonsul.notification.dto.PushNotification;
 import com.example.soonsul.user.entity.PersonalEvaluation;
 import com.example.soonsul.user.entity.User;
 import com.example.soonsul.util.LiquorUtil;
@@ -115,7 +116,7 @@ public class ReviewService {
 
 
     @Transactional
-    public void postReviewLike(Long reviewId){
+    public PushNotification postReviewLike(Long reviewId){
         final User user= userUtil.getUserByAuthentication();
         final Review review= liquorUtil.getReview(reviewId);
 
@@ -123,7 +124,11 @@ public class ReviewService {
                 .review(review)
                 .user(user)
                 .build();
-        reviewGoodRepository.save(good);
+
+        return PushNotification.builder()
+                .objectId(reviewGoodRepository.save(good).getReviewGoodId())
+                .receiveUser(review.getUser())
+                .build();
     }
 
 

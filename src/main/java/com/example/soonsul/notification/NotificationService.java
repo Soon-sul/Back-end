@@ -126,6 +126,7 @@ public class NotificationService {
         }
     }
 
+
     @Transactional(readOnly = true)
     public boolean getNewNotification(){
         final User user= userUtil.getUserByAuthentication();
@@ -145,6 +146,7 @@ public class NotificationService {
 
     @Transactional
     public void sendNotification(NotificationType type, PushNotification pushNotification) throws FirebaseMessagingException {
+        if(!pushNotification.getReceiveUser().isFlagNotification()) return;
         final String token = pushNotification.getReceiveUser().getDeviceToken();
         final User user= userUtil.getUserByAuthentication();
         final String content = getContent(type, user.getNickname());
