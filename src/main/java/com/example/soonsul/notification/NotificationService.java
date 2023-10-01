@@ -1,5 +1,9 @@
 package com.example.soonsul.notification;
 
+import com.example.soonsul.liquor.entity.Comment;
+import com.example.soonsul.liquor.entity.Review;
+import com.example.soonsul.liquor.repository.CommentRepository;
+import com.example.soonsul.liquor.repository.ReviewGoodRepository;
 import com.example.soonsul.notification.dto.NotificationDto;
 import com.example.soonsul.notification.dto.PushNotification;
 import com.example.soonsul.notification.entity.NotificationType;
@@ -20,11 +24,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.util.Pair;
 
 @Slf4j
 @Service
@@ -32,6 +38,8 @@ import java.util.stream.Collectors;
 public class NotificationService {
     private final UserUtil userUtil;
     private final NotificationRepository notificationRepository;
+    private final ReviewGoodRepository reviewGoodRepository;
+    private final CommentRepository commentRepository;
 
 
     @Transactional(readOnly = true)
@@ -41,13 +49,18 @@ public class NotificationService {
 
         final List<NotificationDto> result= new ArrayList<>();
         for(Notifications notification: list){
+            final String date= dateConversion(notification.getDate());
+            final Pair<Long, String> object= getObject(notification.getType(), notification.getObjectId());
             final NotificationDto dto= NotificationDto.builder()
                     .notificationId(notification.getNotificationId())
                     .content(notification.getContent())
-                    .date(dateConversion(notification.getDate()))
+                    .date(date)
+                    .time(date!=null ? timeConversion(notification.getDate()) : null)
                     .flagRead(notification.isFlagRead())
-                    .objectId(notification.getObjectId())
+                    .objectId(object!=null ? object.getFirst() : null)
                     .type(notification.getType())
+                    .sendUserId(notification.getSendUserId())
+                    .objectContent(object != null ? object.getSecond() : null)
                     .build();
             result.add(dto);
         }
@@ -80,6 +93,38 @@ public class NotificationService {
         else return null;
     }
 
+    private String timeConversion(LocalDateTime request){
+        final LocalDateTime now= LocalDateTime.now();
+        final long subSecond= ChronoUnit.SECONDS.between(request, now);
+
+        if(subSecond<=60) return "지금";
+        else if(subSecond<=3600){
+            int min= Long.valueOf(subSecond).intValue()/60;
+            return min+"분";
+        }
+        else if(subSecond<=86400){
+            int min= Long.valueOf(subSecond).intValue()/3600;
+            return min+"시간";
+        }
+        else {
+            int min= Long.valueOf(subSecond).intValue()/86400;
+            return min+"일";
+        }
+    }
+
+    private Pair<Long, String> getObject(NotificationType type, Long objectId){
+        switch (type){
+            case REVIEW_GOOD:
+                final Review review= reviewGoodRepository.findById(objectId).get().getReview();
+                return Pair.of(review.getReviewId(), review.getContent());
+            case COMMENT:
+            case RECOMMENT:
+                final Comment comment= commentRepository.findById(objectId).get();
+                return Pair.of(comment.getCommentId(), comment.getContent());
+            default:
+                return null;
+        }
+    }
 
     @Transactional(readOnly = true)
     public boolean getNewNotification(){
@@ -117,7 +162,7 @@ public class NotificationService {
             case COMMENT:
                 return nickName+ "님이 회원님의 리뷰에 댓글을 남겼습니다.";
             case RECOMMENT:
-                return nickName+ "님이 회원님의 댓글에 새로운 댓글을 남겼습니다.";
+                return nickName+ "님이 댓글을 작성했습니다.";
             default:
                 return null;
         }
