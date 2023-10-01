@@ -149,6 +149,7 @@ public class NotificationService {
         if(!pushNotification.getReceiveUser().isFlagNotification()) return;
         final String token = pushNotification.getReceiveUser().getDeviceToken();
         final User user= userUtil.getUserByAuthentication();
+        if(pushNotification.getReceiveUser()==user) return;
         final String content = getContent(type, user.getNickname());
 
         saveNotifications(content, type, pushNotification.getObjectId(), user.getUserId(), pushNotification.getReceiveUser());
