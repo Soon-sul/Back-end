@@ -1,5 +1,6 @@
 package com.example.soonsul.notification.dto;
 
+import com.example.soonsul.notification.entity.NotificationType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -25,4 +26,10 @@ public class NotificationDto {
 
     @ApiModelProperty(value = "알림 확인 유무 (새로운 알림:false, 이전 알림:true)", position = 4)
     private boolean flagRead;
+
+    @ApiModelProperty(value = "알림 대상의 pk(id값)", position = 5)
+    private Long objectId;
+
+    @ApiModelProperty(value = "알림 종류 (팔로우, 리뷰 좋아요, 댓글, 대댓글)", position = 6)
+    private NotificationType type;
 }

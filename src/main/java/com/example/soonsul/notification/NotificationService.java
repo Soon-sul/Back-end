@@ -46,6 +46,8 @@ public class NotificationService {
                     .content(notification.getContent())
                     .date(dateConversion(notification.getDate()))
                     .flagRead(notification.isFlagRead())
+                    .objectId(notification.getObjectId())
+                    .type(notification.getType())
                     .build();
             result.add(dto);
         }
