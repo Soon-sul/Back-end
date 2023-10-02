@@ -22,12 +22,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.data.util.Pair;
@@ -68,28 +67,17 @@ public class NotificationService {
     }
 
     private String dateConversion(LocalDateTime request){
-        final Date notificationDate= Date.from(request.atZone(ZoneId.systemDefault()).toInstant());
-        final Date now= Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(now);
+        final LocalDate notificationDate= request.toLocalDate();
 
-        Date today = calendar.getTime();
+        final LocalDate today = LocalDateTime.now().toLocalDate();
+        final LocalDate yesterday = today.minusDays(1);
+        final LocalDate startOfWeek = today.minusDays(today.getDayOfWeek().getValue() - 1);
+        final LocalDate startOfMonth = today.withDayOfMonth(1);
 
-        calendar.add(Calendar.DAY_OF_YEAR, -1);
-        Date yesterday = calendar.getTime();
-
-        calendar.setTime(now);
-        calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
-        Date startOfWeek = calendar.getTime();
-
-        calendar.setTime(now);
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
-        Date startOfMonth = calendar.getTime();
-
-        if (notificationDate.equals(today)) return "오늘";
-        else if (notificationDate.equals(yesterday)) return "어제";
-        else if (notificationDate.after(startOfWeek)) return "이번주";
-        else if (notificationDate.after(startOfMonth)) return "이번달";
+        if (!notificationDate.isBefore(today)) return "오늘";
+        else if (!notificationDate.isBefore(yesterday)) return "어제";
+        else if (!notificationDate.isBefore(startOfWeek)) return "이번주";
+        else if (!notificationDate.isBefore(startOfMonth)) return "이번달";
         else return null;
     }
 
