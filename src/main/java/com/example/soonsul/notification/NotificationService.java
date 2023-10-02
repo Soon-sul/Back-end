@@ -185,13 +185,17 @@ public class NotificationService {
     }
 
     private void sendPersonalAlarm(String content, String token) throws FirebaseMessagingException {
-        Message message = Message.builder()
-                .putData("time", LocalDateTime.now().toString())
-                .setNotification(Notification.builder().setTitle("순술").setBody(content).build())
-                .setToken(token)
-                .build();
-        String response = FirebaseMessaging.getInstance().send(message);
-        log.info("메시지 전송 알림 완료 : " + response);
+        try{
+            Message message = Message.builder()
+                    .putData("time", LocalDateTime.now().toString())
+                    .setNotification(Notification.builder().setTitle("순술").setBody(content).build())
+                    .setToken(token)
+                    .build();
+            String response = FirebaseMessaging.getInstance().send(message);
+            log.info("메시지 전송 알림 완료 : " + response);
+        } catch (Exception e){
+            System.out.println(e.toString());
+        }
     }
 
 
