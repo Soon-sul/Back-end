@@ -1,6 +1,7 @@
 package com.example.soonsul.notification.dto;
 
 import com.example.soonsul.notification.entity.NotificationType;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
 @Builder
 @NoArgsConstructor
