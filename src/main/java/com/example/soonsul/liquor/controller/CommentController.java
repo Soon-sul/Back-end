@@ -51,6 +51,7 @@ public class CommentController {
     @ApiOperation(value = "댓글 삭제")
     @DeleteMapping("/comments/{commentId}")
     public ResponseEntity<ResultResponse> deleteComment(@PathVariable("commentId") Long commentId) {
+        notificationService.deleteNotification(NotificationType.COMMENT, commentId);
         commentService.deleteComment(commentId);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.DELETE_COMMENT_SUCCESS));
     }
@@ -77,6 +78,7 @@ public class CommentController {
     @DeleteMapping("/re-comments/{commentId}")
     public ResponseEntity<ResultResponse> deleteReComment(@PathVariable("commentId") Long commentId) {
         commentService.deleteReComment(commentId);
+        notificationService.deleteNotification(NotificationType.RECOMMENT, commentId);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.DELETE_RECOMMENT_SUCCESS));
     }
 

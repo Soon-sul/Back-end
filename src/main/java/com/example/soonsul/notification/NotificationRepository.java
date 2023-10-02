@@ -1,5 +1,6 @@
 package com.example.soonsul.notification;
 
+import com.example.soonsul.notification.entity.NotificationType;
 import com.example.soonsul.notification.entity.Notifications;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.domain.Page;
@@ -22,4 +23,6 @@ public interface NotificationRepository extends JpaRepository<Notifications, Lon
             value="SELECT * FROM notification n WHERE n.user_id = :userId" +
                     " AND n.flag_read = false")
     List<Notifications> findNewNotification(@Param("userId") String userId);
+
+    void deleteByTypeAndObjectId(NotificationType type, Long objectId);
 }

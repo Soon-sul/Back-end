@@ -78,7 +78,8 @@ public class ReviewController {
     @ApiOperation(value = "리뷰 좋아요 삭제")
     @DeleteMapping("/reviews/{reviewId}/like")
     public ResponseEntity<ResultResponse> deleteReviewLike(@PathVariable("reviewId") Long reviewId) {
-        reviewService.deleteReviewLike(reviewId);
+        final Long objectId= reviewService.deleteReviewLike(reviewId);
+        notificationService.deleteNotification(NotificationType.REVIEW_GOOD, objectId);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.DELETE_REVIEW_LIKE_SUCCESS));
     }
 

@@ -133,11 +133,13 @@ public class ReviewService {
 
 
     @Transactional
-    public void deleteReviewLike(Long reviewId){
+    public Long deleteReviewLike(Long reviewId){
         final User user= userUtil.getUserByAuthentication();
         final Review review= liquorUtil.getReview(reviewId);
+        final Long objectId= reviewGoodRepository.findByReviewAndUser(review, user).get().getReviewGoodId();
 
         reviewGoodRepository.deleteByReviewAndUser(review, user);
+        return objectId;
     }
 
 

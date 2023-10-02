@@ -194,4 +194,23 @@ public class NotificationService {
         log.info("메시지 전송 알림 완료 : " + response);
     }
 
+
+    @Transactional
+    public void deleteNotification(NotificationType type, Long objectId){
+        switch (type){
+            case FOLLOW:
+                notificationRepository.deleteByTypeAndObjectId(type, objectId);
+            case REVIEW_GOOD:
+                notificationRepository.deleteByTypeAndObjectId(type, objectId);
+            case COMMENT:
+                final List<Comment> reCommentList= commentRepository.findAllByUpperCommentId(objectId);
+                for(Comment reComment: reCommentList){
+                    notificationRepository.deleteByTypeAndObjectId(NotificationType.RECOMMENT, reComment.getCommentId());
+                }
+                notificationRepository.deleteByTypeAndObjectId(NotificationType.COMMENT, objectId);
+            case RECOMMENT:
+                notificationRepository.deleteByTypeAndObjectId(type, objectId);
+        }
+    }
+
 }

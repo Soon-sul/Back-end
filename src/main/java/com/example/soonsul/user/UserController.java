@@ -154,7 +154,8 @@ public class UserController {
     @ApiOperation(value = "팔로잉 취소", notes = "userId : 팔로잉하는 유저 ID (상대방ID)")
     @DeleteMapping("/{userId}/following")
     public ResponseEntity<ResultResponse> deleteFollowing(@PathVariable("userId") String userId) {
-        userService.deleteFollowing(userId);
+        final Long objectId= userService.deleteFollowing(userId);
+        notificationService.deleteNotification(NotificationType.FOLLOW, objectId);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.DELETE_FOLLOWING_SUCCESS));
     }
 

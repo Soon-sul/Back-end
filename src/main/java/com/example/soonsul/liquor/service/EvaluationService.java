@@ -3,7 +3,10 @@ package com.example.soonsul.liquor.service;
 import com.example.soonsul.liquor.dto.EvaluationRequest;
 import com.example.soonsul.liquor.entity.*;
 import com.example.soonsul.liquor.exception.PersonalRatingNull;
+import com.example.soonsul.liquor.repository.CommentRepository;
 import com.example.soonsul.liquor.repository.ReviewRepository;
+import com.example.soonsul.notification.NotificationRepository;
+import com.example.soonsul.notification.entity.NotificationType;
 import com.example.soonsul.response.error.ErrorCode;
 import com.example.soonsul.user.entity.PersonalEvaluation;
 import com.example.soonsul.user.entity.User;
@@ -32,6 +35,8 @@ public class EvaluationService {
     private final ReviewRepository reviewRepository;
     private final LiquorUtil liquorUtil;
     private final PlatformTransactionManager transactionManager;
+    private final NotificationRepository notificationRepository;
+    private final CommentRepository commentRepository;
 
     private final List<FlavorType> flavorTypes= Arrays.asList(FlavorType.SWEETNESS, FlavorType.ACIDITY,
             FlavorType.CARBONIC_ACID, FlavorType.HEAVY, FlavorType.SCENT, FlavorType.DENSITY);
@@ -107,8 +112,10 @@ public class EvaluationService {
 
 
         final Optional<Review> review= reviewRepository.findByUserAndLiquor(user, liquor);
-        if(request.getReviewContent() == null && review.isPresent())
+        if(request.getReviewContent() == null && review.isPresent()){
+            deleteReviewNotification(review.get());
             review.ifPresent(value -> reviewRepository.deleteById(value.getReviewId()));
+        }
         else if(request.getReviewContent()!= null && review.isPresent()){
             if(!request.getLiquorPersonalRating().equals(review.get().getLiquorRating()))
                 review.get().updateLiquorRating(request.getLiquorPersonalRating());
@@ -150,8 +157,11 @@ public class EvaluationService {
 
 
         personalEvaluationRepository.delete(pe);
-        if(reviewRepository.findByUserAndLiquor(user, liquor).isPresent())
+        final Optional<Review> review= reviewRepository.findByUserAndLiquor(user, liquor);
+        if(review.isPresent()){
+            deleteReviewNotification(review.get());
             reviewRepository.deleteByUserAndLiquor(user, liquor);
+        }
     }
 
 
@@ -227,5 +237,20 @@ public class EvaluationService {
         if(number+mark==0) return 0.0;
         double result= ((origin*number)+(mark*request)) /(number+mark);
         return Math.round(result*10)/10.0;
+    }
+
+
+    private void deleteReviewNotification(Review review){
+        for(ReviewGood reviewGood: review.getReviewGoods()){
+            notificationRepository.deleteByTypeAndObjectId(NotificationType.REVIEW_GOOD, reviewGood.getReviewGoodId());
+        }
+
+        for(Comment comment: review.getCommentList()){
+            final List<Comment> reCommentList= commentRepository.findAllByUpperCommentId(comment.getCommentId());
+            for(Comment reComment: reCommentList){
+                notificationRepository.deleteByTypeAndObjectId(NotificationType.RECOMMENT, reComment.getCommentId());
+            }
+            notificationRepository.deleteByTypeAndObjectId(NotificationType.COMMENT, comment.getCommentId());
+        }
     }
 }

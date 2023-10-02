@@ -88,11 +88,13 @@ public class UserService {
 
 
     @Transactional
-    public void deleteFollowing(String userId){
+    public Long deleteFollowing(String userId){
         final User user= userUtil.getUserByAuthentication();
         final User following= userUtil.getUserById(userId);
+        final Long objectId= followRepository.findByFollowerAndFollowing(user, following).get().getFollowId();
 
         followRepository.deleteByFollowerAndFollowing(user, following);
+        return objectId;
     }
 
 
