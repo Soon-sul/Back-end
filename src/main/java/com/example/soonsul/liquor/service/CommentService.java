@@ -67,6 +67,7 @@ public class CommentService {
                     .createdDate(dateConversion(c.getCreatedDate()))
                     .good(commentGoodRepository.countByComment(c))
                     .reCommentList(reCommentList)
+                    .reCommentNumber(commentRepository.findAllByUpperCommentId(c.getCommentId()).size()-1)
                     .flagMySelf(Objects.equals(c.getUser().getUserId(), user.getUserId()))
                     .flagGood(commentGoodRepository.existsByCommentAndUser(c, user))
                     .build();
