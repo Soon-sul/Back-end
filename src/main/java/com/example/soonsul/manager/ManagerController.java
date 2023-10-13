@@ -2,17 +2,19 @@ package com.example.soonsul.manager;
 
 import com.example.soonsul.response.result.ResultCode;
 import com.example.soonsul.response.result.ResultResponse;
+import com.google.firebase.messaging.FirebaseMessagingException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 
 @Api(tags="관리자")
 @RestController
@@ -27,6 +29,13 @@ public class ManagerController {
     @PostMapping(value = "/liquor/main-photo", produces = MediaType.APPLICATION_JSON_VALUE, consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<ResultResponse> postMainPhoto(@RequestPart("images") List<MultipartFile> images) {
         managerService.postMainPhoto(images);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.POST_MAIN_PHOTO));
+    }
+
+    @ApiOperation(value = "모든 전통주 기본사진 s3에 등록")
+    @PostMapping(value = "/liquor/default-photo")
+    public ResponseEntity<ResultResponse> postDefaultPhoto() {
+        managerService.postDefaultPhoto();
         return ResponseEntity.ok(ResultResponse.of(ResultCode.POST_MAIN_PHOTO));
     }
 
@@ -76,4 +85,19 @@ public class ManagerController {
         return ResponseEntity.ok(ResultResponse.of(ResultCode.MANAGE_ACTION_SUCCESS, data));
     }
 
+    @ApiOperation(value = "프로모션 저장")
+    @PostMapping(value = "/promotion", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ResultResponse> postPromotion(@RequestPart(value = "thumbnail", required = false) MultipartFile image, @RequestPart(value = "content", required = false) MultipartFile content,
+                                                        @RequestPart(value = "title", required = false) String title, @RequestPart(value = "location", required = false) String location,
+                                                        @RequestParam(value = "beginDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate beginDate, @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) throws FirebaseMessagingException {
+        managerService.postPromotion(image, content, title, location, beginDate, endDate);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.MANAGE_ACTION_SUCCESS));
+    }
+
+    @ApiOperation(value = "프로모션 삭제")
+    @DeleteMapping(value = "/promotion/{promotionId}")
+    public ResponseEntity<ResultResponse> deletePromotion(@PathVariable("promotionId") Long promotionId) {
+        managerService.deletePromotion(promotionId);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.MANAGE_ACTION_SUCCESS));
+    }
 }

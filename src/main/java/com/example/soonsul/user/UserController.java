@@ -20,8 +20,10 @@ import com.example.soonsul.scan.ScanService;
 import com.example.soonsul.scan.dto.ScanDto;
 import com.example.soonsul.scan.response.ScanResponse;
 import com.example.soonsul.user.dto.FollowDto;
+import com.example.soonsul.user.dto.NotificationFlag;
 import com.example.soonsul.user.dto.UserProfileDto;
 import com.example.soonsul.user.response.FollowResponse;
+import com.example.soonsul.user.response.NotificationFlagResponse;
 import com.example.soonsul.user.response.UserProfileResponse;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import io.swagger.annotations.Api;
@@ -178,16 +180,16 @@ public class UserController {
 
     @ApiOperation(value = "알림 허용 유무 조회")
     @GetMapping("/flag-notification")
-    public ResponseEntity<ResultResponse> getFlagNotification() {
-        final boolean data= userService.getFlagNotification();
-        return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_FLAG_NOTIFICATION_SUCCESS, data));
+    public ResponseEntity<NotificationFlagResponse> getFlagNotification() {
+        final NotificationFlag data= userService.getFlagNotification();
+        return ResponseEntity.ok(NotificationFlagResponse.of(ResultCode.GET_FLAG_NOTIFICATION_SUCCESS, data));
     }
 
 
     @ApiOperation(value = "알림 허용 유무 수정")
     @PutMapping("/flag-notification")
-    public ResponseEntity<ResultResponse> putFlagNotification(@RequestParam boolean flagNotification) {
-        userService.putFlagNotification(flagNotification);
+    public ResponseEntity<ResultResponse> putFlagNotification(@RequestBody NotificationFlag flag) {
+        userService.putFlagNotification(flag);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.PUT_FLAG_NOTIFICATION_SUCCESS));
     }
 }

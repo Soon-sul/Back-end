@@ -79,17 +79,17 @@ public class GoogleSheetsService {
                     .imageUrl(null)
                     .liquorCategory(liquorId.substring(0, 4))
                     .build();
-            liquorRepository.save(liquor);
+            final Liquor getLiquor= liquorRepository.save(liquor);
 
 
             final LocationInfo locationInfo= LocationInfo.builder()
                     .name(locationName)
                     .brewery(brewery)
                     .build();
-            locationInfoRepository.save(locationInfo);
+            final LocationInfo getLocationInfo= locationInfoRepository.save(locationInfo);
             final Location location= Location.builder()
-                    .locationInfoId(locationInfo.getLocationInfoId())
-                    .liquor(liquor)
+                    .locationInfoId(getLocationInfo.getLocationInfoId())
+                    .liquor(getLiquor)
                     .build();
             locationRepository.save(location);
 
@@ -99,26 +99,27 @@ public class GoogleSheetsService {
                     .siteUrl(siteUrl)
                     .phoneNumber(phoneNumber)
                     .build();
-            salePlaceInfoRepository.save(salePlaceInfo);
+            final SalePlaceInfo getSalePlaceInfo= salePlaceInfoRepository.save(salePlaceInfo);
             final SalePlace salePlace= SalePlace.builder()
-                    .salePlaceInfoId(salePlaceInfo.getSalePlaceInfoId())
-                    .liquor(liquor)
+                    .salePlaceInfoId(getSalePlaceInfo.getSalePlaceInfoId())
+                    .liquor(getLiquor)
                     .build();
             salePlaceRepository.save(salePlace);
 
+            if(prize!=null){
+                final List<String> prizeList= parse(prize,"\n");
+                for(String s: prizeList){
+                    final PrizeInfo prizeInfo= PrizeInfo.builder()
+                            .name(s)
+                            .build();
+                    final PrizeInfo getPrizeInfo= prizeInfoRepository.save(prizeInfo);
 
-            final List<String> prizeList= parse(prize,"\n");
-            for(String s: prizeList){
-                final PrizeInfo prizeInfo= PrizeInfo.builder()
-                        .name(s)
-                        .build();
-                prizeInfoRepository.save(prizeInfo);
-
-                final Prize p= Prize.builder()
-                        .prizeInfoId(prizeInfo.getPrizeInfoId())
-                        .liquor(liquor)
-                        .build();
-                prizeRepository.save(p);
+                    final Prize p= Prize.builder()
+                            .prizeInfoId(getPrizeInfo.getPrizeInfoId())
+                            .liquor(getLiquor)
+                            .build();
+                    prizeRepository.save(p);
+                }
             }
         }
     }

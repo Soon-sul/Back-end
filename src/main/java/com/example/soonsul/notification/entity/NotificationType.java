@@ -9,7 +9,8 @@ public enum NotificationType {
     FOLLOW("follow"),
     REVIEW_GOOD("review"),
     COMMENT("comment"),
-    RECOMMENT("recomment");
+    RECOMMENT("recomment"),
+    PROMOTION("promotion");
 
     private final String value;
 }

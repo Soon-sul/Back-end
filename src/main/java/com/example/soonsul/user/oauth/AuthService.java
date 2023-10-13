@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -80,7 +81,9 @@ public class AuthService {
                 .period(signupDto.getPeriod())
                 .liquor(signupDto.getLiquor())
                 .place(signupDto.getPlace())
-                .flagNotification(signupDto.isFlagNotification())
+                .flagActivity(signupDto.isFlagActivity())
+                .flagAdvertising(signupDto.isFlagAdvertising())
+                .createdDate(LocalDateTime.now())
                 .build();
         userRepository.save(user);
 

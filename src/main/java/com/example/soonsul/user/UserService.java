@@ -3,6 +3,7 @@ package com.example.soonsul.user;
 import com.example.soonsul.config.s3.S3Uploader;
 import com.example.soonsul.notification.dto.PushNotification;
 import com.example.soonsul.user.dto.FollowDto;
+import com.example.soonsul.user.dto.NotificationFlag;
 import com.example.soonsul.user.dto.UserProfileDto;
 import com.example.soonsul.user.entity.Follow;
 import com.example.soonsul.user.entity.User;
@@ -65,7 +66,8 @@ public class UserService {
         return UserProfileDto.builder()
                 .nickname(user.getNickname())
                 .profileImage(user.getProfileImage())
-                .flagNotification((userId==null)? user.isFlagNotification(): null)
+                .flagActivity((userId==null)? user.isFlagActivity(): null)
+                .flagAdvertising((userId==null)? user.isFlagAdvertising(): null)
                 .build();
     }
 
@@ -137,16 +139,20 @@ public class UserService {
 
 
     @Transactional(readOnly = true)
-    public boolean getFlagNotification(){
+    public NotificationFlag getFlagNotification(){
         final User user= userUtil.getUserByAuthentication();
-        return user.isFlagNotification();
+        return NotificationFlag.builder()
+                .flagActivity(user.isFlagActivity())
+                .flagAdvertising(user.isFlagAdvertising())
+                .build();
     }
 
 
     @Transactional
-    public void putFlagNotification(boolean flagNotification){
+    public void putFlagNotification(NotificationFlag flag){
         final User user= userUtil.getUserByAuthentication();
-        user.updateFlagNotification(flagNotification);
+        user.updateFlagActivity(flag.isFlagActivity());
+        user.updateFlagAdvertising(flag.isFlagAdvertising());
     }
 
 }

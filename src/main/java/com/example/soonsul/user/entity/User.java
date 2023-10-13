@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
@@ -64,8 +65,14 @@ public class User {
     @Column(name = "device_token")
     private String deviceToken;
 
-    @Column(name = "flag_notification")
-    private boolean flagNotification;
+    @Column(name = "flag_activity")
+    private boolean flagActivity;
+
+    @Column(name = "flag_advertising")
+    private boolean flagAdvertising;
+
+    @Column(name = "created_date")
+    private LocalDateTime createdDate;
 
     public void updateNickname(String nickname){
         this.nickname= nickname;
@@ -83,7 +90,11 @@ public class User {
         this.deviceToken= deviceToken;
     }
 
-    public void updateFlagNotification(boolean flagNotification){
-        this.flagNotification= flagNotification;
+    public void updateFlagActivity(boolean flagActivity){
+        this.flagActivity= flagActivity;
+    }
+
+    public void updateFlagAdvertising(boolean flagAdvertising){
+        this.flagAdvertising= flagAdvertising;
     }
 }

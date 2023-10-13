@@ -22,7 +22,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -134,13 +133,35 @@ public class NotificationService {
 
     @Transactional
     public void sendNotification(NotificationType type, PushNotification pushNotification) throws FirebaseMessagingException {
-        if(!pushNotification.getReceiveUser().isFlagNotification()) return;
+        switch (type) {
+            case FOLLOW:
+            case REVIEW_GOOD:
+            case COMMENT:
+            case RECOMMENT:
+                if(!pushNotification.getReceiveUser().isFlagActivity()) return;
+                sendActivityNotification(type, pushNotification);
+            case PROMOTION:
+                if(!pushNotification.getReceiveUser().isFlagAdvertising()) return;
+                sendAdvertisingNotification(type, pushNotification);
+            default:
+        }
+    }
+
+    private void sendActivityNotification(NotificationType type, PushNotification pushNotification) throws FirebaseMessagingException{
         final String token = pushNotification.getReceiveUser().getDeviceToken();
         final User user= userUtil.getUserByAuthentication();
         if(pushNotification.getReceiveUser()==user) return;
         final String content = getContent(type, user.getNickname());
 
         saveNotifications(content, type, pushNotification.getObjectId(), user.getUserId(), pushNotification.getReceiveUser());
+        sendPersonalAlarm(content, token);
+    }
+
+    private void sendAdvertisingNotification(NotificationType type, PushNotification pushNotification) throws FirebaseMessagingException{
+        final String token = pushNotification.getReceiveUser().getDeviceToken();
+        final String content = getContent(type, null);
+
+        saveNotifications(content, type, pushNotification.getObjectId(), null, pushNotification.getReceiveUser());
         sendPersonalAlarm(content, token);
     }
 
@@ -154,12 +175,16 @@ public class NotificationService {
                 return nickName+ "님이 회원님의 리뷰에 댓글을 남겼습니다.";
             case RECOMMENT:
                 return nickName+ "님이 댓글을 작성했습니다.";
+            case PROMOTION:
+                return "새로운 프로모션이 등록되었습니다.";
             default:
                 return null;
         }
     }
 
     private void saveNotifications(String content, NotificationType type, Long objectId, String sendUserId, User receiveUser){
+        if(type==NotificationType.PROMOTION) sendUserId= null;
+
         Notifications notification = Notifications.builder()
                 .content(content)
                 .date(LocalDateTime.now())

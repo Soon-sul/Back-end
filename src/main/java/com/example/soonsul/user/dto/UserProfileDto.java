@@ -22,6 +22,9 @@ public class UserProfileDto {
     @ApiModelProperty(value = "유저 프로필 사진", position = 2)
     private String profileImage;
 
-    @ApiModelProperty(value = "알림 허용 유무", position = 3)
-    private Boolean flagNotification;
+    @ApiModelProperty(value = "활동 알림 허용 유무", position = 3)
+    private Boolean flagActivity;
+
+    @ApiModelProperty(value = "광고성 알림 허용 유무", position = 4)
+    private Boolean flagAdvertising;
 }
