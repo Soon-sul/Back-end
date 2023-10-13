@@ -38,6 +38,7 @@ public class InquiryService {
                 .build();
         inquiryRepository.save(inquiry);
 
+        if(request.getImages()==null) return;
         for(MultipartFile image: request.getImages()){
             final InquiryImage inquiryImage= InquiryImage.builder()
                     .image(s3Uploader.upload(image, "inquiry"))
