@@ -108,6 +108,8 @@ public class NotificationService {
             case RECOMMENT:
                 final Comment comment= commentRepository.findById(objectId).get();
                 return Pair.of(comment.getCommentId(), comment.getContent());
+            case PROMOTION:
+                return Pair.of(objectId, "");
             default:
                 return null;
         }
