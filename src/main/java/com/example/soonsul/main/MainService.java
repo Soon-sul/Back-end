@@ -191,7 +191,7 @@ public class MainService {
         double a = Math.sin(deltaLat/2) * Math.sin(deltaLat/2) +
                 Math.cos(lat1) * Math.cos(lat2) * Math.sin(deltaLon/2) * Math.sin(deltaLon/2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        double distance = R * c;
+        double distance = R * c * 1000;
 
         if(distance<=10000) return distance;
         else return -1.0;
