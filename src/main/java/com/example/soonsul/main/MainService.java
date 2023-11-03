@@ -138,13 +138,13 @@ public class MainService {
         final HashMap<String, Pair<Integer, Double>> map = new HashMap<>();
 
         for(RegionClick r: clickList){
-            if(map.get(r.getLiquorId())!=null && map.get(r.getLiquorId()).getSecond() == -1.0) continue;
+            if(map.containsKey(r.getLiquorId()) && map.get(r.getLiquorId()).getSecond() == -1.0) continue;
 
             Double distance;
             if(latitude==null && longitude==null) distance= 0.0;
             else distance= distanceDifference(latitude, longitude, r.getLatitude(), r.getLongitude());
 
-            if(map.get(r.getLiquorId()) == null)
+            if(!map.containsKey(r.getLiquorId()))
                 map.put(r.getLiquorId(), Pair.of(1, distance));
             else
                 map.put(r.getLiquorId(), Pair.of(map.get(r.getLiquorId()).getFirst()+1, map.get(r.getLiquorId()).getSecond()));
