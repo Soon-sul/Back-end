@@ -46,6 +46,28 @@ public class Liquor {
     @Column(name = "liquor_category")
     private String liquorCategory;
 
+    @Column(name = "brewery")
+    private String brewery;
+
+    @Column(name = "location")
+    private String location;
+
+    @Column(name = "latitude")
+    private Double latitude;
+
+    @Column(name = "longitude")
+    private Double longitude;
+
+    @Column(name = "sale_place")
+    private String salePlace;
+
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
+    @Column(name = "site_url")
+    private String siteUrl;
+
+
 
     public void updateAverageRating(Double averageRating){
         this.averageRating= averageRating;
