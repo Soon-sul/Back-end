@@ -26,9 +26,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SearchService {
     private final LiquorRepository liquorRepository;
-    private final CodeRepository codeRepository;
-    private final LocationRepository locationRepository;
-    private final LocationInfoRepository locationInfoRepository;
     private final LiquorUtil liquorUtil;
 
 
@@ -39,19 +36,11 @@ public class SearchService {
 
         for(Liquor l: list){
             final String liquorCategory= liquorUtil.getCodeName(l.getLiquorCategory());
-
-            final List<Location> locations = locationRepository.findAllByLiquor(l);
-            final List<String> locationList = new ArrayList<>();
-            for (Location location : locations) {
-                final LocationInfo info = liquorUtil.getLocationInfo(location.getLocationInfoId());
-                locationList.add(info.getBrewery());
-            }
-
             final SearchDto dto= SearchDto.builder()
                     .liquorId(l.getLiquorId())
                     .name(l.getName())
                     .liquorCategory(liquorCategory)
-                    .locationList(locationList)
+                    .location(l.getBrewery())
                     .imageUrl(l.getImageUrl())
                     .startIdx(l.getName().indexOf(name))
                     .build();
