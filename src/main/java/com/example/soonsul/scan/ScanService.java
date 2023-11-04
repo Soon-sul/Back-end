@@ -76,13 +76,6 @@ public class ScanService {
 
             final String liquorCategory= liquorUtil.getCodeName(liquor.getLiquorCategory());
 
-            final List<Location> locations = locationRepository.findAllByLiquor(liquor);
-            final List<String> locationList = new ArrayList<>();
-            for (Location l : locations) {
-                final LocationInfo info = liquorUtil.getLocationInfo(l.getLocationInfoId());
-                locationList.add(info.getBrewery());
-            }
-
             boolean flag= true;
             final Optional<PersonalEvaluation> evaluation= personalEvaluationRepository.findByUserAndLiquor(user, liquor);
             if(evaluation.isEmpty()) flag=false;
@@ -94,7 +87,7 @@ public class ScanService {
                     .liquorId(liquor.getLiquorId())
                     .name(liquor.getName())
                     .liquorCategory(liquorCategory)
-                    .locationList(locationList)
+                    .brewery(liquor.getBrewery())
                     .averageRating(liquor.getAverageRating())
                     .flagEvaluation(flag)
                     .personalRating((flag) ? evaluation.get().getLiquorPersonalRating() : null)
