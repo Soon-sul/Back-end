@@ -77,4 +77,24 @@ public class Liquor {
         this.imageUrl= imageUrl;
     }
 
+    public void updateLiquor(String name, String ingredient, Long lowestPrice, String region,
+                             Double alcohol, Integer capacity, String imageUrl, String liquorCategory, String location, String brewery,
+                             String salePlace, String phoneNumber, String siteUrl, Double latitude, Double longitude){
+        this.name= name;
+        this.ingredient= ingredient;
+        this.lowestPrice= lowestPrice;
+        this.region= region;
+        this.alcohol= alcohol;
+        this.capacity= capacity;
+        //this.imageUrl= imageUrl;
+        this.liquorCategory= liquorCategory;
+        this.location= location;
+        this.brewery= brewery;
+        this.salePlace= salePlace;
+        this.phoneNumber= phoneNumber;
+        this.siteUrl= siteUrl;
+        this.latitude= latitude;
+        this.longitude= longitude;
+    }
+
 }

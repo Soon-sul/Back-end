@@ -80,14 +80,12 @@ public class LiquorService {
     @Transactional(readOnly = true)
     public List<PrizeListDto> getLiquorPrize(String liquorId){
         final Liquor liquor= liquorUtil.getLiquor(liquorId);
-        final List<Prize> prizeList= prizeRepository.findAllByLiquor(liquor);
+        final List<String> prizeList= prizeRepository.findAll(liquorId);
 
         final List<PrizeListDto> result= new ArrayList<>();
-        for(Prize p: prizeList){
-            final PrizeInfo info= liquorUtil.getPrizeInfo(p.getPrizeInfoId());
+        for(String p: prizeList){
             final PrizeListDto dto = PrizeListDto.builder()
-                    .prizeId(p.getPrizeId())
-                    .name(info.getName())
+                    .name(p)
                     .build();
             result.add(dto);
         }

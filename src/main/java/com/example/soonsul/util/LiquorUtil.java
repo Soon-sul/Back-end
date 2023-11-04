@@ -7,15 +7,10 @@ import com.example.soonsul.response.error.ErrorCode;
 import com.example.soonsul.user.entity.PersonalEvaluation;
 import com.example.soonsul.user.entity.User;
 import com.example.soonsul.user.exception.PersonalEvaluationNotExist;
-import com.example.soonsul.user.exception.UserNotExist;
 import com.example.soonsul.user.repository.PersonalEvaluationRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -27,7 +22,6 @@ public class LiquorUtil {
     private final EvaluationNumberRepository evaluationNumberRepository;
     private final CommentRepository commentRepository;
     private final CodeRepository codeRepository;
-    private final PrizeInfoRepository prizeInfoRepository;
 
 
     public Liquor getLiquor(String liquorId){
@@ -48,11 +42,6 @@ public class LiquorUtil {
     public PersonalEvaluation getPersonalEvaluation(User user, Liquor liquor){
         return personalEvaluationRepository.findByUserAndLiquor(user, liquor)
                 .orElseThrow(()-> new PersonalEvaluationNotExist("liquor evaluation not exist", ErrorCode.PERSONAL_EVALUATION_NOT_EXIST));
-    }
-
-    public PrizeInfo getPrizeInfo(Long prizeInfoId){
-        return prizeInfoRepository.findById(prizeInfoId)
-                .orElseThrow(()-> new PrizeInfoNotExist("prize info not exist",ErrorCode.PRIZE_INFO_NOT_EXIST));
     }
 
     public Review getReview(Long reviewId) {
