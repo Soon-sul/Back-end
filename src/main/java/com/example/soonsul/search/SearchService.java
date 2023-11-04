@@ -40,7 +40,7 @@ public class SearchService {
                     .liquorId(l.getLiquorId())
                     .name(l.getName())
                     .liquorCategory(liquorCategory)
-                    .location(l.getBrewery())
+                    .brewery(l.getBrewery())
                     .imageUrl(l.getImageUrl())
                     .startIdx(l.getName().indexOf(name))
                     .build();
