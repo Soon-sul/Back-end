@@ -81,7 +81,7 @@ public class PersonalDto {
     private Integer commentNumber;
 
     @ApiModelProperty(value = "판매처", position = 21)
-    private List<String> salePlaceList;
+    private String salePlace;
 
     @ApiModelProperty(value = "좋아요 유무", position = 22)
     private boolean flagGood;

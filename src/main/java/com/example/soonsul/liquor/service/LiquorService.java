@@ -28,7 +28,6 @@ public class LiquorService {
     private final UserUtil userUtil;
     private final LiquorUtil liquorUtil;
     private final PrizeRepository prizeRepository;
-    private final SalePlaceRepository salePlaceRepository;
     private final ReviewRepository reviewRepository;
     private final LiquorFilteringRepository filteringRepository;
     private final FilteringClickRepository filteringClickRepository;
@@ -109,22 +108,13 @@ public class LiquorService {
 
 
     @Transactional(readOnly = true)
-    public List<SalePlaceListDto> getLiquorSalePlace(String liquorId){
+    public SalePlaceDto getLiquorSalePlace(String liquorId){
         final Liquor liquor= liquorUtil.getLiquor(liquorId);
-        final List<SalePlace> salePlaceList= salePlaceRepository.findAllByLiquor(liquor);
-
-        final List<SalePlaceListDto> result= new ArrayList<>();
-        for(SalePlace s: salePlaceList){
-            final SalePlaceInfo info= liquorUtil.getSalePlaceInfo(s.getSalePlaceInfoId());
-            final SalePlaceListDto dto = SalePlaceListDto.builder()
-                    .salePlaceId(s.getSalePlaceId())
-                    .name(info.getName())
-                    .phoneNumber(info.getPhoneNumber())
-                    .siteUrl(info.getSiteUrl())
-                    .build();
-            result.add(dto);
-        }
-        return result;
+        return SalePlaceDto.builder()
+                .salePlace(liquor.getSalePlace())
+                .phoneNumber(liquor.getPhoneNumber())
+                .siteUrl(liquor.getSiteUrl())
+                .build();
     }
 
 

@@ -164,7 +164,7 @@ public class MainService {
                     .alcohol(liquor.getAlcohol())
                     .capacity(liquor.getCapacity())
                     .liquorCategory(liquorUtil.getCodeName(liquor.getLiquorCategory()))
-                    .locationList(liquorUtil.getBreweryList(liquorId))
+                    .brewery(liquor.getBrewery())
                     .lowestPrice(liquor.getLowestPrice())
                     .flagScrap(scrapRepository.existsByUserAndLiquor(user, liquor))
                     .ratingNumber(reviewRepository.countByLiquor(liquor))

@@ -25,13 +25,9 @@ public class LiquorUtil {
     private final EvaluationRepository evaluationRepository;
     private final ReviewRepository reviewRepository;
     private final EvaluationNumberRepository evaluationNumberRepository;
-    private final LocationInfoRepository locationInfoRepository;
     private final CommentRepository commentRepository;
     private final CodeRepository codeRepository;
     private final PrizeInfoRepository prizeInfoRepository;
-    private final SalePlaceInfoRepository salePlaceInfoRepository;
-    private final LocationRepository locationRepository;
-    private final SalePlaceRepository salePlaceRepository;
 
 
     public Liquor getLiquor(String liquorId){
@@ -54,19 +50,9 @@ public class LiquorUtil {
                 .orElseThrow(()-> new PersonalEvaluationNotExist("liquor evaluation not exist", ErrorCode.PERSONAL_EVALUATION_NOT_EXIST));
     }
 
-    public LocationInfo getLocationInfo(Long locationInfoId){
-        return locationInfoRepository.findById(locationInfoId)
-                .orElseThrow(()-> new LocationInfoNotExist("location info not exist",ErrorCode.LOCATION_INFO_NOT_EXIST));
-    }
-
     public PrizeInfo getPrizeInfo(Long prizeInfoId){
         return prizeInfoRepository.findById(prizeInfoId)
                 .orElseThrow(()-> new PrizeInfoNotExist("prize info not exist",ErrorCode.PRIZE_INFO_NOT_EXIST));
-    }
-
-    public SalePlaceInfo getSalePlaceInfo(Long salePlaceInfoId){
-        return salePlaceInfoRepository.findById(salePlaceInfoId)
-                .orElseThrow(()-> new SalePlaceInfoNotExist("sale place info not exist",ErrorCode.SALE_PLACE_INFO_NOT_EXIST));
     }
 
     public Review getReview(Long reviewId) {
@@ -89,23 +75,4 @@ public class LiquorUtil {
                 .orElseThrow(()->new CodeNotExist("code not exist", ErrorCode.CODE_NOT_EXIST)).getCodeId();
     }
 
-    public List<String> getBreweryList(String liquorId){
-        final List<String> locationList = new ArrayList<>();
-        final List<Location> locations = locationRepository.findAllById(liquorId);
-        for (Location l : locations) {
-            locationList.add(getLocationInfo(l.getLocationInfoId()).getBrewery());
-        }
-        return locationList;
-    }
-
-    public List<String> getSalePlaceList(String liquorId){
-        final List<String> salePlaceList = new ArrayList<>();
-        final Liquor liquor= liquorRepository.findById(liquorId)
-                .orElseThrow(()-> new LiquorNotExist("liquor not exist", ErrorCode.LIQUOR_NOT_EXIST));
-        final List<SalePlace> salePlaces = salePlaceRepository.findAllByLiquor(liquor);
-        for (SalePlace s : salePlaces) {
-            salePlaceList.add(getSalePlaceInfo(s.getSalePlaceInfoId()).getName());
-        }
-        return salePlaceList;
-    }
 }
