@@ -1,16 +1,7 @@
 package com.example.soonsul.search;
 
 import com.example.soonsul.liquor.entity.Liquor;
-import com.example.soonsul.liquor.entity.Location;
-import com.example.soonsul.liquor.entity.LocationInfo;
-import com.example.soonsul.liquor.exception.CodeNotExist;
-import com.example.soonsul.liquor.exception.LocationInfoNotExist;
-import com.example.soonsul.liquor.repository.CodeRepository;
 import com.example.soonsul.liquor.repository.LiquorRepository;
-import com.example.soonsul.liquor.repository.LocationInfoRepository;
-import com.example.soonsul.liquor.repository.LocationRepository;
-import com.example.soonsul.main.dto.RegionLiquorDto;
-import com.example.soonsul.response.error.ErrorCode;
 import com.example.soonsul.search.dto.SearchDto;
 import com.example.soonsul.util.LiquorUtil;
 import lombok.RequiredArgsConstructor;

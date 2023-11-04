@@ -28,7 +28,6 @@ public class LiquorService {
     private final UserUtil userUtil;
     private final LiquorUtil liquorUtil;
     private final PrizeRepository prizeRepository;
-    private final LocationRepository locationRepository;
     private final SalePlaceRepository salePlaceRepository;
     private final ReviewRepository reviewRepository;
     private final LiquorFilteringRepository filteringRepository;
@@ -98,23 +97,14 @@ public class LiquorService {
 
 
     @Transactional(readOnly = true)
-    public List<LocationListDto> getLiquorLocation(String liquorId){
+    public LocationDto getLiquorLocation(String liquorId){
         final Liquor liquor= liquorUtil.getLiquor(liquorId);
-        final List<Location> locationList= locationRepository.findAllByLiquor(liquor);
-
-        final List<LocationListDto> result= new ArrayList<>();
-        for(Location l: locationList){
-            final LocationInfo info= liquorUtil.getLocationInfo(l.getLocationInfoId());
-            final LocationListDto dto = LocationListDto.builder()
-                    .locationInfoId(l.getLocationId())
-                    .name(info.getName())
-                    .latitude(info.getLatitude())
-                    .longitude(info.getLongitude())
-                    .brewery(info.getBrewery())
-                    .build();
-            result.add(dto);
-        }
-        return result;
+        return LocationDto.builder()
+                .location(liquor.getLocation())
+                .latitude(liquor.getLatitude())
+                .longitude(liquor.getLongitude())
+                .brewery(liquor.getBrewery())
+                .build();
     }
 
 

@@ -41,9 +41,9 @@ public class LiquorController {
 
     @ApiOperation(value = "전통주 소재지 조회")
     @GetMapping("/{liquorId}/locations")
-    public ResponseEntity<LocationListResponse> getLiquorLocation(@PathVariable("liquorId") String liquorId) {
-        final List<LocationListDto> data= liquorService.getLiquorLocation(liquorId);
-        return ResponseEntity.ok(LocationListResponse.of(ResultCode.GET_LIQUOR_LOCATION_SUCCESS, data));
+    public ResponseEntity<LocationResponse> getLiquorLocation(@PathVariable("liquorId") String liquorId) {
+        final LocationDto data= liquorService.getLiquorLocation(liquorId);
+        return ResponseEntity.ok(LocationResponse.of(ResultCode.GET_LIQUOR_LOCATION_SUCCESS, data));
     }
 
 
