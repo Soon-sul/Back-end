@@ -138,6 +138,7 @@ public class MainService {
         final HashMap<String, Pair<Integer, Double>> map = new HashMap<>();
 
         for(RegionClick r: clickList){
+            if(r == null) continue;
             if(map.containsKey(r.getLiquorId()) && map.get(r.getLiquorId()).getSecond() == -1.0) continue;
 
             Double distance;
