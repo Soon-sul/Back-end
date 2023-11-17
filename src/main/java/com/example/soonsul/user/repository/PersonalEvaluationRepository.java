@@ -17,7 +17,7 @@ import java.util.Optional;
 public interface PersonalEvaluationRepository extends JpaRepository<PersonalEvaluation,Long> {
 
     Optional<PersonalEvaluation> findByUserAndLiquor(User user, Liquor liquor);
-    Long countByLiquor(Liquor liquor);
+    Integer countByLiquor(Liquor liquor);
     Integer countByUser(User user);
 
     @Query(nativeQuery = true,

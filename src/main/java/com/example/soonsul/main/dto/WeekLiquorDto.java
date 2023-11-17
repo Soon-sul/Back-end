@@ -25,4 +25,10 @@ public class WeekLiquorDto {
 
     @ApiModelProperty(value = "평균 평점", position = 4)
     private Double averageRating;
+
+    @ApiModelProperty(value = "양조장", position = 5)
+    private String brewery;
+
+    @ApiModelProperty(value = "평점 수", position = 6)
+    private Integer number;
 }

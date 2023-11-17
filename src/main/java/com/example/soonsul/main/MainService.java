@@ -7,6 +7,7 @@ import com.example.soonsul.main.dto.RegionLiquorDto;
 import com.example.soonsul.main.dto.WeekLiquorDto;
 import com.example.soonsul.main.entity.Sorting;
 import com.example.soonsul.user.entity.User;
+import com.example.soonsul.user.repository.PersonalEvaluationRepository;
 import com.example.soonsul.util.LiquorUtil;
 import com.example.soonsul.util.UserUtil;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class MainService {
     private final RegionClickRepository regionClickRepository;
     private final ReviewRepository reviewRepository;
     private final ScrapRepository scrapRepository;
+    private final PersonalEvaluationRepository personalEvaluationRepository;
 
 
     @Transactional(readOnly = true)
@@ -58,6 +60,8 @@ public class MainService {
                     .imageUrl(liquor.getImageUrl())
                     .name(liquor.getName())
                     .averageRating(liquor.getAverageRating())
+                    .brewery(liquor.getBrewery())
+                    .number(personalEvaluationRepository.countByLiquor(liquor))
                     .build();
             result.add(dto);
         }
