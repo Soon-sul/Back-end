@@ -13,6 +13,7 @@ import com.example.soonsul.response.result.ResultResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,13 +37,13 @@ public class MainController {
 
     @ApiOperation(value = "지금 사랑받는 지역술", notes = "region: [내위치: Around-me] [수도권: Metropolitan-area]" +
             "[강원도: Gangwon-do] [충청도: Chungcheong-do] [경상도: Gyeongsang-do] [전라도: Jeolla-do] [제주도: Jeju-do] " +
-            ", sorting: [별점순: STAR] [리뷰순: REVIEW] [가격 낮은순: LOWEST_COST] [가격 높은순: HIGHEST_COST]")
+            ", sorting: [별점순: STAR] [리뷰순: REVIEW] [가격 낮은순: LOWEST_COST] [가격 높은순: HIGHEST_COST] [인기순 : POPULARITY]")
     @GetMapping("/region-liquor")
     public ResponseEntity<RegionLiquorResponse> getRegionLiquor(@RequestParam("region") String region, @RequestParam("sorting") String sorting,
                                                                 @RequestParam(value = "latitude", required = false) Double latitude,
                                                                 @RequestParam(value = "longitude", required = false) Double longitude) {
         final List<RegionLiquorDto> data= mainService.getRegionLiquor(region, Sorting.valueOf(sorting), latitude, longitude);
-        return ResponseEntity.ok(RegionLiquorResponse.of(ResultCode.GET_WEEK_LIQUOR_SUCCESS, data));
+        return ResponseEntity.ok(RegionLiquorResponse.of(ResultCode.GET_WEEK_LIQUOR_SUCCESS, Pair.of(data, data.size())));
     }
 
 

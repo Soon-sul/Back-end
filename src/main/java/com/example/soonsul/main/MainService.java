@@ -213,6 +213,8 @@ public class MainService {
                 return byLowestCost(list);
             case HIGHEST_COST:
                 return byHighestCost(list);
+            case POPULARITY:
+                return byPopularity(list);
             default:
                 return list;
         }
@@ -232,7 +234,7 @@ public class MainService {
                             return Double.compare(entry1.getValue().getSecond(), entry2.getValue().getSecond());
                         }
                 )
-                .limit(10)
+                .limit(20)
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
                         Map.Entry::getValue,
@@ -285,6 +287,12 @@ public class MainService {
         sortedLiquors.addAll(noPriceLiquors);
 
         return sortedLiquors;
+    }
+
+    private List<RegionLiquorDto> byPopularity(List<RegionLiquorDto> list){
+        return list.stream()
+                .sorted(Comparator.comparing(RegionLiquorDto::getClickNumber).reversed())
+                .collect(Collectors.toList());
     }
 
 }

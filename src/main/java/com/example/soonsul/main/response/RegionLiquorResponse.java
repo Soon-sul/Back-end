@@ -5,6 +5,7 @@ import com.example.soonsul.response.result.ResultCode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
+import org.springframework.data.util.Pair;
 
 import java.util.List;
 
@@ -19,17 +20,17 @@ public class RegionLiquorResponse {
     @ApiModelProperty(value = "응답 메세지")
     private final String message;
     @ApiModelProperty(value = "응답 데이터")
-    private final List<RegionLiquorDto> data;
+    private final Pair<List<RegionLiquorDto>,Integer> data;
 
 
-    public RegionLiquorResponse(ResultCode resultCode, List<RegionLiquorDto> data) {
+    public RegionLiquorResponse(ResultCode resultCode, Pair<List<RegionLiquorDto>,Integer> data) {
         this.status = resultCode.getStatus();
         this.code = resultCode.getCode();
         this.message = resultCode.getMessage();
         this.data = data;
     }
 
-    public static RegionLiquorResponse of(ResultCode resultCode, List<RegionLiquorDto> data) {
+    public static RegionLiquorResponse of(ResultCode resultCode, Pair<List<RegionLiquorDto>,Integer> data) {
         return new RegionLiquorResponse(resultCode, data);
     }
 }
