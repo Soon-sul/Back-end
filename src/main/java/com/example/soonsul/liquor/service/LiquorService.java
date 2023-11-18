@@ -369,6 +369,7 @@ public class LiquorService {
                     .filtering(filtering)
                     .flagScrap(scrapRepository.existsByUserAndLiquor(user, liquor))
                     .build();
+            result.add(dto);
         }
         return result;
     }
