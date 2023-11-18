@@ -20,6 +20,10 @@ public interface LiquorRepository extends JpaRepository<Liquor, String> {
     List<String> findAllName();
 
     @Query(nativeQuery = true,
+            value="SELECT DISTINCT l.brewery FROM liquor l")
+    List<String> findAllBrewery();
+
+    @Query(nativeQuery = true,
             value="SELECT l.liquor_id FROM liquor l")
     List<String> findAllId();
 

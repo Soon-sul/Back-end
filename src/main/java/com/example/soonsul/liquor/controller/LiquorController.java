@@ -66,7 +66,7 @@ public class LiquorController {
     }
 
 
-    @ApiOperation(value = "모든 전통주 이름 조회")
+    @ApiOperation(value = "모든 전통주, 양조장 이름 조회")
     @GetMapping("/name")
     public ResponseEntity<ResultResponse> getLiquorListName() {
         final List<String> data= liquorService.getLiquorListName();

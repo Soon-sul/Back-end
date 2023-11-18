@@ -178,7 +178,10 @@ public class LiquorService {
 
     @Transactional(readOnly = true)
     public List<String> getLiquorListName(){
-        return liquorRepository.findAllName();
+        final List<String> result= new ArrayList<>();
+        result.addAll(liquorRepository.findAllName());
+        result.addAll(liquorRepository.findAllBrewery());
+        return result;
     }
 
 
