@@ -33,4 +33,8 @@ public interface LiquorRepository extends JpaRepository<Liquor, String> {
 
     boolean existsByName(String name);
     boolean existsByBrewery(String brewery);
+
+    @Query(nativeQuery = true,
+            value="SELECT * FROM liquor l WHERE l.brewery = :brewery")
+    Page<Liquor> findAllByBrewery(Pageable pageable, @Param("brewery") String brewery);
 }

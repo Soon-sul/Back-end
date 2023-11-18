@@ -8,6 +8,9 @@ import com.example.soonsul.response.result.ResultResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -111,5 +114,12 @@ public class LiquorController {
     public ResponseEntity<ResultResponse> getLiquorSearch(@RequestParam("name") String name) {
         final List<String> data= liquorService.getLiquorSearch(name);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_LIQUOR_SEARCH_SUCCESS, data));
+    }
+
+    @ApiOperation(value = "양조장에 해당하는 전통주 모두 조회")
+    @GetMapping()
+    public ResponseEntity<LiquorInfoListResponse> getLiquorBrewery(@PageableDefault(size=10, sort = "name", direction = Sort.Direction.ASC) Pageable pageable, @RequestParam("brewery") String brewery) {
+        final List<LiquorInfoDto> data= liquorService.getLiquorBrewery(pageable, brewery);
+        return ResponseEntity.ok(LiquorInfoListResponse.of(ResultCode.GET_LIQUOR_BREWERY_SUCCESS, data));
     }
 }

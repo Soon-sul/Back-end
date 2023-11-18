@@ -327,4 +327,49 @@ public class LiquorService {
         return result;
     }
 
+
+    @Transactional(readOnly = true)
+    public List<LiquorInfoDto> getLiquorBrewery(Pageable pageable, String brewery){
+        final List<Liquor> liquors= liquorRepository.findAllByBrewery(pageable, brewery).toList();
+        final User user= userUtil.getUserByAuthentication();
+        final List<LiquorInfoDto> result= new ArrayList<>();
+        for(Liquor liquor: liquors){
+            final Optional<PersonalEvaluation> personalEvaluation= personalEvaluationRepository.findByUserAndLiquor(user,liquor);
+
+            Double liquorPersonalRating= null;
+            if(personalEvaluation.isPresent()){
+                liquorPersonalRating= personalEvaluation.get().getLiquorPersonalRating();
+            }
+
+            final String region= liquorUtil.getCodeName(liquor.getRegion());
+            final String liquorCategory= liquorUtil.getCodeName(liquor.getLiquorCategory());
+
+            final List<LiquorFilteringDto> filtering= new ArrayList<>();
+            final List<LiquorFiltering> filteringList= filteringRepository.findAllByLiquorId(liquor.getLiquorId());
+            for(LiquorFiltering l: filteringList){
+                final LiquorFilteringDto dto= LiquorFilteringDto.builder()
+                        .age(l.getAge())
+                        .gender(l.getGender())
+                        .build();
+                filtering.add(dto);
+            }
+
+            final LiquorInfoDto dto= LiquorInfoDto.builder()
+                    .name(liquor.getName())
+                    .ingredient(liquor.getIngredient())
+                    .averageRating(liquor.getAverageRating())
+                    .lowestPrice(liquor.getLowestPrice())
+                    .alcohol(liquor.getAlcohol())
+                    .capacity(liquor.getCapacity())
+                    .region(region)
+                    .imageUrl(liquor.getImageUrl())
+                    .liquorCategory(liquorCategory)
+                    .liquorPersonalRating(liquorPersonalRating)
+                    .ratingNumber(reviewRepository.countByLiquor(liquor))
+                    .filtering(filtering)
+                    .flagScrap(scrapRepository.existsByUserAndLiquor(user, liquor))
+                    .build();
+        }
+        return result;
+    }
 }
