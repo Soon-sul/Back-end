@@ -31,4 +31,6 @@ public interface LiquorRepository extends JpaRepository<Liquor, String> {
             value="SELECT * FROM liquor l WHERE l.name like %:name% order by l.name")
     List<Liquor> findSearch(@Param("name") String name);
 
+    boolean existsByName(String name);
+    boolean existsByBrewery(String brewery);
 }

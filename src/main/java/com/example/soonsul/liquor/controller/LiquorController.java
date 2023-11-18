@@ -104,4 +104,12 @@ public class LiquorController {
         final List<String> data= liquorService.getLiquorListId();
         return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_LIQUOR_LIST_ID_SUCCESS, data));
     }
+
+
+    @ApiOperation(value = "검색 키워드가 제품명인지 양조장인지 조회")
+    @GetMapping("/search")
+    public ResponseEntity<ResultResponse> getLiquorSearch(@RequestParam("name") String name) {
+        final List<String> data= liquorService.getLiquorSearch(name);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_LIQUOR_SEARCH_SUCCESS, data));
+    }
 }

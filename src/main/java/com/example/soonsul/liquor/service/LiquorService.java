@@ -319,4 +319,12 @@ public class LiquorService {
     }
 
 
+    @Transactional(readOnly = true)
+    public List<String> getLiquorSearch(String name){
+        final List<String> result= new ArrayList<>();
+        if(liquorRepository.existsByName(name)) result.add("liquor");
+        if(liquorRepository.existsByBrewery(name)) result.add("brewery");
+        return result;
+    }
+
 }
