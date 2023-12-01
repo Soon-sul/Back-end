@@ -109,6 +109,14 @@ public class LiquorController {
     }
 
 
+    @ApiOperation(value = "모든 전통주 ID 조회")
+    @GetMapping("/id-name")
+    public ResponseEntity<LiquorIdNameResponse> getLiquorIdAndName() {
+        final List<LiquorIdName> data= liquorService.getLiquorIdAndName();
+        return ResponseEntity.ok(LiquorIdNameResponse.of(ResultCode.GET_LIQUOR_LIST_ID_SUCCESS, data));
+    }
+
+
     @ApiOperation(value = "검색 키워드가 제품명인지 양조장인지 조회")
     @GetMapping("/search")
     public ResponseEntity<ResultResponse> getLiquorSearch(@RequestParam("name") String name) {

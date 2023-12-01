@@ -190,6 +190,20 @@ public class LiquorService {
         return liquorRepository.findAllId();
     }
 
+    @Transactional(readOnly = true)
+    public List<LiquorIdName> getLiquorIdAndName(){
+        final List<Liquor> liquors= liquorRepository.findAll();
+        final List<LiquorIdName> result= new ArrayList<>();
+        for(Liquor liquor: liquors){
+            LiquorIdName dto= LiquorIdName.builder()
+                    .liquorId(liquor.getLiquorId())
+                    .name(liquor.getName())
+                    .build();
+            result.add(dto);
+        }
+        return result;
+    }
+
 
     @Transactional
     public void updateFiltering(){
