@@ -67,6 +67,7 @@ public class PersonalService {
                     .commentNumber(review.map(commentRepository::countByReview).orElse(0))
                     .salePlace(liquor.getSalePlace())
                     .flagGood(review.isPresent() && reviewGoodRepository.existsByReviewAndUser(review.get(), userUtil.getUserByAuthentication()))
+                    .reviewImageList(review.map(value -> liquorUtil.getReviewImages(value.getReviewId())).orElse(null))
                     .build();
             result.add(dto);
         }
@@ -90,6 +91,7 @@ public class PersonalService {
                 .scent(personalEvaluation.getScent())
                 .density(personalEvaluation.getDensity())
                 .reviewContent(review.map(Review::getContent).orElse(null))
+                .reviewImageList(review.map(value -> liquorUtil.getReviewImages(value.getReviewId())).orElse(null))
                 .build();
     }
 

@@ -77,4 +77,8 @@ public class LiquorUtil {
             s3Uploader.deleteFile(image.getImage());
         }
     }
+
+    public List<String> getReviewImages(Long reviewId){
+        return reviewImageRepository.findAllImage(reviewId);
+    }
 }

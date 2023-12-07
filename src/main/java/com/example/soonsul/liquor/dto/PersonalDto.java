@@ -85,4 +85,7 @@ public class PersonalDto {
 
     @ApiModelProperty(value = "좋아요 유무", position = 22)
     private boolean flagGood;
+
+    @ApiModelProperty(value = "리뷰 사진 url 리스트", position = 23)
+    private List<String> reviewImageList;
 }
