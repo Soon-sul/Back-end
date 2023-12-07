@@ -2,7 +2,11 @@ package com.example.soonsul.liquor.dto;
 
 import com.example.soonsul.liquor.entity.FlavorType;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
+@Data
 @Getter
 @Setter
 @Builder
@@ -17,6 +21,7 @@ public class EvaluationRequest {
     private Integer scent;
     private Integer density;
     private String reviewContent;
+    private List<MultipartFile> images;
 
 
     public Integer getFlavor(FlavorType fType){

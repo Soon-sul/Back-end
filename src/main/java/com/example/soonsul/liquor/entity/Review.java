@@ -46,6 +46,9 @@ public class Review {
     @OneToMany(mappedBy = "review", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private final List<Comment> commentList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "review", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private final List<ReviewImage> reviewImageList = new ArrayList<>();
+
     public void updateContent(String content){
         this.content= content;
     }

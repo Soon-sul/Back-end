@@ -1,9 +1,11 @@
 package com.example.soonsul.liquor.service;
 
+import com.example.soonsul.config.s3.S3Uploader;
 import com.example.soonsul.liquor.dto.EvaluationRequest;
 import com.example.soonsul.liquor.entity.*;
 import com.example.soonsul.liquor.exception.PersonalRatingNull;
 import com.example.soonsul.liquor.repository.CommentRepository;
+import com.example.soonsul.liquor.repository.ReviewImageRepository;
 import com.example.soonsul.liquor.repository.ReviewRepository;
 import com.example.soonsul.notification.NotificationRepository;
 import com.example.soonsul.notification.entity.NotificationType;
@@ -20,6 +22,7 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -37,18 +40,21 @@ public class EvaluationService {
     private final PlatformTransactionManager transactionManager;
     private final NotificationRepository notificationRepository;
     private final CommentRepository commentRepository;
+    private final ReviewImageRepository reviewImageRepository;
+    private final S3Uploader s3Uploader;
 
     private final List<FlavorType> flavorTypes= Arrays.asList(FlavorType.SWEETNESS, FlavorType.ACIDITY,
             FlavorType.CARBONIC_ACID, FlavorType.HEAVY, FlavorType.SCENT, FlavorType.DENSITY);
 
 
-    public synchronized void postEvaluation(String liquorId, EvaluationRequest request){
+    public synchronized Long postEvaluation(String liquorId, EvaluationRequest request){
         DefaultTransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         transactionDefinition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
 
         TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
         try {
+            Long reviewId= null;
             final User user= userUtil.getUserByAuthentication();
             final Liquor liquor= liquorUtil.getLiquor(liquorId);
             final Evaluation evaluation= liquorUtil.getEvaluation(liquorId);
@@ -76,10 +82,11 @@ public class EvaluationService {
                         .user(user)
                         .liquor(liquor)
                         .build();
-                reviewRepository.save(review);
+                reviewId= reviewRepository.save(review).getReviewId();
             }
 
             transactionManager.commit(transactionStatus);
+            return reviewId;
         } catch (Exception e) {
             transactionManager.rollback(transactionStatus);
             throw e;
@@ -88,9 +95,10 @@ public class EvaluationService {
 
 
     @Transactional
-    public void putEvaluation(String liquorId, EvaluationRequest request){
+    public Long putEvaluation(String liquorId, EvaluationRequest request){
         if(request.getLiquorPersonalRating()==null) throw new PersonalRatingNull("personal rating is null", ErrorCode.PERSONAL_RATING_NULL);
 
+        Long reviewId= null;
         final User user= userUtil.getUserByAuthentication();
         final Liquor liquor= liquorUtil.getLiquor(liquorId);
         final PersonalEvaluation pe= liquorUtil.getPersonalEvaluation(user, liquor);
@@ -114,12 +122,17 @@ public class EvaluationService {
         final Optional<Review> review= reviewRepository.findByUserAndLiquor(user, liquor);
         if(request.getReviewContent() == null && review.isPresent()){
             deleteReviewNotification(review.get());
+            review.ifPresent(value -> liquorUtil.deleteReviewImages(value.getReviewId()));
             review.ifPresent(value -> reviewRepository.deleteById(value.getReviewId()));
         }
         else if(request.getReviewContent()!= null && review.isPresent()){
             if(!request.getLiquorPersonalRating().equals(review.get().getLiquorRating()))
                 review.get().updateLiquorRating(request.getLiquorPersonalRating());
             review.get().updateContent(request.getReviewContent());
+
+            liquorUtil.deleteReviewImages(review.get().getReviewId());
+            reviewImageRepository.deleteAllByReview(review.get());
+            reviewId= review.get().getReviewId();
         }
         else if(request.getReviewContent() != null){
             final Review newReview= Review.builder()
@@ -129,8 +142,10 @@ public class EvaluationService {
                     .user(user)
                     .liquor(liquor)
                     .build();
-            reviewRepository.save(newReview);
+            reviewId= reviewRepository.save(newReview).getReviewId();
         }
+
+        return reviewId;
     }
 
     private boolean checkByEqual(Integer origin, Integer request){
@@ -160,6 +175,7 @@ public class EvaluationService {
         final Optional<Review> review= reviewRepository.findByUserAndLiquor(user, liquor);
         if(review.isPresent()){
             deleteReviewNotification(review.get());
+            liquorUtil.deleteReviewImages(review.get().getReviewId());
             reviewRepository.deleteByUserAndLiquor(user, liquor);
         }
     }
@@ -253,4 +269,20 @@ public class EvaluationService {
             notificationRepository.deleteByTypeAndObjectId(NotificationType.COMMENT, comment.getCommentId());
         }
     }
+
+
+    @Transactional
+    public void postReviewImages(Long reviewId, List<MultipartFile> images){
+        final Review review= liquorUtil.getReview(reviewId);
+        for(MultipartFile image: images){
+            final ReviewImage reviewImage= ReviewImage.builder()
+                    .image(s3Uploader.upload(image, "review-image"))
+                    .createdDate(LocalDateTime.now())
+                    .review(review)
+                    .build();
+            reviewImageRepository.save(reviewImage);
+        }
+    }
+
+
 }

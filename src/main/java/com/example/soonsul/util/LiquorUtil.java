@@ -1,5 +1,6 @@
 package com.example.soonsul.util;
 
+import com.example.soonsul.config.s3.S3Uploader;
 import com.example.soonsul.liquor.entity.*;
 import com.example.soonsul.liquor.exception.*;
 import com.example.soonsul.liquor.repository.*;
@@ -10,6 +11,8 @@ import com.example.soonsul.user.exception.PersonalEvaluationNotExist;
 import com.example.soonsul.user.repository.PersonalEvaluationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 
 @Component
@@ -22,6 +25,8 @@ public class LiquorUtil {
     private final EvaluationNumberRepository evaluationNumberRepository;
     private final CommentRepository commentRepository;
     private final CodeRepository codeRepository;
+    private final ReviewImageRepository reviewImageRepository;
+    private final S3Uploader s3Uploader;
 
 
     public Liquor getLiquor(String liquorId){
@@ -64,4 +69,12 @@ public class LiquorUtil {
                 .orElseThrow(()->new CodeNotExist("code not exist", ErrorCode.CODE_NOT_EXIST)).getCodeId();
     }
 
+    public void deleteReviewImages(Long reviewId){
+        final Review review= reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new ReviewNotExist("review not exist", ErrorCode.REVIEW_NOT_EXIST));
+        final List<ReviewImage> images= reviewImageRepository.findAllByReview(review);
+        for(ReviewImage image: images){
+            s3Uploader.deleteFile(image.getImage());
+        }
+    }
 }
