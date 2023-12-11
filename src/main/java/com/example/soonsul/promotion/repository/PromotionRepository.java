@@ -1,4 +1,4 @@
-package com.example.soonsul.promotion;
+package com.example.soonsul.promotion.repository;
 
 import com.example.soonsul.promotion.entity.Promotion;
 import org.springframework.data.jpa.repository.JpaRepository;
