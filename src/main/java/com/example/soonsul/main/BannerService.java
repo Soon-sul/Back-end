@@ -4,6 +4,7 @@ import com.example.soonsul.main.dto.MainBannerDto;
 import com.example.soonsul.main.entity.BannerZzim;
 import com.example.soonsul.main.entity.MainBanner;
 import com.example.soonsul.main.exception.MainBannerNotExist;
+import com.example.soonsul.main.repository.BannerLiquorRepository;
 import com.example.soonsul.main.repository.BannerZzimRepository;
 import com.example.soonsul.main.repository.MainBannerRepository;
 import com.example.soonsul.response.error.ErrorCode;
@@ -22,6 +23,7 @@ public class BannerService {
     private final UserUtil userUtil;
     private final MainBannerRepository mainBannerRepository;
     private final BannerZzimRepository bannerZzimRepository;
+    private final BannerLiquorRepository bannerLiquorRepository;
 
 
     @Transactional(readOnly = true)
@@ -35,6 +37,7 @@ public class BannerService {
                     .thumbnail(banner.getThumbnail())
                     .flagZzim(null)
                     .title(banner.getTitle())
+                    .liquorList(bannerLiquorRepository.findByMainBanner(banner.getMainBannerId()))
                     .build();
             result.add(dto);
         }
@@ -54,6 +57,7 @@ public class BannerService {
                 .content(banner.getContent())
                 .flagZzim(bannerZzimRepository.existsByUserAndMainBanner(user, banner))
                 .title(banner.getTitle())
+                .liquorList(bannerLiquorRepository.findByMainBanner(banner.getMainBannerId()))
                 .build();
     }
 
