@@ -64,8 +64,11 @@ public class LiquorInfoDto {
     @ApiModelProperty(value = "스크랩 날짜", position = 15)
     private LocalDate scrapDate;
 
-
     @ApiModelProperty(value = "스크랩 총 개수", position = 16)
     private Integer totalScrapNumber;
+
+    private String gender;
+
+    private Integer age;
 
 }
