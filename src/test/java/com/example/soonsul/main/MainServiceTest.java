@@ -100,7 +100,7 @@ public class MainServiceTest {
         void init(){
             doReturn(user).when(userUtil).getUserByAuthentication();
             doReturn("").when(liquorUtil).getCodeName(null);
-            doReturn(Collections.emptyList()).when(liquorUtil).getBreweryList(any(String.class));
+//            doReturn(Collections.emptyList()).when(liquorUtil).(any(String.class));
             doReturn(true).when(scrapRepository).existsByUserAndLiquor(any(User.class), any(Liquor.class));
             doReturn(10).when(reviewRepository).countByLiquor(any(Liquor.class));
         }
