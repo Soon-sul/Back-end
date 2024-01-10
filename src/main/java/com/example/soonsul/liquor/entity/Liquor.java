@@ -19,6 +19,14 @@ public class Liquor {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
     @Column(name = "ingredient")
     private String ingredient;
 
@@ -66,6 +74,9 @@ public class Liquor {
 
     @Column(name = "site_url")
     private String siteUrl;
+
+    private String gender;
+    private Integer age;
 
 
 
