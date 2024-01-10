@@ -55,6 +55,7 @@ public class ReviewService {
                     .reviewNumber(reviewRepository.countByUser(r.getUser()))
                     .flagGood(reviewGoodRepository.existsByReviewAndUser(r, user))
                     .totalReviewNumber(totalReviewNumber)
+                    .reviewImageList(liquorUtil.getReviewImages(r.getReviewId()))
                     .build();
             result.add(reviewDto);
         }
@@ -86,6 +87,7 @@ public class ReviewService {
                     .reviewNumber(reviewRepository.countByUser(r.getUser()))
                     .flagGood(reviewGoodRepository.existsByReviewAndUser(r, user))
                     .totalReviewNumber(totalReviewNumber)
+                    .reviewImageList(liquorUtil.getReviewImages(r.getReviewId()))
                     .build();
             result.add(reviewDto);
         }
@@ -111,6 +113,7 @@ public class ReviewService {
                 .profileImage(review.getUser().getProfileImage())
                 .reviewNumber(reviewRepository.countByUser(review.getUser()))
                 .flagGood(reviewGoodRepository.existsByReviewAndUser(review, user))
+                .reviewImageList(liquorUtil.getReviewImages(review.getReviewId()))
                 .build();
     }
 

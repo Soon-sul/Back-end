@@ -22,9 +22,11 @@ import com.example.soonsul.scan.response.ScanResponse;
 import com.example.soonsul.user.dto.FollowDto;
 import com.example.soonsul.user.dto.NotificationFlag;
 import com.example.soonsul.user.dto.UserProfileDto;
+import com.example.soonsul.user.dto.ZzimDto;
 import com.example.soonsul.user.response.FollowResponse;
 import com.example.soonsul.user.response.NotificationFlagResponse;
 import com.example.soonsul.user.response.UserProfileResponse;
+import com.example.soonsul.user.response.ZzimListResponse;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -80,10 +82,9 @@ public class UserController {
 
     @ApiOperation(value = "유저 찜 리스트 조회")
     @GetMapping("/zzims")
-    public ResponseEntity<PromotionListResponse> getUserZzim() {
-        final List<PromotionDto> result= promotionService.getPromotionList("all");
-        final List<PromotionDto> data= result.stream().filter(PromotionDto::isFlagZzim).collect(Collectors.toList());
-        return ResponseEntity.ok(PromotionListResponse.of(ResultCode.GET_USER_ZZIM_SUCCESS, data));
+    public ResponseEntity<ZzimListResponse> getUserZzim() {
+        final List<ZzimDto> data= userService.getZzimList();
+        return ResponseEntity.ok(ZzimListResponse.of(ResultCode.GET_USER_ZZIM_SUCCESS, data));
     }
 
 

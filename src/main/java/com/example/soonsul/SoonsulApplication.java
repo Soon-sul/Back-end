@@ -1,14 +1,15 @@
 package com.example.soonsul;
 
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-
-import java.time.LocalDate;
-import java.time.ZoneId;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 
+@EnableScheduling
 @SpringBootApplication(exclude = SecurityAutoConfiguration.class)
+@EnableBatchProcessing
 public class SoonsulApplication {
 	public static final String APPLICATION_LOCATIONS = "spring.config.location="
 			+ "classpath:application.properties ,"
@@ -19,7 +20,6 @@ public class SoonsulApplication {
 
 		System.setProperty("logging.file.name", "/home/ubuntu/log/"
 				+ "error.log");
-				//+ LocalDate.now(ZoneId.of("Asia/Seoul"))+".log");
 
 		new SpringApplicationBuilder(SoonsulApplication.class)
 				.properties(APPLICATION_LOCATIONS)

@@ -43,6 +43,10 @@ dependencies {
 	implementation group: 'io.lettuce', name: 'lettuce-core', version: '6.1.8.RELEASE'
 	implementation 'org.springframework.boot:spring-boot-starter-cache'
 
+	// spring batch
+	implementation 'org.springframework.boot:spring-boot-starter-batch'
+
+
 	//Google API
 	implementation("com.google.api-client:google-api-client:1.31.3")
 	implementation("com.google.apis:google-api-services-drive:v3-rev197-1.25.0")
@@ -64,6 +68,9 @@ dependencies {
 	testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.mockito:mockito-core'
+
+	// spring batch
+	testImplementation 'org.springframework.batch:spring-batch-test'
 
 	compileOnly 'org.slf4j:slf4j-api:1.7.5'
 	compileOnly 'org.projectlombok:lombok:1.18.20'

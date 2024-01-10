@@ -58,7 +58,9 @@ public enum ResultCode {
     DELETE_SCRAP_SUCCESS(200,"L031","스크랩을 삭제했습니다."),
     GET_RECOMMENT_LIST_SUCCESS(200,"L032","대댓글을 모두 조회했습니다."),
     GET_EVALUATION_SUCCESS(200,"L033","유저가 남긴 평가 내용을 모두 조회했습니다."),
-    GET_LIQUOR_LIST_ID_SUCCESS(200,"L034","모든 전통주 ID를 조회했습니다"),
+    GET_LIQUOR_LIST_ID_SUCCESS(200,"L034","모든 전통주 ID를 조회했습니다."),
+    GET_LIQUOR_SEARCH_SUCCESS(200,"L035","검색 키워드에 대한 결과값을 조회했습니다."),
+    GET_LIQUOR_BREWERY_SUCCESS(200,"L036","양조장 모든 전통주를 조회했습니다."),
 
     //user
     PUT_PROFILE_SUCCESS(200,"U001","유저 프로필을 수정했습니다."),

@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
@@ -39,20 +40,9 @@ public class PromotionDto {
     @ApiModelProperty(value = "프로모션 이미지", position = 7)
     private String image;
 
-
-    @ApiModelProperty(value = "메인배너 pk", position = 8)
-    private Long mainBannerId;
-
-    @ApiModelProperty(value = "메인배너 내용", position = 9)
-    private String bannerContent;
-
-    @ApiModelProperty(value = "메인배너 썸네일", position = 10)
-    private String bannerThumbnail;
-
-    @ApiModelProperty(value = "메인배너 이름", position = 11)
-    private String bannerName;
-
-
-    @ApiModelProperty(value = "찜 여부", position = 12)
+    @ApiModelProperty(value = "찜 여부", position = 8)
     private boolean flagZzim;
+
+    @ApiModelProperty(value = "프로모션 관련된 전통주 리스트 (pk)", position = 9)
+    private List<String> liquorList;
 }

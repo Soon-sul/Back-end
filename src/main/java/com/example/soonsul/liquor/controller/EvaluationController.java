@@ -1,5 +1,6 @@
 package com.example.soonsul.liquor.controller;
 
+import com.example.soonsul.inquiry.dto.InquiryRequest;
 import com.example.soonsul.liquor.dto.EvaluationDto;
 import com.example.soonsul.liquor.dto.EvaluationRequest;
 import com.example.soonsul.liquor.dto.PersonEvaluationDto;
@@ -64,21 +65,23 @@ public class EvaluationController {
 
     @ApiOperation(value = "전통주에 대한 평가 등록")
     @PostMapping("/{liquorId}/evaluation")
-    public ResponseEntity<ResultResponse> postEvaluation(@PathVariable("liquorId") String liquorId, @RequestBody EvaluationRequest request) {
-        evaluationService.postEvaluation(liquorId, request);
+    public ResponseEntity<ResultResponse> postEvaluation(@PathVariable("liquorId") String liquorId, EvaluationRequest request) {
+        final Long reviewId= evaluationService.postEvaluation(liquorId, request);
+        if(reviewId!= null) evaluationService.postReviewImages(reviewId, request.getImages());
         return ResponseEntity.ok(ResultResponse.of(ResultCode.POST_EVALUATION_SUCCESS));
     }
 
 
     @ApiOperation(value = "전통주에 대한 평가 수정")
     @PutMapping("/{liquorId}/evaluation")
-    public ResponseEntity<ResultResponse> putEvaluation(@PathVariable("liquorId") String liquorId, @RequestBody EvaluationRequest request) {
-        evaluationService.putEvaluation(liquorId, request);
+    public ResponseEntity<ResultResponse> putEvaluation(@PathVariable("liquorId") String liquorId, EvaluationRequest request) {
+        final Long reviewId= evaluationService.putEvaluation(liquorId, request);
+        if(reviewId!= null) evaluationService.postReviewImages(reviewId, request.getImages());
         return ResponseEntity.ok(ResultResponse.of(ResultCode.PUT_EVALUATION_SUCCESS));
     }
 
 
-    @ApiOperation(value = "유저가 남긴 평가 내용들 조회 (평점, 맛평점, 리뷰 내용)")
+    @ApiOperation(value = "유저가 남긴 평가 내용들 조회 (평점, 맛평점, 리뷰 내용, 리뷰 사진)")
     @GetMapping("/{liquorId}/evaluation")
     public ResponseEntity<PersonalResponse> getEvaluation(@PathVariable("liquorId") String liquorId) {
         final PersonalDto data= personalService.getEvaluation(liquorId);

@@ -1,12 +1,12 @@
 package com.example.soonsul.promotion;
 
-import com.example.soonsul.main.entity.MainBanner;
-import com.example.soonsul.main.repository.BannerZzimRepository;
-import com.example.soonsul.main.repository.MainBannerRepository;
 import com.example.soonsul.promotion.dto.PromotionDto;
 import com.example.soonsul.promotion.entity.Promotion;
 import com.example.soonsul.promotion.entity.Zzim;
 import com.example.soonsul.promotion.exception.PromotionNotExist;
+import com.example.soonsul.promotion.repository.PromotionLiquorRepository;
+import com.example.soonsul.promotion.repository.PromotionRepository;
+import com.example.soonsul.promotion.repository.ZzimRepository;
 import com.example.soonsul.response.error.ErrorCode;
 import com.example.soonsul.user.entity.User;
 import com.example.soonsul.util.UserUtil;
@@ -24,12 +24,11 @@ public class PromotionService {
     private final UserUtil userUtil;
     private final PromotionRepository promotionRepository;
     private final ZzimRepository zzimRepository;
-    private final MainBannerRepository mainBannerRepository;
-    private final BannerZzimRepository bannerZzimRepository;
+    private final PromotionLiquorRepository promotionLiquorRepository;
 
 
     @Transactional(readOnly = true)
-    public List<PromotionDto> getPromotionList(String category){
+    public List<PromotionDto> getPromotionList(){
         final User user= userUtil.getUserByAuthentication();
         final List<Promotion> list= promotionRepository.findAll();
 
@@ -45,23 +44,10 @@ public class PromotionService {
                     .location(p.getLocation())
                     .image(p.getImage())
                     .flagZzim(zzimRepository.existsByUserAndPromotion(user, p))
+                    .liquorList(promotionLiquorRepository.findByPromotion(p.getPromotionId()))
                     .build();
             result.add(dto);
         }
-        if(category.equals("promotion")) return result;
-
-        final List<MainBanner> bannerList= mainBannerRepository.findAll();
-        for(MainBanner banner: bannerList){
-            final PromotionDto dto= PromotionDto.builder()
-                    .mainBannerId(banner.getMainBannerId())
-                    .bannerContent(banner.getContent())
-                    .bannerThumbnail(banner.getThumbnail())
-                    .bannerName(banner.getTitle())
-                    .flagZzim(bannerZzimRepository.existsByUserAndMainBanner(user, banner))
-                    .build();
-            result.add(dto);
-        }
-
         return result;
     }
 
@@ -81,6 +67,7 @@ public class PromotionService {
                 .location(promotion.getLocation())
                 .image(promotion.getImage())
                 .flagZzim(zzimRepository.existsByUserAndPromotion(user, promotion))
+                .liquorList(promotionLiquorRepository.findByPromotion(promotion.getPromotionId()))
                 .build();
     }
 

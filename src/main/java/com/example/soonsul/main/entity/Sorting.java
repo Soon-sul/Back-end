@@ -10,7 +10,8 @@ public enum Sorting {
     REVIEW("review"),
     LOWEST_COST("lowest-cost"),
     HIGHEST_COST("highest-cost"),
-    DATE("date");
+    DATE("date"),
+    POPULARITY("popularity");
 
     private final String value;
 

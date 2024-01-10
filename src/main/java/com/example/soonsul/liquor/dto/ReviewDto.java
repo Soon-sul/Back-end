@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 
 @Getter
 @Builder
@@ -52,4 +54,7 @@ public class ReviewDto {
 
     @ApiModelProperty(value = "총 리뷰 개수", position = 12)
     private Integer totalReviewNumber;
+
+    @ApiModelProperty(value = "리뷰 사진 url 리스트", position = 13)
+    private List<String> reviewImageList;
 }

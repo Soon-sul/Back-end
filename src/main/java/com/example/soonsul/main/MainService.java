@@ -7,6 +7,7 @@ import com.example.soonsul.main.dto.RegionLiquorDto;
 import com.example.soonsul.main.dto.WeekLiquorDto;
 import com.example.soonsul.main.entity.Sorting;
 import com.example.soonsul.user.entity.User;
+import com.example.soonsul.user.repository.PersonalEvaluationRepository;
 import com.example.soonsul.util.LiquorUtil;
 import com.example.soonsul.util.UserUtil;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class MainService {
     private final RegionClickRepository regionClickRepository;
     private final ReviewRepository reviewRepository;
     private final ScrapRepository scrapRepository;
+    private final PersonalEvaluationRepository personalEvaluationRepository;
 
 
     @Transactional(readOnly = true)
@@ -58,6 +60,8 @@ public class MainService {
                     .imageUrl(liquor.getImageUrl())
                     .name(liquor.getName())
                     .averageRating(liquor.getAverageRating())
+                    .brewery(liquor.getBrewery())
+                    .number(personalEvaluationRepository.countByLiquor(liquor))
                     .build();
             result.add(dto);
         }
@@ -138,6 +142,7 @@ public class MainService {
         final HashMap<String, Pair<Integer, Double>> map = new HashMap<>();
 
         for(RegionClick r: clickList){
+            if(r == null) continue;
             if(map.containsKey(r.getLiquorId()) && map.get(r.getLiquorId()).getSecond() == -1.0) continue;
 
             Double distance;
@@ -164,7 +169,7 @@ public class MainService {
                     .alcohol(liquor.getAlcohol())
                     .capacity(liquor.getCapacity())
                     .liquorCategory(liquorUtil.getCodeName(liquor.getLiquorCategory()))
-                    .locationList(liquorUtil.getBreweryList(liquorId))
+                    .brewery(liquor.getBrewery())
                     .lowestPrice(liquor.getLowestPrice())
                     .flagScrap(scrapRepository.existsByUserAndLiquor(user, liquor))
                     .ratingNumber(reviewRepository.countByLiquor(liquor))
@@ -208,6 +213,8 @@ public class MainService {
                 return byLowestCost(list);
             case HIGHEST_COST:
                 return byHighestCost(list);
+            case POPULARITY:
+                return byPopularity(list);
             default:
                 return list;
         }
@@ -227,7 +234,7 @@ public class MainService {
                             return Double.compare(entry1.getValue().getSecond(), entry2.getValue().getSecond());
                         }
                 )
-                .limit(10)
+                .limit(20)
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
                         Map.Entry::getValue,
@@ -280,6 +287,12 @@ public class MainService {
         sortedLiquors.addAll(noPriceLiquors);
 
         return sortedLiquors;
+    }
+
+    private List<RegionLiquorDto> byPopularity(List<RegionLiquorDto> list){
+        return list.stream()
+                .sorted(Comparator.comparing(RegionLiquorDto::getClickNumber).reversed())
+                .collect(Collectors.toList());
     }
 
 }

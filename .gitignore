@@ -35,6 +35,9 @@ out/
 
 ### VS Code ###
 .vscode/
-
-.properties
+src/main/resources/*
+**/application.properties
 .yml
+application.properties
+**/oauth.yml
+**/google_client_key.json

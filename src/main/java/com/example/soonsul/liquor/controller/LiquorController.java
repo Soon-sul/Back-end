@@ -8,6 +8,9 @@ import com.example.soonsul.response.result.ResultResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,17 +44,17 @@ public class LiquorController {
 
     @ApiOperation(value = "전통주 소재지 조회")
     @GetMapping("/{liquorId}/locations")
-    public ResponseEntity<LocationListResponse> getLiquorLocation(@PathVariable("liquorId") String liquorId) {
-        final List<LocationListDto> data= liquorService.getLiquorLocation(liquorId);
-        return ResponseEntity.ok(LocationListResponse.of(ResultCode.GET_LIQUOR_LOCATION_SUCCESS, data));
+    public ResponseEntity<LocationResponse> getLiquorLocation(@PathVariable("liquorId") String liquorId) {
+        final LocationDto data= liquorService.getLiquorLocation(liquorId);
+        return ResponseEntity.ok(LocationResponse.of(ResultCode.GET_LIQUOR_LOCATION_SUCCESS, data));
     }
 
 
     @ApiOperation(value = "전통주 판매처 조회")
     @GetMapping("/{liquorId}/sale-places")
-    public ResponseEntity<SalePlaceListResponse> getLiquorSalePlace(@PathVariable("liquorId") String liquorId) {
-        final List<SalePlaceListDto> data= liquorService.getLiquorSalePlace(liquorId);
-        return ResponseEntity.ok(SalePlaceListResponse.of(ResultCode.GET_LIQUOR_SALE_PLACE_SUCCESS, data));
+    public ResponseEntity<SalePlaceResponse> getLiquorSalePlace(@PathVariable("liquorId") String liquorId) {
+        final SalePlaceDto data= liquorService.getLiquorSalePlace(liquorId);
+        return ResponseEntity.ok(SalePlaceResponse.of(ResultCode.GET_LIQUOR_SALE_PLACE_SUCCESS, data));
     }
 
 
@@ -66,7 +69,7 @@ public class LiquorController {
     }
 
 
-    @ApiOperation(value = "모든 전통주 이름 조회")
+    @ApiOperation(value = "모든 전통주, 양조장 이름 조회")
     @GetMapping("/name")
     public ResponseEntity<ResultResponse> getLiquorListName() {
         final List<String> data= liquorService.getLiquorListName();
@@ -103,5 +106,28 @@ public class LiquorController {
     public ResponseEntity<ResultResponse> getLiquorListId() {
         final List<String> data= liquorService.getLiquorListId();
         return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_LIQUOR_LIST_ID_SUCCESS, data));
+    }
+
+
+    @ApiOperation(value = "모든 전통주 ID 조회")
+    @GetMapping("/id-name")
+    public ResponseEntity<LiquorIdNameResponse> getLiquorIdAndName() {
+        final List<LiquorIdName> data= liquorService.getLiquorIdAndName();
+        return ResponseEntity.ok(LiquorIdNameResponse.of(ResultCode.GET_LIQUOR_LIST_ID_SUCCESS, data));
+    }
+
+
+    @ApiOperation(value = "검색 키워드가 제품명인지 양조장인지 조회")
+    @GetMapping("/search")
+    public ResponseEntity<ResultResponse> getLiquorSearch(@RequestParam("name") String name) {
+        final List<String> data= liquorService.getLiquorSearch(name);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_LIQUOR_SEARCH_SUCCESS, data));
+    }
+
+    @ApiOperation(value = "양조장에 해당하는 전통주 모두 조회")
+    @GetMapping()
+    public ResponseEntity<LiquorInfoListResponse> getLiquorBrewery(@PageableDefault(size=10, sort = "name", direction = Sort.Direction.ASC) Pageable pageable, @RequestParam("brewery") String brewery) {
+        final List<LiquorInfoDto> data= liquorService.getLiquorBrewery(pageable, brewery);
+        return ResponseEntity.ok(LiquorInfoListResponse.of(ResultCode.GET_LIQUOR_BREWERY_SUCCESS, data));
     }
 }

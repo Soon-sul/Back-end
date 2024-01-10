@@ -11,10 +11,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel(description = "전통주 - 수상내역 정보")
-public class PrizeListDto {
+@ApiModel(description = "전통주 id와 이름 정보")
+public class LiquorIdName {
 
-    @ApiModelProperty(value = "상 이름")
+    @ApiModelProperty(value = "전통주 id", position = 1)
+    private String liquorId;
+
+    @ApiModelProperty(value = "전통주 이름", position = 2)
     private String name;
-
 }

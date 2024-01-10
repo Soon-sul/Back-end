@@ -1,17 +1,17 @@
-package com.example.soonsul.main.response;
+package com.example.soonsul.liquor.response;
 
-import com.example.soonsul.main.dto.RegionLiquorDto;
+import com.example.soonsul.liquor.dto.EvaluationDto;
+import com.example.soonsul.liquor.dto.LiquorIdName;
 import com.example.soonsul.response.result.ResultCode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
-import org.springframework.data.util.Pair;
 
 import java.util.List;
 
 @Getter
-@ApiModel(description = "지역술 전통주 리스트 응답 모델")
-public class RegionLiquorResponse {
+@ApiModel(description = "전통주 id와 이름 응답 모델")
+public class LiquorIdNameResponse {
 
     @ApiModelProperty(value = "Http 상태 코드")
     private final int status;
@@ -20,17 +20,17 @@ public class RegionLiquorResponse {
     @ApiModelProperty(value = "응답 메세지")
     private final String message;
     @ApiModelProperty(value = "응답 데이터")
-    private final Pair<List<RegionLiquorDto>,Integer> data;
+    private final List<LiquorIdName> data;
 
 
-    public RegionLiquorResponse(ResultCode resultCode, Pair<List<RegionLiquorDto>,Integer> data) {
+    public LiquorIdNameResponse(ResultCode resultCode, List<LiquorIdName> data) {
         this.status = resultCode.getStatus();
         this.code = resultCode.getCode();
         this.message = resultCode.getMessage();
         this.data = data;
     }
 
-    public static RegionLiquorResponse of(ResultCode resultCode, Pair<List<RegionLiquorDto>,Integer> data) {
-        return new RegionLiquorResponse(resultCode, data);
+    public static LiquorIdNameResponse of(ResultCode resultCode, List<LiquorIdName> data) {
+        return new LiquorIdNameResponse(resultCode, data);
     }
 }

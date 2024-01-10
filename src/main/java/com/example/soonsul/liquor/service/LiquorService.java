@@ -28,8 +28,6 @@ public class LiquorService {
     private final UserUtil userUtil;
     private final LiquorUtil liquorUtil;
     private final PrizeRepository prizeRepository;
-    private final LocationRepository locationRepository;
-    private final SalePlaceRepository salePlaceRepository;
     private final ReviewRepository reviewRepository;
     private final LiquorFilteringRepository filteringRepository;
     private final FilteringClickRepository filteringClickRepository;
@@ -82,14 +80,12 @@ public class LiquorService {
     @Transactional(readOnly = true)
     public List<PrizeListDto> getLiquorPrize(String liquorId){
         final Liquor liquor= liquorUtil.getLiquor(liquorId);
-        final List<Prize> prizeList= prizeRepository.findAllByLiquor(liquor);
+        final List<String> prizeList= prizeRepository.findAll(liquorId);
 
         final List<PrizeListDto> result= new ArrayList<>();
-        for(Prize p: prizeList){
-            final PrizeInfo info= liquorUtil.getPrizeInfo(p.getPrizeInfoId());
+        for(String p: prizeList){
             final PrizeListDto dto = PrizeListDto.builder()
-                    .prizeId(p.getPrizeId())
-                    .name(info.getName())
+                    .name(p)
                     .build();
             result.add(dto);
         }
@@ -98,43 +94,25 @@ public class LiquorService {
 
 
     @Transactional(readOnly = true)
-    public List<LocationListDto> getLiquorLocation(String liquorId){
+    public LocationDto getLiquorLocation(String liquorId){
         final Liquor liquor= liquorUtil.getLiquor(liquorId);
-        final List<Location> locationList= locationRepository.findAllByLiquor(liquor);
-
-        final List<LocationListDto> result= new ArrayList<>();
-        for(Location l: locationList){
-            final LocationInfo info= liquorUtil.getLocationInfo(l.getLocationInfoId());
-            final LocationListDto dto = LocationListDto.builder()
-                    .locationInfoId(l.getLocationId())
-                    .name(info.getName())
-                    .latitude(info.getLatitude())
-                    .longitude(info.getLongitude())
-                    .brewery(info.getBrewery())
-                    .build();
-            result.add(dto);
-        }
-        return result;
+        return LocationDto.builder()
+                .location(liquor.getLocation())
+                .latitude(liquor.getLatitude())
+                .longitude(liquor.getLongitude())
+                .brewery(liquor.getBrewery())
+                .build();
     }
 
 
     @Transactional(readOnly = true)
-    public List<SalePlaceListDto> getLiquorSalePlace(String liquorId){
+    public SalePlaceDto getLiquorSalePlace(String liquorId){
         final Liquor liquor= liquorUtil.getLiquor(liquorId);
-        final List<SalePlace> salePlaceList= salePlaceRepository.findAllByLiquor(liquor);
-
-        final List<SalePlaceListDto> result= new ArrayList<>();
-        for(SalePlace s: salePlaceList){
-            final SalePlaceInfo info= liquorUtil.getSalePlaceInfo(s.getSalePlaceInfoId());
-            final SalePlaceListDto dto = SalePlaceListDto.builder()
-                    .salePlaceId(s.getSalePlaceId())
-                    .name(info.getName())
-                    .phoneNumber(info.getPhoneNumber())
-                    .siteUrl(info.getSiteUrl())
-                    .build();
-            result.add(dto);
-        }
-        return result;
+        return SalePlaceDto.builder()
+                .salePlace(liquor.getSalePlace())
+                .phoneNumber(liquor.getPhoneNumber())
+                .siteUrl(liquor.getSiteUrl())
+                .build();
     }
 
 
@@ -200,13 +178,30 @@ public class LiquorService {
 
     @Transactional(readOnly = true)
     public List<String> getLiquorListName(){
-        return liquorRepository.findAllName();
+        final List<String> result= new ArrayList<>();
+        result.addAll(liquorRepository.findAllName());
+        result.addAll(liquorRepository.findAllBrewery());
+        return result;
     }
 
 
     @Transactional(readOnly = true)
     public List<String> getLiquorListId(){
         return liquorRepository.findAllId();
+    }
+
+    @Transactional(readOnly = true)
+    public List<LiquorIdName> getLiquorIdAndName(){
+        final List<Liquor> liquors= liquorRepository.findAll();
+        final List<LiquorIdName> result= new ArrayList<>();
+        for(Liquor liquor: liquors){
+            LiquorIdName dto= LiquorIdName.builder()
+                    .liquorId(liquor.getLiquorId())
+                    .name(liquor.getName())
+                    .build();
+            result.add(dto);
+        }
+        return result;
     }
 
 
@@ -306,6 +301,8 @@ public class LiquorService {
                     .flagScrap(true)
                     .scrapDate(s.getScrapDate())
                     .totalScrapNumber(totalScrapNumber)
+                    .age(liquor.getAge())
+                    .gender(liquor.getGender())
                     .build();
             result.add(dto);
         }
@@ -338,4 +335,60 @@ public class LiquorService {
     }
 
 
+    @Transactional(readOnly = true)
+    public List<String> getLiquorSearch(String name){
+        final List<String> result= new ArrayList<>();
+        if(liquorRepository.existsByName(name)) result.add("liquor");
+        if(liquorRepository.existsByBrewery(name)) result.add("brewery");
+        return result;
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<LiquorInfoDto> getLiquorBrewery(Pageable pageable, String brewery){
+        final List<Liquor> liquors= liquorRepository.findAllByBrewery(pageable, brewery).toList();
+        final User user= userUtil.getUserByAuthentication();
+        final List<LiquorInfoDto> result= new ArrayList<>();
+        for(Liquor liquor: liquors){
+            final Optional<PersonalEvaluation> personalEvaluation= personalEvaluationRepository.findByUserAndLiquor(user,liquor);
+
+            Double liquorPersonalRating= null;
+            if(personalEvaluation.isPresent()){
+                liquorPersonalRating= personalEvaluation.get().getLiquorPersonalRating();
+            }
+
+            final String region= liquorUtil.getCodeName(liquor.getRegion());
+            final String liquorCategory= liquorUtil.getCodeName(liquor.getLiquorCategory());
+
+            final List<LiquorFilteringDto> filtering= new ArrayList<>();
+            final List<LiquorFiltering> filteringList= filteringRepository.findAllByLiquorId(liquor.getLiquorId());
+            for(LiquorFiltering l: filteringList){
+                final LiquorFilteringDto dto= LiquorFilteringDto.builder()
+                        .age(l.getAge())
+                        .gender(l.getGender())
+                        .build();
+                filtering.add(dto);
+            }
+
+            final LiquorInfoDto dto= LiquorInfoDto.builder()
+                    .name(liquor.getName())
+                    .ingredient(liquor.getIngredient())
+                    .averageRating(liquor.getAverageRating())
+                    .lowestPrice(liquor.getLowestPrice())
+                    .alcohol(liquor.getAlcohol())
+                    .capacity(liquor.getCapacity())
+                    .region(region)
+                    .imageUrl(liquor.getImageUrl())
+                    .liquorCategory(liquorCategory)
+                    .liquorPersonalRating(liquorPersonalRating)
+                    .ratingNumber(reviewRepository.countByLiquor(liquor))
+                    .filtering(filtering)
+                    .flagScrap(scrapRepository.existsByUserAndLiquor(user, liquor))
+                    .gender(liquor.getGender())
+                    .age(liquor.getAge())
+                    .build();
+            result.add(dto);
+        }
+        return result;
+    }
 }

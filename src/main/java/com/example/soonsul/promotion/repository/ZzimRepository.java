@@ -1,4 +1,4 @@
-package com.example.soonsul.promotion;
+package com.example.soonsul.promotion.repository;
 
 import com.example.soonsul.promotion.entity.Promotion;
 import com.example.soonsul.promotion.entity.Zzim;

@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
 @Builder
@@ -30,4 +32,7 @@ public class MainBannerDto {
 
     @ApiModelProperty(value = "메인배너 이름", position = 5)
     private String title;
+
+    @ApiModelProperty(value = "메인배너와 관련된 전통주 리스트 (pk)", position = 6)
+    private List<String> liquorList;
 }
