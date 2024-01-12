@@ -21,10 +21,15 @@ public class EmbeddedRedisConfig {
     @PostConstruct
     public void redisServer() throws IOException {
         redisServer = RedisServer.builder()
-                .port(6379)
+                .port(redisPort)
                 .setting("maxmemory 128M")
                 .build();
-        redisServer.start();
+        try {
+            redisServer.start();
+        } catch (Exception e) {
+           log.error("", e);
+        }
+
     }
 
     @PreDestroy
