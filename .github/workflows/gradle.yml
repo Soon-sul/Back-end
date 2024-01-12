@@ -31,27 +31,27 @@ jobs:
     # 이용하여서 설정 파일을 생성해줌 (github에 commit 되는게 아님!)
     - run : touch ./src/main/resources/application.properties
     - run : echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.properties
-    - run : cat ./src/main/resources/application.properties
+    
     
     # google
     - run : touch ./src/main/resources/google_client_key.json
     - run : echo "${{ secrets.GOOGLE }}" > ./src/main/resources/google_client_key.json
-    - run : cat ./src/main/resources/google_client_key.json
+
     
     # oauth
     - run : touch ./src/main/resources/oauth.yml
     - run : echo "${{ secrets.OAUTH }}" > ./src/main/resources/oauth.yml
-    - run : cat ./src/main/resources/oauth.yml
+
 
     # firebase
     - run : touch ./src/main/resources/firebase/soonsool-firebase.json
     - run : echo "${{ secrets.FCM }}" > ./src/main/resources/firebase/soonsool-firebase.json
-    - run : cat ./src/main/resources/firebase/soonsool-firebase.json
+
     
     # keys
     - run : touch ./src/main/resources/keys/AuthKey_2RYD94LVWD.p8
     - run : echo "${{ secrets.AUTHKEY }}" > ./src/main/resources/keys/AuthKey_2RYD94LVWD.p8
-    - run : cat ./src/main/resources/keys/AuthKey_2RYD94LVWD.p8
+
     
     # gradlew에 권한 부여
     - name: Grant execute permission for gradlew
