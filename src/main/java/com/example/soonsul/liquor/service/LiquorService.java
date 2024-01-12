@@ -301,8 +301,8 @@ public class LiquorService {
                     .flagScrap(true)
                     .scrapDate(s.getScrapDate())
                     .totalScrapNumber(totalScrapNumber)
-                    .age(liquor.getAge())
-                    .gender(liquor.getGender())
+//                    .age(liquor.getAge())
+//                    .gender(liquor.getGender())
                     .build();
             result.add(dto);
         }
@@ -384,8 +384,8 @@ public class LiquorService {
                     .ratingNumber(reviewRepository.countByLiquor(liquor))
                     .filtering(filtering)
                     .flagScrap(scrapRepository.existsByUserAndLiquor(user, liquor))
-                    .gender(liquor.getGender())
-                    .age(liquor.getAge())
+//                    .gender(liquor.getGender())
+//                    .age(liquor.getAge())
                     .build();
             result.add(dto);
         }
