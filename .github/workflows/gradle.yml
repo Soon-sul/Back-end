@@ -4,8 +4,6 @@ name: Java CI with Gradle
 on:
   push:
     branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
 
 permissions:
   contents: read
@@ -26,9 +24,6 @@ jobs:
         
     - uses : actions/checkout@v3
     #1
-    # 해당 부분은 상당히 중요함 (글에서 부가설명)
-    # application.properties는 외부에 노출되면 안되므로 Actions가 빌드될때마다 해당 Repository의 Secret 설정을
-
     # 디렉터리 생성
     - run : mkdir ./src/main/resources/keys
     - run : mkdir ./src/main/resources/firebase
