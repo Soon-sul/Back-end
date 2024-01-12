@@ -9,7 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableScheduling
 @SpringBootApplication(exclude = SecurityAutoConfiguration.class)
-@EnableBatchProcessing
+//@EnableBatchProcessing
 public class SoonsulApplication {
 	public static final String APPLICATION_LOCATIONS = "spring.config.location="
 			+ "classpath:application.properties ,"
