@@ -75,7 +75,10 @@ public class Liquor {
     @Column(name = "site_url")
     private String siteUrl;
 
+    @Column(name = "gender")
     private String gender;
+
+    @Column(name = "age")
     private Integer age;
 
 
