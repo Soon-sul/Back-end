@@ -52,7 +52,7 @@ jobs:
     # firebase
     - name: create-json
       id: create-json1
-      uses: jsdaniell/create-json1@1.1.2
+      uses: jsdaniell/create-json@1.1.2
       with:
         name: "soonsool-firebase.json"
         json: ${{ secrets.FCM }}
