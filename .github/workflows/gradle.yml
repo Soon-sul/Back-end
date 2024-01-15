@@ -34,20 +34,29 @@ jobs:
     - run : touch ./src/main/resources/application.properties
     - run : echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.properties
     
-    
+   
     # google
-    - run : touch ./src/main/resources/google_client_key.json
-    - run : echo "${{ secrets.GOOGLE }}" > ./src/main/resources/google_client_key.json
-
-    
+    - name: create-json
+      id: create-json
+      uses: jsdaniell/create-json@1.1.2
+      with:
+        name: "google_client_key.json"
+        json: ${{ secrets.GOOGLE }}
+        dir: './src/main/resources/'
+        
     # oauth
     - run : touch ./src/main/resources/oauth.yml
     - run : echo "${{ secrets.OAUTH }}" > ./src/main/resources/oauth.yml
 
 
     # firebase
-    - run : touch ./src/main/resources/firebase/soonsool-firebase.json
-    - run : echo "${{ secrets.FCM }}" > ./src/main/resources/firebase/soonsool-firebase.json
+    - name: create-json
+      id: create-json1
+      uses: jsdaniell/create-json1@1.1.2
+      with:
+        name: "soonsool-firebase.json"
+        json: ${{ secrets.FCM }}
+        dir: './src/main/resources/firebase/'
 
     
     # keys
