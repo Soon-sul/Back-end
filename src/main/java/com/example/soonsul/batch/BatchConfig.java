@@ -45,7 +45,7 @@ public class BatchConfig {
     @Bean
     public Step liquorStep() {
         return stepBuilderFactory.get("liquorStep")
-                .<Liquor, Liquor>chunk(100)
+                .<Liquor,Liquor>chunk(100)
                 .reader(liquorItemReader())
                 .processor(liquorItemProcessor())
                 .writer(liquorItemWriter(entityManagerFactory))

@@ -68,13 +68,8 @@ public class Liquor {
     @Column(name = "site_url")
     private String siteUrl;
 
-    @Column(name = "gender")
     private String gender;
-
-    @Column(name = "age")
     private Integer age;
-
-
     public void setGender(String gender) {
         this.gender = gender;
     }
@@ -82,6 +77,7 @@ public class Liquor {
     public void setAge(Integer age) {
         this.age = age;
     }
+
 
     public void updateAverageRating(Double averageRating){
         this.averageRating= averageRating;
