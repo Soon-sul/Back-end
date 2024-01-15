@@ -1,5 +1,6 @@
 package com.example.soonsul;
 
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -8,7 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableScheduling
 @SpringBootApplication(exclude = SecurityAutoConfiguration.class)
-//@EnableBatchProcessing
+@EnableBatchProcessing
 public class SoonsulApplication {
 	public static final String APPLICATION_LOCATIONS = "spring.config.location="
 			+ "classpath:application.properties ,"
