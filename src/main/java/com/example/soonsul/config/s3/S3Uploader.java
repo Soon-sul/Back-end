@@ -32,6 +32,7 @@ public class S3Uploader {
                     .orElseThrow(() -> new UploadFileNotExist("upload file not exist", ErrorCode.UPLOAD_FILE_NOT_EXIST));
             return upload(uploadFile, dirName);
         }catch (Exception e){
+            log.error("파일 업로드 중 발생한 에러" + e);
             throw new FileUpload("file upload error", ErrorCode.FILE_UPLOAD_ERROR);
         }
     }
