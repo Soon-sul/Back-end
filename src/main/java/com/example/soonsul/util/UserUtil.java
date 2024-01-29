@@ -22,7 +22,7 @@ public class UserUtil {
             return userRepository.findById(authentication.getName())
                     .orElseThrow(() -> new UserNotExist("login user not exist", ErrorCode.USER_NOT_EXIST));
         } catch (Exception e) {
-            log.error(e + "유저인증");
+            log.error(authentication.getName());
             throw new RuntimeException("");
         }
 
