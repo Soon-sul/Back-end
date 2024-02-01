@@ -20,7 +20,7 @@ else
 fi
 
 # 현재 포트의 PID를 불러온다
-TARGET_PID=$(lsof -Fp -i TCP:${TARGET_PORT} | grep -Po 'p[0-9]+' | grep -Po '[0-9]+')
+TARGET_PID=$(sudo lsof -Fp -i TCP:${TARGET_PORT} | grep -Po 'p[0-9]+' | grep -Po '[0-9]+')
 
 # PID를 이용해 해당 포트 서버 Kill
 if [ ! -z ${TARGET_PID} ]; then
@@ -29,6 +29,6 @@ if [ ! -z ${TARGET_PID} ]; then
 fi
 
 # 타켓 포트에 jar파일을 이용해 새로운 서버 실행
-nohup java -jar -Dserver.port=${TARGET_PORT} ${JAR_FILE} > /home/ubuntu/nohup.out 2>&1 &
+sudo nohup java -jar -Dserver.port=${TARGET_PORT} ${JAR_FILE} > /home/ubuntu/nohup.out 2>&1 &
 echo "> Now new WAS runs at ${TARGET_PORT}."
 exit 0
