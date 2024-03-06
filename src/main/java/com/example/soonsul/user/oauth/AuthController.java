@@ -6,10 +6,7 @@ import com.example.soonsul.user.oauth.dto.SignupDto;
 import com.example.soonsul.user.oauth.dto.TokenDto;
 import com.example.soonsul.user.oauth.dto.ValidationDto;
 import com.example.soonsul.user.oauth.jwt.AuthConstants;
-import com.example.soonsul.user.oauth.param.AppleParams;
-import com.example.soonsul.user.oauth.param.GoogleParams;
-import com.example.soonsul.user.oauth.param.KakaoParams;
-import com.example.soonsul.user.oauth.param.NaverParams;
+import com.example.soonsul.user.oauth.param.*;
 import com.example.soonsul.user.oauth.response.TokenResponse;
 import com.example.soonsul.user.oauth.response.ValidationResponse;
 import io.swagger.annotations.Api;
@@ -38,10 +35,29 @@ public class AuthController {
         return ResponseEntity.ok(TokenResponse.of(ResultCode.ORIGINAL_USER_LOGIN_SUCCESS, data));
     }
 
+    @ApiOperation(value = "카카오 로그인")
+    @GetMapping("/login/kakao")
+    public ResponseEntity<TokenResponse> loginKakaoPost(@ModelAttribute KakaoRequest kakaoParams) throws Exception{
+        TokenDto data= authService.login(kakaoParams);
+        if(data.getRefreshToken()==null){
+            return ResponseEntity.ok(TokenResponse.of(ResultCode.NEW_USER_LOGIN_SUCCESS, data));
+        }
+        return ResponseEntity.ok(TokenResponse.of(ResultCode.ORIGINAL_USER_LOGIN_SUCCESS, data));
+    }
+
 
     @ApiOperation(value = "네이버 로그인")
     @GetMapping("/login/naver")
     public ResponseEntity<TokenResponse> loginNaver(@ModelAttribute NaverParams naverParams) throws Exception{
+        TokenDto data= authService.login(naverParams);
+        if(data.getRefreshToken()==null){
+            return ResponseEntity.ok(TokenResponse.of(ResultCode.NEW_USER_LOGIN_SUCCESS, data));
+        }
+        return ResponseEntity.ok(TokenResponse.of(ResultCode.ORIGINAL_USER_LOGIN_SUCCESS, data));
+    }
+    @ApiOperation(value = "네이버 로그인")
+    @PostMapping("/login/naver")
+    public ResponseEntity<TokenResponse> loginNaverPost(@ModelAttribute NaverRequest naverParams) throws Exception{
         TokenDto data= authService.login(naverParams);
         if(data.getRefreshToken()==null){
             return ResponseEntity.ok(TokenResponse.of(ResultCode.NEW_USER_LOGIN_SUCCESS, data));
@@ -58,11 +74,30 @@ public class AuthController {
         }
         return ResponseEntity.ok(TokenResponse.of(ResultCode.ORIGINAL_USER_LOGIN_SUCCESS, data));
     }
+    @ApiOperation(value = "구글 로그인")
+    @PostMapping("/login/google")
+    public ResponseEntity<TokenResponse> loginGooglePost(@ModelAttribute GoogleRequest googleParams) throws Exception{
+        TokenDto data= authService.login(googleParams);
+        if(data.getRefreshToken()==null){
+            return ResponseEntity.ok(TokenResponse.of(ResultCode.NEW_USER_LOGIN_SUCCESS, data));
+        }
+        return ResponseEntity.ok(TokenResponse.of(ResultCode.ORIGINAL_USER_LOGIN_SUCCESS, data));
+    }
 
 
     @ApiOperation(value = "애플 로그인")
     @GetMapping("/login/apple")
     public ResponseEntity<TokenResponse> loginApple(@ModelAttribute AppleParams appleParams) throws Exception{
+        TokenDto data= authService.login(appleParams);
+        if(data.getRefreshToken()==null){
+            return ResponseEntity.ok(TokenResponse.of(ResultCode.NEW_USER_LOGIN_SUCCESS, data));
+        }
+        return ResponseEntity.ok(TokenResponse.of(ResultCode.ORIGINAL_USER_LOGIN_SUCCESS, data));
+    }
+
+    @ApiOperation(value = "애플 로그인")
+    @PostMapping("/login/apple")
+    public ResponseEntity<TokenResponse> loginApplePost(@ModelAttribute AppleRequest appleParams) throws Exception{
         TokenDto data= authService.login(appleParams);
         if(data.getRefreshToken()==null){
             return ResponseEntity.ok(TokenResponse.of(ResultCode.NEW_USER_LOGIN_SUCCESS, data));
