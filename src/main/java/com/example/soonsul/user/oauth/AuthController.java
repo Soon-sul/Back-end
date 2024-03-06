@@ -36,7 +36,7 @@ public class AuthController {
     }
 
     @ApiOperation(value = "카카오 로그인")
-    @GetMapping("/login/kakao")
+    @PostMapping("/login/kakao")
     public ResponseEntity<TokenResponse> loginKakaoPost(@ModelAttribute KakaoRequest kakaoParams) throws Exception{
         TokenDto data= authService.login(kakaoParams);
         if(data.getRefreshToken()==null){
