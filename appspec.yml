@@ -9,6 +9,7 @@ hooks:
     - location: scripts/run_new_was.sh
       timeout: 60
       runas: root
+      
     - location: scripts/health_check.sh
       timeout: 60
       runas: root
